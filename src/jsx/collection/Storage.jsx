@@ -1,14 +1,15 @@
 import React from 'react';
 import styled from "styled-components";
-import {global} from "./global/global";
+import {global} from "../global/global";
 import {useDispatch, useSelector} from "react-redux";
-import {addOpenStorage, selectCollection} from "./redux/slice/collectionSlice";
-import {UrlBox, Msg, NoteArea} from "./Collection.jsx";
-import Icon from '../../public/svg.js'
-const {main, transition_speed1, primary_opacity, primary} = global
+import {addOpenStorage, selectCollection} from "../redux/slice/collectionSlice";
+import {NoteArea, Msg, Note} from "./NoteArea.jsx";
+import Icon from '../../../public/svg.jsx'
+const {main, transition_speed1, primary_opacity, primary, tertiary} = global
 
 const Main = styled.div`
     position: absolute;
+    z-index: 3;
     right: -250px;
     top: 0;
     width: 250px;
@@ -30,8 +31,16 @@ const Navbar = styled.div`
         transform: scale(1.2);
         color: ${main};
     }
-     
 `
+
+const UrlBox = styled.div`
+    > .url {
+        font-size: 10px;
+        color: ${tertiary};
+        margin-top: 5px;
+    }`
+
+
 function Storage(props) {
     const {openStorage, storage} = useSelector(selectCollection)
     const dispatch = useDispatch()
@@ -45,14 +54,13 @@ function Storage(props) {
             <NoteArea>
                 {
                     storage.map(item => (
-                        <div key={item.url + item.msg} className='note'>
+                        <Note key={item.url + item.msg}>
                             <UrlBox>
-                                <img src={item.favIconUrl} alt=""/>
                                 <div className="url">{item.url}</div>
                             </UrlBox>
                             <Msg>{item.msg}</Msg>
-                            <Icon.Ellipsis styled={ellipsis}/>
-                        </div>
+                            <Icon.Delete styled={ellipsis}/>
+                        </Note>
                     ))
                 }
             </NoteArea>
@@ -61,3 +69,4 @@ function Storage(props) {
 }
 
 export default Storage;
+export {Main, Navbar}

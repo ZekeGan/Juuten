@@ -31,6 +31,12 @@ module.exports = {
                     presets: ['@babel/preset-env', '@babel/preset-react',],
                 }
             },
+        },{
+            test: /\.(woff|woff2|ttf|eot|otf)$/,
+            exclude: /node_modules/,
+            use: {
+                loader: "file-loader"
+            }
         }]
     },
     plugins: [

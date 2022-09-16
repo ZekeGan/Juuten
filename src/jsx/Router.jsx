@@ -2,7 +2,7 @@ import React from 'react';
 import {HashRouter as Router, Routes, Route} from "react-router-dom";
 
 import Home from './Folder.jsx'
-import Collection from './Collection.jsx'
+import Collection from './collection/Collection.jsx'
 
 
 

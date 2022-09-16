@@ -1,14 +1,15 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from "styled-components";
-import {global} from "./global/global";
-import {useNavigate, useParams} from "react-router-dom";
+import {global} from "../global/global";
+import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {addOpenStorage, selectCollection} from "./redux/slice/collectionSlice";
+import {addOpenBar, addOpenStorage, selectCollection} from "../redux/slice/collectionSlice";
 import Storage from "./Storage.jsx";
-import Icon from '../../public/svg.js'
-import chrome from './redux/chromeFunction.js'
+import Bar from "./Bar.jsx";
+import NoteArea from "./NoteArea.jsx";
+import Icon from '../../../public/svg.jsx'
 
-const {transition_speed1, main, primary, secondary, tertiary} = global
+const {main, primary, secondary, warning} = global
 
 const Collection = styled.div`
     width: 450px;
@@ -16,14 +17,16 @@ const Collection = styled.div`
     position: relative;
     overflow: hidden;
     background-color: ${primary};
+    
 `
 const Navbar = styled.div`
     position: fixed;
     left: 0;
     top: 0;
+    z-index: 2;
     width: 450px;
     height: 48px;
-    background-color: white;
+    background-color: rgba(255,255,255,0.9);
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -38,59 +41,23 @@ const Navbar = styled.div`
         font-size: 12px;
     }
 `
-const NoteArea = styled.div`
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 58px;
-    padding: 0 10px;
-    > .note {
-        position: relative;
-        width: 100%;
-        background-color: white;
-        border-radius: 10px;
-        margin: 5px 0;
-        padding: 10px 20px;
-        box-shadow: 2px 2px 0.5px rgba(0,0,0,0.2);
-        ${transition_speed1}
-        &:hover {
-            box-shadow: 4px 4px 3px  rgba(0,0,0,0.2);
-        }
-    }
-`
-const UrlBox = styled.div`
-    display: flex;
-    align-items: center;
-    > img {
-        height: 15px;
-    }
-    > .url {
-        font-size: 10px;
-        color: ${tertiary};
-        margin-left: 7px;
-    }
-`
-const Msg = styled.div`
-    margin-top: 8px;    
-`
 const StorageCount = styled.div`
     position: relative;
     > i {
         position: absolute;
         bottom: 5%;
         right: -30%;
-        width: 12px;
-        height: 12px;
+        width: 15px;
+        height: 15px;
         border-radius: 50%;
-        background-color: red;
-        color: white;   
-        font-size: 12px;
-        line-height: 12px;
+        background-color: ${warning};
+        color: white;
+        font-style: normal;   
+        font-size: 0.5rem;
+        line-height: 15px;
         text-align: center;
-    }
-`
+    }`
+
 
 const ellipsisIcon = `
     position: absolute;
@@ -113,16 +80,25 @@ export default function App(props) {
     * 4. 生成頁面資料
     * */
 
-
+    /* Hooks */
+    const [saveWarning, setSaveWarning] = useState(false)
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const obj = useSelector(selectCollection)
     const storage = obj['storage']
-    const {id} = useParams()
-    const data = obj[id]
-    const back = () => navigate('/home')
-    const openStorage = (payload) => dispatch(addOpenStorage(payload))
 
+    /* function */
+    const back = () => {
+        if (obj.openEditId) {
+            setSaveWarning(true)
+            setTimeout(()=>{
+                setSaveWarning(false)
+            }, 3000)
+        }
+        else navigate('/home')
+    }
+    const openStorage = (payload) => dispatch(addOpenStorage(payload))
+    const openBar = (payload) => dispatch(addOpenBar(payload))
 
     return (
         <Collection openStorage={obj.openStorage}>
@@ -134,26 +110,15 @@ export default function App(props) {
                     <Icon.Box styled={navbarIcon} onClick={() => openStorage('open')}/>
                     {storage.length === 0 ? '' : <i>{storage.length}</i>}
                 </StorageCount>
-                <Icon.Bar styled={navbarIcon}/>
+                <Icon.Bar styled={navbarIcon} onClick={() => openBar('open')}/>
             </Navbar>
-            <NoteArea>
-                {
-                    data.map(item => (
-                        <div key={item.url + item.msg} className='note'>
-                            <UrlBox>
-                                <img src={item.favIconUrl} alt=""/>
-                                <div className="url">{item.url}</div>
-                            </UrlBox>
-                            <Msg>{item.msg}</Msg>
-                            <Icon.Ellipsis styled={ellipsisIcon}/>
-                        </div>
-                    ))
-                }
-            </NoteArea>
+
+            <NoteArea isSave={saveWarning}/>
             <Storage ellipsis={ellipsisIcon} navbar={navbarIcon}/>
+
+            <Bar ellipsis={ellipsisIcon} navbar={navbarIcon}/>
 
         </Collection>
     );
 }
 
-export {NoteArea, UrlBox, Msg}
