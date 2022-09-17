@@ -1,5 +1,4 @@
 import {createSlice} from "@reduxjs/toolkit";
-import chrome from '../chromeFunction.js'
 
 
 export const CollectionSlice = createSlice({

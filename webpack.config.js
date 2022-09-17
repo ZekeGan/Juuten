@@ -13,7 +13,7 @@ module.exports = {
     },
     devServer: {
         static: {
-          directory: path.resolve(__dirname, 'dist')
+            directory: path.resolve(__dirname, 'dist')
         },
         port: 3000,
         compress: true,
@@ -31,13 +31,16 @@ module.exports = {
                     presets: ['@babel/preset-env', '@babel/preset-react',],
                 }
             },
-        },{
+        }, {
             test: /\.(woff|woff2|ttf|eot|otf)$/,
             exclude: /node_modules/,
-            use: {
-                loader: "file-loader"
-            }
-        }]
+            type: 'asset/resource',
+            dependency: { not: ['url'] },
+        }, {
+            test: /\.css$/i,
+            exclude: /node_modules/,
+            use: ['style-loader', 'css-loader']
+        },]
     },
     plugins: [
         new HtmlWebpackPlugin({

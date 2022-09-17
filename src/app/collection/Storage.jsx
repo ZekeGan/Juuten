@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from "styled-components";
-import {global} from "../global/global";
+import {global} from "../../assets/global";
 import {useDispatch, useSelector} from "react-redux";
-import {addOpenStorage, selectCollection} from "../redux/slice/collectionSlice";
+import {addOpenStorage, selectCollection} from "../../redux/slice/collectionSlice";
 import {NoteArea, Msg, Note} from "./NoteArea.jsx";
-import Icon from '../../../public/svg.jsx'
+import Icon from '../../assets/svg.jsx'
 const {main, transition_speed1, primary_opacity, primary, tertiary} = global
 
 const Main = styled.div`

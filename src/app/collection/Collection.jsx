@@ -1,24 +1,23 @@
 import React, {useState} from 'react';
 import styled from "styled-components";
-import {global} from "../global/global";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {addOpenBar, addOpenStorage, selectCollection} from "../redux/slice/collectionSlice";
+import {addOpenBar, addOpenStorage, selectCollection} from "../../redux/slice/collectionSlice";
+
 import Storage from "./Storage.jsx";
 import Bar from "./Bar.jsx";
 import NoteArea from "./NoteArea.jsx";
-import Icon from '../../../public/svg.jsx'
-
+import Icon from '../../assets/svg.jsx'
+import {global} from "../../assets/global";
 const {main, primary, secondary, warning} = global
+
 
 const Collection = styled.div`
     width: 450px;
     height: 600px;
     position: relative;
     overflow: hidden;
-    background-color: ${primary};
-    
-`
+    background-color: ${primary};`
 const Navbar = styled.div`
     position: fixed;
     left: 0;
@@ -39,8 +38,7 @@ const Navbar = styled.div`
         outline: none;
         padding-left: 15px;
         font-size: 12px;
-    }
-`
+    }`
 const StorageCount = styled.div`
     position: relative;
     > i {
@@ -58,19 +56,19 @@ const StorageCount = styled.div`
         text-align: center;
     }`
 
-
 const ellipsisIcon = `
     position: absolute;
     right: 0;
     top: 50%;
     transform: translateY(-50%) scale(1.1);
     color: ${main};
-    cursor: pointer;
-`
+    cursor: pointer;`
+
 const navbarIcon = `
     color: ${main};
     transform: scale(1.2);
     cursor: pointer;`
+
 
 export default function App(props) {
     /*獲取資料的方式 :
@@ -80,12 +78,14 @@ export default function App(props) {
     * 4. 生成頁面資料
     * */
 
+
     /* Hooks */
     const [saveWarning, setSaveWarning] = useState(false)
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const obj = useSelector(selectCollection)
     const storage = obj['storage']
+
 
     /* function */
     const back = () => {
@@ -100,8 +100,11 @@ export default function App(props) {
     const openStorage = (payload) => dispatch(addOpenStorage(payload))
     const openBar = (payload) => dispatch(addOpenBar(payload))
 
+
     return (
         <Collection openStorage={obj.openStorage}>
+
+
             <Navbar>
                 <Icon.Left styled={navbarIcon} onClick={() => back()}/>
                 <input type="text"/>
@@ -113,8 +116,12 @@ export default function App(props) {
                 <Icon.Bar styled={navbarIcon} onClick={() => openBar('open')}/>
             </Navbar>
 
+
             <NoteArea isSave={saveWarning}/>
+
+
             <Storage ellipsis={ellipsisIcon} navbar={navbarIcon}/>
+
 
             <Bar ellipsis={ellipsisIcon} navbar={navbarIcon}/>
 

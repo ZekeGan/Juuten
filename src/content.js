@@ -1,13 +1,13 @@
 console.log('content script 正常運作')
-let currentURL, currentMsg, position, currentDate;
+let currentURL, currentMsg, position, currentDate, folderLists;
 
 
-/* 從 sync storage 獲取 Juuten 數據 */
-const fetchMsg = async () => {
+/* 從 sync storage獲取 dataName數據 */
+const fetchMsg = async (dataName) => {
     console.log('fetch 運作中')
     return new Promise((resolve) => {
-        chrome.storage.sync.get(['Juuten'], (obj) => {
-            resolve(obj['Juuten'] ? JSON.parse(obj['Juuten']) : [])
+        chrome.storage.sync.get([dataName], (obj) => {
+            resolve(obj[dataName] ? JSON.parse(obj[dataName]) : [])
         })
     })
 }
@@ -30,17 +30,31 @@ const addNewMsg = async (obj) => {
         position,
         msg,
     }
-    chrome.storage.sync.set({
-        ['Juuten']: JSON.stringify([...currentMsg, newMsgData])
-    })
+
+}
+
+const renewDataToStorage = (dataName) => {
+
 }
 
 
-/* 監聽從 background 的通信 */
-chrome.runtime.onMessage.addListener((req, sender) => {
+/* 監聽從 background || popup.js 的通信 */
+chrome.runtime.onMessage.addListener((req, sender, res) => {
     console.log('inside send new message')
     console.log(req)
     void addNewMsg(req)
+
+    /* 獲取儲存在storage 的folderLists */
+    if (req.type === 'folderLists') {
+        folderLists = fetchMsg('Juuten_folderLists')
+        res(folderLists)
+
+        /* 儲存新的資料夾進storage */
+    } else if (req.type === 'addNewFolderToFolderLists') {
+        chrome.storage.sync.set({
+            ['Juuten_folderLists']: JSON.stringify([...folderLists, req.payload])
+        })
+    }
 })
 
 const getCurrentDate = () => {
