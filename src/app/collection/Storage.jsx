@@ -3,8 +3,9 @@ import styled from "styled-components";
 import {global} from "../../assets/global";
 import {useDispatch, useSelector} from "react-redux";
 import {addOpenStorage, selectCollection} from "../../redux/slice/collectionSlice";
-import {NoteArea, Msg, Note} from "./NoteArea.jsx";
+import {TextArea, Msg, Note} from "./TextArea.jsx";
 import Icon from '../../assets/svg.jsx'
+
 const {main, transition_speed1, primary_opacity, primary, tertiary} = global
 
 const Main = styled.div`
@@ -42,7 +43,7 @@ const UrlBox = styled.div`
 
 
 function Storage(props) {
-    const {openStorage, storage} = useSelector(selectCollection)
+    const {openStorage, Juuten_storage} = useSelector(selectCollection)
     const dispatch = useDispatch()
     const {ellipsis, navbar} = props
     const close = () => dispatch(addOpenStorage())
@@ -51,19 +52,17 @@ function Storage(props) {
             <Navbar>
                 <Icon.Right styled={navbar} onClick={() => close()}/>
             </Navbar>
-            <NoteArea>
-                {
-                    storage.map(item => (
-                        <Note key={item.url + item.msg}>
-                            <UrlBox>
-                                <div className="url">{item.url}</div>
-                            </UrlBox>
-                            <Msg>{item.msg}</Msg>
-                            <Icon.Delete styled={ellipsis}/>
-                        </Note>
-                    ))
+            <TextArea>
+                {Juuten_storage.map(item => (
+                    <Note key={item.url + item.msg}>
+                        <UrlBox>
+                            <div className="url">{item.url}</div>
+                        </UrlBox>
+                        <Msg>{item.msg}</Msg>
+                        <Icon.Delete styled={ellipsis}/>
+                    </Note>))
                 }
-            </NoteArea>
+            </TextArea>
         </Main>
     );
 }

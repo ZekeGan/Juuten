@@ -1,4 +1,17 @@
-import {createSlice} from "@reduxjs/toolkit";
+import {createSlice, createAsyncThunk} from "@reduxjs/toolkit";
+import {fetchData, getCurrentDate} from "../utils";
+// import store from "../store";
+
+const thunkData = createAsyncThunk(
+    '',
+    async (payload) => {
+        console.log('在函數裡')
+        return {
+            index: payload.index,
+            value: await fetchData(payload.index),
+            fn: payload.fn
+        }
+    })
 
 
 export const CollectionSlice = createSlice({
@@ -8,100 +21,57 @@ export const CollectionSlice = createSlice({
         openBar: false,
         openEditToolbar: false,
         openEditId: '',
-        test: '',
-
-
-
-        folder: '',
-        simFolderName: ['N1', 'N2', 'N3'],
-        storage: [{
-            url: 'http://google.com',
-            favIconUrl: 'https://developer.mozilla.org/favicon-48x48.cbbd161b.png',
-            msg: '索尼互動娛樂（SIE）旗下聖塔摩尼卡工作室製作，預定 11 ',
-        }, {
-            url: 'http://google.com',
-            favIconUrl: 'https://developer.mozilla.org/favicon-48x48.cbbd161b.png',
-            msg: '還是要改寫既定的未來，開闢自己的道路',
-        }, {
-            url: 'http://google.com',
-            favIconUrl: 'https://developer.mozilla.org/favicon-48x48.cbbd161b.png',
-            msg: '更飾有熊與狼的圖騰',
-        },],
-
+        Juuten_storage: [],//await fetchData('Juuten_storage'),
+        addNewNoteAnimation: '',
 
         N1: [{
-
-            url: 'http://google.com',
-            favIconUrl: 'https://developer.mozilla.org/favicon-48x48.cbbd161b.png',
-            msg: 'The Object.entries() method returns an array of a given object\'s own enumerable string-keyed property [key, value]',
-            currentDate: '2022/07/03 12:30',
             key: 1,
+            favIconUrl: '',
+            url: 'https://',
+            currentDate: '2022',
+            msg: `fds
+            
+            
+            f
+            d
+            
+            s
+            fsd
+            s
+            f
+            sd
+            fsd
+            f
+            sd
+            f
+            f
+            d
+            fs
+            fsd
+            
+            fds
+            fds
+            fs
+            df
+            df
+            ds
+            fsd
+            f
+            sd
+            fsd
+            `
         }, {
-            url: 'http://google.com',
-            favIconUrl: 'https://developer.mozilla.org/favicon-48x48.cbbd161b.png',
-            msg: '　SEGA 旗下人中之龍工作室（龍が如くスタジオ / RGG Studio）今日於 2022 東京電玩展前夕舉辦的「人中之龍工作室新作發表會」中，正式發表兩部《人中之龍》系列新作《人中之龍 8》及《人中之龍 7 外傳 英雄無名》，同時公布今早發表的《人中之龍 維新！極》的上市日期。',
-            currentDate: '2022/07/03 12:30',
+            key: 30,
+            favIconUrl: '',
+            url: 'https://',
+            currentDate: '2022',
+            msg: 'hi'
+        }, {
             key: 2,
-        }, {
-            url: 'http://google.com',
-            favIconUrl: 'https://developer.mozilla.org/favicon-48x48.cbbd161b.png',
-            msg: 'punk',
-            currentDate: '2022/07/03 12:30',
-            key: 3,
-        },{
-            url: 'http://google.com',
-            favIconUrl: 'https://developer.mozilla.org/favicon-48x48.cbbd161b.png',
-            msg: '索尼互動娛樂（SIE）旗下聖塔摩尼卡工作室製作，預定 s11 ',
-            currentDate: '2022/07/03 12:30',
-            key: 4,
-        },{
-            url: 'http://google.com',
-            favIconUrl: 'https://developer.mozilla.org/favicon-48x48.cbbd161b.png',
-            msg: '索尼互動娛樂（SIE）旗下聖塔摩尼卡工作室製作，預定 1d1 ',
-            currentDate: '2022/07/03 12:30',
-            key: 5,
-        },],
-
-
-        N2: [{
-            url: 'http://google.com',
-            favIconUrl: 'https://developer.mozilla.org/favicon-48x48.cbbd161b.png',
-            msg: 'The Object.entries() method returns an array of a given object\'s own enumerable string-keyed property [key, value] ',
-            currentDate: '2022/07/03 12:30',
-            key: 1,
-        }, {
-            url: 'http://google.com',
-            favIconUrl: 'https://developer.mozilla.org/favicon-48x48.cbbd161b.png',
-            msg: '　SEGA 旗下人中之龍工作室（龍が如くスタジオ / RGG Studio）今日於 2022 東京電玩展前夕舉辦的「人中之龍工作室新作發表會」中，正式發表兩部《人中之龍》系列新作《人中之龍 8》及《人中之龍 7 外傳 英雄無名》，同時公布今早發表的《人中之龍 維新！極》的上市日期。',
-            currentDate: '2022/07/03 12:30',
-            key: 2,
-        }, {
-            url: 'http://google.com',
-            favIconUrl: 'https://developer.mozilla.org/favicon-48x48.cbbd161b.png',
-            msg: 'punk',
-            currentDate: '2022/07/03 12:30',
-            key: 3,
-        }],
-
-
-        N3: [{
-            url: 'http://google.com',
-            favIconUrl: 'https://developer.mozilla.org/favicon-48x48.cbbd161b.png',
-            msg: 'The <strong>Object</strong>.entries() method returns an array of a given object\'s own enumerable string-keyed property [key, value] ',
-            currentDate: '2022/07/03 12:30',
-            key: 1,
-        }, {
-            url: 'http://google.com',
-            favIconUrl: 'https://developer.mozilla.org/favicon-48x48.cbbd161b.png',
-            msg: '　SEGA 旗下人中之龍工作室（龍が如くスタジオ / RGG Studio）今日於 2022 東京電玩展前夕舉辦的「人中之龍工作室新作發表會」中，正式發表兩部《人中之龍》系列新作《人中之龍 8》及《人中之龍 7 外傳 英雄無名》，同時公布今早發表的《人中之龍 維新！極》的上市日期。',
-            currentDate: '2022/07/03 12:30',
-            key: 2,
-        }, {
-            url: 'http://google.com',
-            favIconUrl: 'https://developer.mozilla.org/favicon-48x48.cbbd161b.png',
-            msg: 'punk',
-            currentDate: '2022/07/03 12:30',
-            key: 3,
+            favIconUrl: '',
+            url: 'https://',
+            currentDate: '2022',
+            msg: 'hi'
         }],
 
 
@@ -115,22 +85,41 @@ export const CollectionSlice = createSlice({
         },
         openEditToolbar: (state, action) => {
             state.openEditId = action.payload
-
-        },
-        test: (state) => {
-            console.log('可以 reducer 對接 reducer')
         },
         addNewNote: (state, action) => {
-
+            let max
+            let currentState = [...state[action.payload]]
+            currentState.length < 1 ? max = 0 : max = Math.max(...currentState.map(i => i.key))
+            let newNote = {
+                key: ++max,
+                favIconUrl: '',
+                url: '',
+                currentDate: getCurrentDate(),
+                msg: ''
+            }
+            state[action.payload].unshift(newNote)
+            state.addNewNoteAnimation = newNote
+        },
+        addNoteAnimation: (state, action) => {
+            state.addNewNoteAnimation = ''
         }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(thunkData.fulfilled, (state, action) => {
+            console.log(action)
+            const currentData = {...state, [action.payload.index]: action.payload.value}
+            action.payload.fn()
+            return currentData
+        })
     }
-
-
 })
 
 export default CollectionSlice.reducer
 export const selectCollection = (state) => state.collection
 
+export const addFetchData = (payload) => thunkData(payload)
 export const addOpenStorage = (payload) => CollectionSlice.actions.openStorage(payload)
 export const addOpenBar = (payload) => CollectionSlice.actions.openBar(payload)
 export const addOpenEditToolbar = (payload) => CollectionSlice.actions.openEditToolbar(payload)
+export const addAddNewNote = (payload) => CollectionSlice.actions.addNewNote(payload)
+export const addAddNoteAnimation = (payload) => CollectionSlice.actions.addNoteAnimation(payload)

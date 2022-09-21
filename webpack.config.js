@@ -1,9 +1,11 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
+
 
 module.exports = {
-    mode: "development", // production development
+    mode: 'development', //development
     entry: {
         popup: './src/popup.jsx',
     },
@@ -21,6 +23,9 @@ module.exports = {
         hot: true,
         historyApiFallback: true
     },
+    experiments: {
+        topLevelAwait: true
+    },
     module: {
         rules: [{
             test: /\.(jsx|js)$/,
@@ -36,13 +41,22 @@ module.exports = {
             exclude: /node_modules/,
             type: 'asset/resource',
             dependency: { not: ['url'] },
+            generator: {
+                filename: 'resources/[hash:10][ext][query]'
+            }
         }, {
             test: /\.css$/i,
             exclude: /node_modules/,
             use: ['style-loader', 'css-loader']
         },]
     },
+    performance: {
+        hints: false,
+        maxEntrypointSize: 512000,
+        maxAssetSize: 512000
+    },
     plugins: [
+        new NodePolyfillPlugin(),
         new HtmlWebpackPlugin({
             template: './src/popup.html',
             filename: 'index.html'
@@ -54,5 +68,17 @@ module.exports = {
                 {from: "src/content.js"}
             ],
         }),
-    ]
+
+
+    ],
+    resolve: {
+        fallback: {
+            "fs": false,
+            "tls": false,
+            "child_process": false,
+            "dns": false,
+            "readline": false,
+            "net": false,
+        }
+    },
 }

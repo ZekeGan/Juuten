@@ -1,13 +1,13 @@
 import React from 'react';
 import {HashRouter as Router, Routes, Route} from "react-router-dom";
 
-import Home from './Folder.jsx'
+import Home from './folder/Folder.jsx'
 import Collection from './collection/Collection.jsx'
 
 
 
 
-export default function App(props) {
+export default function App() {
     return (
         <Router>
             <Routes>

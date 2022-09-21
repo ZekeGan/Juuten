@@ -1,19 +1,33 @@
-export const getActiveTabURL = async () => {
-    const tabs = await chrome.tabs.query({
-        currentWindow: true,
-        active: true
-    });
-    return tabs[0];
+export const getCurrentDate = () => {
+    const date = new Date()
+    const year = date.getFullYear()
+    const month = date.getMonth()
+    const day = date.getDate()
+    const hour = date.getHours()
+    const minute = date.getMinutes()
+    return `${year}/${month}/${day} ${hour}:${minute < 10 ? `0${minute}` : minute}`
 }
 
-export const sendMessageToContentScript = async (data) => {
-    const {type, value} = data
-    // let activeTab = await getActiveTabURL()
-    // chrome.tabs.sendMessage(activeTab.id, {
-    //     type: "PLAY",
-    //     value: bookmarkTime,
-    // });
-    // return tab[0]
-    console.log(type)
-    console.log(value)
+export const fetchData = async (dataName) => {
+    // return new Promise((resolve) => {
+    //     chrome.storage.sync.get([dataName], (obj) => {
+    //         resolve(obj[dataName] ? JSON.parse(obj[dataName]) : [])
+    //     })
+    // })
 }
+
+export const setDataToLocal = (name, data = []) => {
+    // const current = [...data]
+    // chrome.storage.sync.set({
+    //     [name]: JSON.stringify(current)
+    // })
+}
+
+
+
+
+
+
+
+
+
