@@ -1,0 +1,20 @@
+@font-face {
+    font-family: Nunito-VariableFont_wght;
+    src: url(./font/Nunito-VariableFont_wght.ttf) format('truetype');
+}
+@font-face {
+    font-family: SourceHanSansHWTC-Regular;
+    src: url(./font/SourceHanSansHWTC-Regular.otf) format('opentype');
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    box-sizing: border-box;
+    font-family: Nunito-VariableFont_wght, SourceHanSansHWTC-Regular, serif  ;
+}
+
+body {
+    background-color: #F0F2F5;
+}
