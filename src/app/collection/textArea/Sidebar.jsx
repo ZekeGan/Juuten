@@ -32,8 +32,7 @@ const SideToolbar = styled.div`
         padding: 10px 0 5px 0;
         transition: 0.2s ease-out ${p => p.open ? '0.2s' : ''};
         transform: translateX(${p => p.open ? '-28px' : 0});
-    }
-`
+    }`
 
 
 const App = (p) => {
@@ -52,12 +51,12 @@ const App = (p) => {
     return (
         <SideToolbar open={openEditId === (item.key)}>
             <div className="ellipsis">
-                <Icon.Ellipsis onClick={() => open(item.key)}/>
+                {/*<Icon.Ellipsis/>*/}
             </div>
-            <div className="saveAndDel">
-                <Icon.Save onClick={() => save()}/>
-                <Icon.Delete />
-            </div>
+            {/*<div className="saveAndDel">*/}
+            {/*    <Icon.Save onClick={() => save()}/>*/}
+            {/*    <Icon.Delete />*/}
+            {/*</div>*/}
         </SideToolbar>
     );
 };

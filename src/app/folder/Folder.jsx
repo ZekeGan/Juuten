@@ -1,7 +1,8 @@
 import React, {useState, useEffect, useMemo} from 'react';
 import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
-import {addEditFolderAnimationId, addEditFolderId, addFolderEdit, selectFolder} from "../../redux/slice/folderSlice";
+import {addEditFolderAnimationId, addEditFolderId, addFolderEdit, selectFolder,} from "../../redux/slice/folderSlice";
+import {addFetchData} from "../../redux/slice/collectionSlice";
 import {useNavigate} from "react-router-dom";
 
 import {global} from "../../assets/global";
@@ -83,7 +84,6 @@ const FoldersContainer = styled.div`
      padding: 0 40px;`
 
 /* folders */
-
 const FolderContainer = styled.div`
     position: relative;
 `
@@ -172,8 +172,7 @@ const FolderName = styled.div`
         overflow: hidden;
         font-size: 9px;
         resize: none;
-     }
-`
+     }`
 
 const Warning = styled.div`
     position: absolute;
@@ -199,8 +198,7 @@ const EditFolderToolbar = styled.div`
     width: ${({animation}) => animation ? '0' : '90px'};
     height: 15px;
     background-color: ${p => p.folderColor};
-    ${transition_speed1}
-`
+    ${transition_speed1}`
 
 
 /* icon style */
@@ -246,12 +244,12 @@ export default function App() {
         document.querySelectorAll('textarea').forEach(item => item.style.height = item.scrollHeight + 'px')
     }, []);
 
-    /* 新增資料夾後的動畫
-    * 概念:
-    * 新增後把新增的 index值 賦予給 addFolderAnimationId
-    * map 比對所有資料和紀錄的 id 值，設為 true
-    * 當 useMemo 感受到變動 非同步再次設為 false
-    * 狀態改變 動畫啟動
+    /* ##新增資料夾後的動畫
+    *    概念:
+    *       1. 新增後把新增的 index值 賦予給 addFolderAnimationId
+    *       2. map 比對所有資料和紀錄的 id 值，設為 true
+    *       3. 當 useMemo 感受到變動 非同步再次設為 false
+    *       4. 狀態改變 動畫啟動
     *  */
     useMemo(() => {
         setTimeout(() => {
@@ -286,16 +284,19 @@ export default function App() {
                     {Juuten_folderLists.map(item => (
                         <FolderContainer key={item.index}>
 
-                            <EditFolderToolbar open={editFolderId === item.index} folderColor={item.folderColor}
+                            <EditFolderToolbar open={editFolderId === item.index}
+                                               folderColor={item.folderColor}
                                                animation={item === addFolderAnimationId}/>
 
-                            <Folder onDoubleClick={() => goIntoFolder(item.index)} open={editFolderId === item.index}
+                            <Folder onDoubleClick={() => goIntoFolder(item.index)}
+                                    open={editFolderId === item.index}
                                     folderColor={item.folderColor}
-                                    animation={item === addFolderAnimationId}
-                            >
+                                    animation={item === addFolderAnimationId}>
                                 <div className="Juuten_mask"/>
                                 <FolderName font={item.font}>
-                                    <textarea defaultValue={item.name} id={`Juuten_${item.index}`} disabled/>
+                                    <textarea defaultValue={item.name}
+                                              id={`Juuten_${item.index}`}
+                                              disabled/>
                                 </FolderName>
                                 {/* 三個點，設定檔案夾 */}
                                 <Icon.Ellipsis_Rotate90 styled={styleEllipsisRotate90}

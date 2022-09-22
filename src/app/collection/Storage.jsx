@@ -3,7 +3,7 @@ import styled from "styled-components";
 import {global} from "../../assets/global";
 import {useDispatch, useSelector} from "react-redux";
 import {addOpenStorage, selectCollection} from "../../redux/slice/collectionSlice";
-import {TextArea, Msg, Note} from "./TextArea.jsx";
+import {TextArea, Note} from "./textArea/TextArea.jsx";
 import Icon from '../../assets/svg.jsx'
 
 const {main, transition_speed1, primary_opacity, primary, tertiary} = global
@@ -40,6 +40,9 @@ const UrlBox = styled.div`
         color: ${tertiary};
         margin-top: 5px;
     }`
+
+const Msg = styled.div`
+    margin-top: 8px;`
 
 
 function Storage(props) {

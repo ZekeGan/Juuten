@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from "styled-components";
-import {addOpenBar, addOpenStorage, addAddNewNote} from "../../redux/slice/collectionSlice";
+import {addOpenBar, addOpenStorage, addEditNote, addOpenEditToolbar} from "../../redux/slice/collectionSlice";
 import {useDispatch} from "react-redux";
 import {useNavigate, useParams} from "react-router-dom";
 import {global} from "../../assets/global";
@@ -53,7 +53,6 @@ const App = (p) => {
     const {storage, navbarIcon, setSaveWarning, openEditId} = p
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const {id} = useParams()
 
 
     /* fn */
@@ -68,9 +67,8 @@ const App = (p) => {
     const openStorage = (payload) => dispatch(addOpenStorage(payload))
     const openBar = (payload) => dispatch(addOpenBar(payload))
 
-    const addNewNote = () => {
-        dispatch(addAddNewNote(id))
-    }
+    const addNewNote = () => dispatch(addEditNote({type: 'add'}))
+
 
     return (
         <Navbar>

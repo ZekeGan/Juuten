@@ -5,6 +5,7 @@ const GlobalStyle = createGlobalStyle`
 export default GlobalStyle
 export const global = {
     main: '#f2e702',
+    fontColor: '#545454',
     primary: '#F0F2F5',
     primary_opacity: 'rgba(240, 242, 245, 0.2)',
     secondary: '#D9D9D9',
