@@ -1,6 +1,12 @@
 import React from 'react';
 import styled from "styled-components";
-import {addOpenBar, addOpenStorage, addEditNote, addOpenEditToolbar} from "../../redux/slice/collectionSlice";
+import {
+    addOpenBar,
+    addOpenStorage,
+    addEditNote,
+    addOpenEditToolbar,
+    addSetFocusFlag
+} from "../../redux/slice/collectionSlice";
 import {useDispatch} from "react-redux";
 import {useNavigate, useParams} from "react-router-dom";
 import {global} from "../../assets/global";
@@ -46,6 +52,7 @@ const StorageCount = styled.div`
         font-size: 0.5rem;
         line-height: 15px;
         text-align: center;
+        cursor: pointer;
     }`
 
 
@@ -67,7 +74,10 @@ const App = (p) => {
     const openStorage = (payload) => dispatch(addOpenStorage(payload))
     const openBar = (payload) => dispatch(addOpenBar(payload))
 
-    const addNewNote = () => dispatch(addEditNote({type: 'add'}))
+    const addNewNote = () => {
+        dispatch(addSetFocusFlag(true))
+        dispatch(addEditNote({type: 'add'}))
+    }
 
 
     return (
@@ -88,7 +98,7 @@ const App = (p) => {
             {/* 顯示暫存區數量 */}
             <StorageCount>
                 <Icon.Box styled={navbarIcon} onClick={() => openStorage('open')}/>
-                {storage.length === 0 ? '' : <i>{storage.length}</i>}
+                {storage.length === 0 ? '' : <i onClick={() => openStorage('open')}>{storage.length}</i>}
             </StorageCount>
 
 

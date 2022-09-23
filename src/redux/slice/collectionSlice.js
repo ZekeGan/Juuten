@@ -17,22 +17,86 @@ const thunkData = createAsyncThunk(
 export const CollectionSlice = createSlice({
     name: 'collection',
     initialState: {
-        folderId: '',
+        Juuten_Storage: [{
+            key: 23,
+            msg: 'hi i am collection',
+            type: 'collection',
+            url: 'https://google.com',
+            favIconUrl: '',
+            pageTitle: 'david love lucy',
+            currentDate: '2022/10/10 12:10',
+            position: 203,
+            comment: []
+        },{
+            key: 24,
+            msg: 'hi i am ',
+            type: 'collection',
+            url: 'https://google.com',
+            favIconUrl: '',
+            pageTitle: 'david love lucy',
+            currentDate: '2022/10/10 12:10',
+            position: 203,
+            comment: []
+        },{
+            key: 25,
+            msg: 'ectiondsadasdasdasdasdasdsadasdasdasdasdasdasds',
+            type: 'collection',
+            url: 'https://google.com',
+            favIconUrl: '',
+            pageTitle: 'david love lucy',
+            currentDate: '2022/10/10 12:10',
+            position: 203,
+            comment: []
+        },{
+            key: 27,
+            msg: 'hi i am collection',
+            type: 'collection',
+            url: 'https://google.com',
+            favIconUrl: '',
+            pageTitle: 'david love lucy',
+            currentDate: '2022/10/10 12:10',
+            position: 203,
+            comment: []
+        },{
+            key: 26,
+            msg: 'hi i am collection',
+            type: 'collection',
+            url: 'https://google.com',
+            favIconUrl: '',
+            pageTitle: 'david love lucy',
+            currentDate: '2022/10/10 12:10',
+            position: 203,
+            comment: []
+        },{
+            key: 28,
+            msg: 'hi i am collection',
+            type: 'collection',
+            url: 'https://google.com',
+            favIconUrl: '',
+            pageTitle: 'david love lucy',
+            currentDate: '2022/10/10 12:10',
+            position: 203,
+            comment: []
+        },], //await fetchData('Juuten_Storage'),
+
+
         openStorage: false,
         openBar: false,
+
+        folderId: '',
         openEditToolbar: false,
         openEditId: '',
         openEditType: '',
+        focusFlag: true,
         addNewNoteAnimation: '',
-
-
-        Juuten_storage: [],//await fetchData('Juuten_storage'),
+        addNewCommentAnimation: '',
+        storageAddAnimation: '',
 
         N1: [{
             key: 1,
             type: 'collection',
             favIconUrl: 'https://img.icons8.com/material/344/globe--v2.png',
-            url: 'https://',
+            url: 'https://google.com',
             currentDate: '2022/10/10 12:11',
             msg: `fds`,
             comment: [{
@@ -74,15 +138,24 @@ export const CollectionSlice = createSlice({
         openBar: (state, action) => {
             state.openBar = action.payload === 'open'
         },
-
         openEditToolbar: (state, action) => {
             state.openEditId = action.payload.key
             state.openEditType = action.payload.type
         },
+        setFocusFlag: (state, action) => {
+            state.focusFlag = action.payload
+        },
 
-
-        addNoteAnimation: (state, action) => {
-            state.addNewNoteAnimation = ''
+        addAnimation: (state, action) => {
+            switch (action.payload) {
+                case 'note':
+                    state.addNewNoteAnimation = ''
+                    break
+                case 'comment':
+                    state.addNewCommentAnimation = ''
+                    break
+                default:
+            }
         },
 
         editNote: (state, action) => {
@@ -96,10 +169,8 @@ export const CollectionSlice = createSlice({
                     let newNote = {
                         key: _key,
                         type: 'note',
-                        favIconUrl: '',
-                        url: '',
-                        currentDate: getCurrentDate(),
                         msg: '',
+                        currentDate: getCurrentDate(),
                         comment: [],
                     }
                     data.unshift(newNote)
@@ -107,7 +178,6 @@ export const CollectionSlice = createSlice({
                     state.openEditId = _key
                     state.openEditType = 'note'
                     break
-
                 case 'delete':
                     data.map((item, index) => {
                         if (item.key === key) {
@@ -115,7 +185,18 @@ export const CollectionSlice = createSlice({
                         }
                     })
                     break
-
+                case 'toCollection':
+                    console.log('jfgjf')
+                    const storage = [...state.Juuten_Storage]
+                    data.map((item, index) => {
+                        if (item.key === key) {
+                            storage.unshift(item)
+                            data.splice(index, 1)
+                        }
+                    })
+                    state['Juuten_Storage'] = storage
+                    setDataToLocal('Juuten_Storage', state['Juuten_Storage'])
+                    break
                 default:
                     console.warn('editNote Error')
             }
@@ -127,7 +208,6 @@ export const CollectionSlice = createSlice({
             const _id = state.folderId
             let _key = state.openEditId
             const _data = [...state[state.folderId]]
-
             const findData = (type, data, key) => {
                 if (!data) return
                 data.map((item, index) => {
@@ -142,19 +222,16 @@ export const CollectionSlice = createSlice({
                                     msg: '',
                                     comment: [],
                                 }
-                                if (!item.comment)item.comment = []
                                 item.comment.push(_newComment)
                                 state.openEditId = _key
+                                state.addNewCommentAnimation = _key
                                 return
-
                             case 'delete':
                                 data.splice(index, 1)
                                 return
-
                             case 'modify':
                                 item.msg = action.payload.msg
                                 return
-
                             default:
                                 console.warn('editComment Error')
                         }
@@ -166,10 +243,26 @@ export const CollectionSlice = createSlice({
             findData(action.payload.type, _data, _key)
             setDataToLocal(_id, state[_id])
         },
+
+        addCollectionToThisFolder: (state, action) => {
+            const id = state.folderId
+            const storageData = [...state.Juuten_Storage]
+            const data = [...state[id]]
+            data.unshift(action.payload)
+            storageData.map((item, index) => {
+                if (item.key === action.payload.key) storageData.splice(index, 1)
+            })
+            state[id] = data
+            state.Juuten_Storage = storageData
+            state.addNewNoteAnimation = action.payload
+            setDataToLocal('Juuten_storage', state['Juuten_storage'])
+            setDataToLocal(id, state[id])
+        }
     },
+
+
     extraReducers: (builder) => {
         builder.addCase(thunkData.fulfilled, (state, action) => {
-            console.log(action)
             const currentData = {...state, [action.payload.index]: action.payload.value}
             action.payload.fn()
             return currentData
@@ -186,6 +279,7 @@ export const addOpenStorage = (payload) => CollectionSlice.actions.openStorage(p
 export const addOpenBar = (payload) => CollectionSlice.actions.openBar(payload)
 export const addOpenEditToolbar = (payload) => CollectionSlice.actions.openEditToolbar(payload)
 export const addEditNote = (payload) => CollectionSlice.actions.editNote(payload)
-export const addAddNoteAnimation = (payload) => CollectionSlice.actions.addNoteAnimation(payload)
-
+export const addAddAnimation = (payload) => CollectionSlice.actions.addAnimation(payload)
+export const addSetFocusFlag = (payload) => CollectionSlice.actions.setFocusFlag(payload)
 export const addEditComment = (payload) => CollectionSlice.actions.editComment(payload)
+export const addAddCollectionToThisFolder = (payload) => CollectionSlice.actions.addCollectionToThisFolder(payload)

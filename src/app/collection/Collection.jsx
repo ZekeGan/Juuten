@@ -57,7 +57,10 @@ export default function App() {
         <Collection openStorage={obj.openStorage}>
 
             {/* 導航欄 */}
-            <Navbar storage={obj['Juuten_storage']} navbarIcon={navbarIcon} setSaveWarning={setSaveWarning} openEditId={obj.openEditId}/>
+            <Navbar storage={obj['Juuten_Storage']}
+                    navbarIcon={navbarIcon}
+                    setSaveWarning={setSaveWarning}
+                    openEditId={obj.openEditId}/>
 
 
             {/* 顯示筆記地方 */}
@@ -67,11 +70,13 @@ export default function App() {
 
 
             {/* 暫存區 */}
-            <Storage ellipsis={ellipsisIcon} navbar={navbarIcon}/>
+            <Storage ellipsis={ellipsisIcon}
+                     navbar={navbarIcon}/>
 
 
             {/* 更多工作區 */}
-            <Bar ellipsis={ellipsisIcon} navbar={navbarIcon}/>
+            <Bar ellipsis={ellipsisIcon}
+                 navbar={navbarIcon}/>
 
         </Collection>
     );

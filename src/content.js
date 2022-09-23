@@ -1,57 +1,44 @@
-let currentMsg, position, currentDate, folderLists;
-
-
 /* 從 sync storage獲取 dataName數據 */
 const fetchMsg = async (dataName) => {
-    console.log('fetch 運作中')
     return new Promise((resolve) => {
         chrome.storage.sync.get([dataName], (obj) => {
-            resolve(obj[dataName] ? JSON.parse(obj[dataName]) : ['新的東東'])
+            resolve(obj[dataName] ? JSON.parse(obj[dataName]) : [])
         })
     })
 }
 
-/*
-* function => void
-* 先同步資料加入新資料後再次儲存
-* */
 const addNewMsg = async (obj) => {
-    position = document.documentElement.scrollTop
-    currentDate = getCurrentDate()
     const {msg, pageTitle, favIconUrl, url} = obj
-    console.log('inside addNewMsg')
-    currentMsg = await fetchMsg()
-    const newMsgData = {
-        url,
-        currentDate,
-        pageTitle,
-        favIconUrl,
-        position,
+    const position = document.documentElement.scrollTop
+    const currentDate = getCurrentDate()
+    const key = Date.now()
+    return {
+        key,
         msg,
+        type: 'collection',
+        url,
+        favIconUrl,
+        pageTitle,
+        currentDate,
+        position,
+        comment: []
     }
-
 }
 
 
 /* 監聽從 background || popup.js 的通信 */
 chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
-    console.log('type值為: ' + req.type)
-    // void addNewMsg(req)
+    if (req.type !== 'fromBackground') return
+    let oldData = fetchMsg('Juuten_Storage')
+    const newData = addNewMsg(req)
+    console.log(newData)
 
-    /* 獲取儲存在storage 的folderLists */
-    if (req.type === 'getFolderLists') {
-        console.log('在content獲取中')
-        fetchMsg('Juuten_folderLists').then((res) => {
-            sendResponse({response: res})
-        })
-    } else if (req.type === 'addNewFolderToFolderLists') {
-        /* 儲存新的資料夾進storage */
-        chrome.storage.sync.set({
-            ['Juuten_folderLists']: JSON.stringify([...folderLists, req.payload])
-        })
-    }
+    chrome.storage.sync.set({
+        ['Juuten_Storage']: JSON.stringify([newData, ...oldData])
+    })
     return true
 })
+
 
 const getCurrentDate = () => {
     const date = new Date()
@@ -61,9 +48,5 @@ const getCurrentDate = () => {
     const hour = date.getHours()
     const minute = date.getMinutes()
     return `${year}/${month}/${day} ${hour}:${minute}`
-}
-
-const getMax = (data) => {
-    return Math.max(...data)
 }
 

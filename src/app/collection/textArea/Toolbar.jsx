@@ -2,10 +2,16 @@ import React, {useLayoutEffect} from 'react';
 import styled from "styled-components";
 import {global} from "../../../assets/global";
 import Icon from '../../../assets/svg.jsx'
-import {addEditComment, addEditNote, addOpenEditToolbar, addOpenEditType} from "../../../redux/slice/collectionSlice";
+import {
+    addEditComment,
+    addEditNote,
+    addOpenEditToolbar,
+    addOpenEditType,
+    addSetFocusFlag
+} from "../../../redux/slice/collectionSlice";
 import {useDispatch} from "react-redux";
 
-const {tertiary,secondary} = global
+const {tertiary,secondary, quaternary} = global
 
 const Toolbar = styled.div`
     position: relative;
@@ -14,7 +20,7 @@ const Toolbar = styled.div`
     overflow: hidden;
     padding-top: 6px;`
 
-const UrlBox = styled.div`
+const DateBox = styled.div`
     transition: 0.2s ease-out ${p => p.open ? '' : '200ms'};
     transform: translateY(${p => p.open ? '-27px' : '-5px'});
     color: ${tertiary};
@@ -28,9 +34,7 @@ const UrlBox = styled.div`
     > .Juuten_toolbox {
         display: flex;
         justify-content: space-between;
-        align-items: center;
         > div {
-            display: flex;
             font-size: 9px;
         }
        
@@ -44,34 +48,35 @@ const EditToolbar = styled.div`
     left: 0;
     top: 0;
     transition: 0.2s ease-out ${p => p.open ? '200ms' : ''};
-    transform: translateY(${p => p.open ? '3px' : '-20px'}); 
+    transform: translateY(${p => p.open ? '-2px' : '-20px'}); 
     color: ${tertiary};
     > div {
         font-size: 9px;
         transform: scale(0.9);
         display: flex;
         justify-content: space-between;
+        align-items: center;
         > div {
-            margin-left: 1%;
+            margin-left: 20px;
         }
     }`
 
 const BuildDate = styled.div`
-    width: 93%;
-    ${({comment}) => comment ? `border-top: 1px solid ${secondary};` : ''}
+    width: 100%;
+    ${({comment}) => comment ? `border-top: 1px solid ${quaternary};` : ''}
     > div {
         margin-right: auto;
         font-size: 9px;
         margin-top: 1px;
         color: ${tertiary};
-        transform: scale(0.8) translateX(-13px);
+        transform: scale(0.8) translateX(-45px);
     }
 `
 
 
 export default function App(p) {
     const dispatch = useDispatch()
-    let {item, noteType, editCount, setEditCount, openEditId, openEditType} = p
+    let {item, noteType, editCount, setEditCount, openEditId, openEditType, setFocusFlag} = p
 
     /* editing動畫 */
     const ShowEditCount = () => {
@@ -98,6 +103,7 @@ export default function App(p) {
 
 
     const open = (payload) => {
+        dispatch(addSetFocusFlag(true))
         dispatch(addOpenEditToolbar(payload))
         setEditCount(0)
     }
@@ -106,7 +112,6 @@ export default function App(p) {
         const textarea = document.querySelector(`#Juuten_noteTextarea_${openEditId}`)
         const newMsg = textarea.value
         textarea.style.height = textarea.style.scrollHeight
-        console.log(textarea.scrollHeight)
         dispatch(addEditComment({
             type: payload.type,
             msg: newMsg
@@ -114,21 +119,30 @@ export default function App(p) {
         dispatch(addOpenEditToolbar(payload.key))
     }
 
+
     const addComment = (payload) => {
+        dispatch(addSetFocusFlag(true))
         dispatch(addEditComment(payload))
     }
+
 
     const deleteNoteOrComment = (payload) => {
         if (openEditType === 'collection' || openEditType === 'note') dispatch(addEditNote(payload))
         dispatch(addEditComment(payload))
     }
 
+
+    const addToCollection = () => {
+        if (openEditType === 'collection' || openEditType === 'note') {
+            dispatch(addEditNote({type: 'toCollection'}))
+        }
+    }
+
     return (
         <Toolbar>
 
-            {/* date and url place */}
-            <UrlBox open={openEditId === item.key}>
-
+            {/* date place */}
+            <DateBox open={openEditId === item.key}>
                     <div className='Juuten_toolbox'>
                         <BuildDate comment={item.type === 'comment'}>
                             <div>{item.currentDate}</div>
@@ -138,33 +152,26 @@ export default function App(p) {
                             type: item.type
                         })}/>
                     </div>
-
-                    {/*<div className='Juuten_toolbox'>*/}
-                    {/*    <div>Note</div>*/}
-                    {/*    <Icon.Ellipsis_Rotate90 onClick={() => open({*/}
-                    {/*        key: item.key,*/}
-                    {/*        type: item.type*/}
-                    {/*    })}/>*/}
-                    {/*</div>*/}
-
-
-            </UrlBox>
-
+            </DateBox>
 
             {/* editing 動畫 */}
             <EditToolbar open={openEditId === item.key}>
                 <ShowEditCount className='count'/>
                 <div>
-                    <Icon.Save onClick={() => save({
-                        key: '',
-                        type: 'modify'
-                    })}/>
-                    <Icon.Chat onClick={() => addComment({type: 'add'})}/>
-                    <Icon.Delete onClick={() => deleteNoteOrComment({type: 'delete'})}/>
+                    <Icon.Plus title={'加入至收藏夾'} onClick={() => addToCollection()}/>
+
+                    <Icon.Save title={'保存'}
+                               onClick={() => save({key: '', type: 'modify'})}/>
+
+                    <Icon.Chat title={'新增留言'}
+                               onClick={() => addComment({type: 'add'})}/>
+                    <Icon.Delete title={'刪除'}
+                                 onClick={() => deleteNoteOrComment({type: 'delete'})}/>
                 </div>
             </EditToolbar>
 
         </Toolbar>
     );
 };
+export {BuildDate, DateBox}
 

@@ -4,22 +4,10 @@
 * */
 chrome.runtime.onInstalled.addListener((() => {
     chrome.contextMenus.create({
-        id: 'parent',
-        type: 'normal',
-        title: 'Juuten',
-        contexts: ['selection']
-    });
-    chrome.contextMenus.create({
         id: 'addToJuuten',
-        title: "加入  %s  至Juuten",
+        title: "加入所選文字至 Juuten",
         contexts: ['selection'],
-        parentId: 'parent',
         type: 'normal'
-    });
-    chrome.contextMenus.create({
-        id: 'separator1',
-        parentId: 'parent',
-        type: 'separator'
     });
 }))
 
@@ -31,6 +19,7 @@ chrome.contextMenus.onClicked.addListener((info) => {
 
     chrome.tabs.query({currentWindow: true, active: true}, (tab) => {
         chrome.tabs.sendMessage(tab[0].id, {
+            type: 'fromBackground',
             msg: info.selectionText,
             pageTitle: tab[0].title,
             favIconUrl: tab[0].favIconUrl,

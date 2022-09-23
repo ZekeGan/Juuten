@@ -1,63 +1,79 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import styled from "styled-components";
 import {global} from "../../../assets/global";
 import {StyledTextarea, BuildDate} from "./TextArea.jsx";
 import Toolbar from './Toolbar.jsx'
+import {addAddAnimation, addAddNoteAnimation} from "../../../redux/slice/collectionSlice";
+import {useDispatch} from "react-redux";
 
-const {secondary, tertiary, fontColor} = global
+const {secondary, tertiary, fontColor, quaternary, transition_speed1, transition_speed2} = global
 
 const Comment = styled.div`
     width: 100%;
-    bnackground-color: ${secondary}; 
+    transform: translateY(${({animation}) => animation ? '-100px' : '0'});
+    ${transition_speed1}
+    overflow: hidden;
     border-left: 3px solid ${secondary};
     padding: 0 0 0 6px;
-    margin-top: 8px;
+    margin: 8px 0 0 0;
     color: ${fontColor};
 `
 const Note = styled.div`
     width: 100%;
 `
 
+
 const App = (p) => {
-    const {obj, comment} = p
-
+    const {obj, comment, autoFocus, textChange} = p
     return comment.map(note => (
-        <CommentTemplate key={note.key} obj={obj} comment={note}/>
+        <CommentTemplate key={note.key}
+                         obj={obj}
+                         comment={note}
+                         textChange={textChange}
+                         autoFocus={autoFocus}/>
     ))
-
 };
 
 
 const CommentTemplate = (p) => {
-    const [editText, setEditText] = useState('')
     const [editCount, setEditCount] = useState(0)
-    const {comment, obj} = p
-    const {addNewNoteAnimation, openEditId} = obj
 
-    const textChange = (ta) => {
-        ta.style.height = `${ta.scrollHeight}px`
-        setEditText(ta.value)
-    }
+    const dispatch = useDispatch()
+    const {comment, obj, autoFocus, textChange} = p
+    const {openEditId, addNewCommentAnimation, focusFlag} = obj
+
+    useMemo(() => {
+        setTimeout(() => {
+            dispatch(dispatch(addAddAnimation('comment')))
+        }, 0)
+    }, [addNewCommentAnimation])
+
+
 
     return (
-        <Comment comment={comment} obj={obj}>
-                <Note key={comment.key}>
-                    <Toolbar item={comment}
-                             noteType={comment.type === 'comment'}
-                             editCount={editCount}
-                             setEditCount={setEditCount}
-                             openEditId={openEditId}/>
+        <Comment comment={comment} obj={obj} animation={addNewCommentAnimation === comment.key}>
+            <Note key={comment.key}>
+                <Toolbar item={comment}
+                         noteType={comment.type === 'comment'}
+                         editCount={editCount}
+                         setEditCount={setEditCount}
+                         openEditId={openEditId}/>
 
-                    <StyledTextarea defaultValue={comment.msg}
-                                    id={`Juuten_noteTextarea_${comment.key}`}
-                                    onInput={(e) => textChange(e.target)}
-                                    disabled={!(openEditId === (comment.key))}/>
+                <StyledTextarea defaultValue={comment.msg}
+                                id={`Juuten_noteTextarea_${comment.key}`}
+                                ref={textarea => openEditId === comment.key && focusFlag && autoFocus(textarea)}
+                                onInput={textChange}
+                                disabled={!(openEditId === comment.key)}/>
 
 
-                    {comment.comment ?
-                        <App comment={comment.comment} obj={obj}/> : ''
-                    }
-                </Note>
+                {comment.comment ?
+                    <App comment={comment.comment}
+                         obj={obj}
+                         textChange={textChange}
+                         focusFlag={focusFlag}
+                         autoFocus={autoFocus}/> : ''
+                }
+            </Note>
         </Comment>
     );
 };

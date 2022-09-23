@@ -211,6 +211,9 @@ const styleEllipsisRotate90 = `
     left: 50%;
     transform: translateX(-50%) scale(1.3);`
 
+// 更改資料夾名稱 自動focus
+
+
 
 export default function App() {
     const dispatch = useDispatch()
@@ -226,7 +229,6 @@ export default function App() {
         /* editFolderId === '' 代表沒有在編輯資料夾
          * 在編輯A資料夾 無法進入A資料夾
          * */
-
 
         // if (editFolderId || editFolderId === index) return
         // const fn = () => navigate(`/collection/${index}`)

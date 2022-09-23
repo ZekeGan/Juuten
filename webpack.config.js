@@ -5,7 +5,7 @@ const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 
 
 module.exports = {
-    mode: 'development', //development
+    mode: 'development', //development production
     entry: {
         popup: './src/popup.jsx',
     },

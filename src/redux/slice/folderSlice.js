@@ -45,7 +45,7 @@ export const FolderSlice = createSlice({
                     state.Juuten_folderLists = currentState
                     break
                 default:
-                    console.log('error')
+                    console.warn('error')
             }
 
             setDataToLocal('Juuten_getFolderLists', state.Juuten_folderLists)
