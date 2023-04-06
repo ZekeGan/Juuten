@@ -53,10 +53,8 @@ const App = (p) => {
             <div className="ellipsis">
                 {/*<Icon.Ellipsis/>*/}
             </div>
-            {/*<div className="saveAndDel">*/}
-            {/*    <Icon.Save onClick={() => save()}/>*/}
-            {/*    <Icon.Delete />*/}
-            {/*</div>*/}
+
+
         </SideToolbar>
     );
 };

@@ -1,4 +1,4 @@
-export const getCurrentDate = () => {
+export function getCurrentDate() {
     const date = new Date()
     const year = date.getFullYear()
     const month = date.getMonth()
@@ -8,15 +8,35 @@ export const getCurrentDate = () => {
     return `${year}/${month}/${day} ${hour}:${minute < 10 ? `0${minute}` : minute}`
 }
 
-export const fetchData = async (dataName) => {
-    // return new Promise((resolve) => {
-    //     chrome.storage.sync.get([dataName], (obj) => {
-    //         resolve(obj[dataName] ? JSON.parse(obj[dataName]) : [])
-    //     })
-    // })
+export async function fetchData(dataName) {
+    try {
+        return new Promise((resolve) => {
+            chrome.storage.sync.get(
+                [dataName],
+                (obj) => {
+                    resolve(
+                        obj[dataName]
+                            ? JSON.parse(obj[dataName])
+                            : []
+                    )
+                })
+        })
+    } catch (error) {
+        console.error(error)
+    }
 }
 
-export const setDataToLocal = (name, data = []) => {
+/*
+* 如果要使用 npm run dev 進行調適，需要停止的函數或變數為以下幾個
+* 1. setDataToLocal()
+* 2. collectionSlice.js 使用 fetchData 的變數
+* 3. folderSlice.js 使用 fetchData 的變數
+* 4. folder.jsx 的 goIntoFolder()
+* 5. webpack.config.js 的 mode
+* */
+
+
+export function setDataToLocal(name, data = []) {
     // const current = [...data]
     // chrome.storage.sync.set({
     //     [name]: JSON.stringify(current)

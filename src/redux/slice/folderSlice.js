@@ -1,30 +1,40 @@
 import {createSlice, current} from "@reduxjs/toolkit";
-import {fetchData, setDataToLocal} from "../utils";
+import {fetchData, getCurrentDate, setDataToLocal} from "../utils";
+import {Juuten_folderLists} from "../../assets/fakeData";
 
+const changeFontColor = (colorValue) => {
+    let cut = colorValue.replace('#', '')
+    return 0.213 * parseInt(cut[0] + cut[1], 16)
+        + 0.715 * parseInt(cut[2] + cut[3], 16)
+        + 0.072 * parseInt(cut[4] + cut[5], 16)
+        > 255 / 2;
+}
 
 export const FolderSlice = createSlice({
     name: 'folder',
     initialState: {
-        Juuten_folderLists: [
-            {index: 'N1', name: 'test9', folderColor: '#1f1e33', font: true},
-            {index: 'N2', name: 'test9', folderColor: '#1f1e33', font: true},
-            {index: 'N3', name: 'test9', folderColor: '#1f1e33', font: true},
-            {index: 'N4', name: 'test9', folderColor: '#1f1e33', font: true},
-        ],//await fetchData('Juuten_getFolderLists'),
+        /* 測試時替換 */
+        Juuten_folderLists: Juuten_folderLists,
+        // Juuten_folderLists: await fetchData('Juuten_getFolderLists'),
+        /////////////
+
+        Juuten_tagLists: [],
         editFolderId: '',
-        addFolderAnimationId: ''
+        addFolderAnimationId: '',
+
+        folderAutoFocusId: '',
+        tagCurrentColor: '#f24726',
     },
     reducers: {
         folderEdit: (state, action) => {
             const currentState = [...state.Juuten_folderLists]
             switch (action.payload.type) {
                 case 'color':
-                    console.log(action.payload.value)
                     const color = action.payload.value
                     currentState.map(item => {
-                        if (item.index === state.editFolderId) {
-                            item.folderColor = color[0] === 't' ? color.slice(1) : color
-                            item.font = color[0] === 't'
+                        if (item.key === state.editFolderId) {
+                            item.folderColor = color
+                            item.font = changeFontColor(item.folderColor)
                         }
                     })
                     state.Juuten_folderLists = currentState
@@ -32,13 +42,13 @@ export const FolderSlice = createSlice({
                 case 'name':
                     const name = action.payload.value
                     currentState.map(item => {
-                        if (item.index === state.editFolderId) item.name = name
+                        if (item.key === state.editFolderId) item.name = name
                     })
                     state.Juuten_folderLists = currentState
                     break
                 case 'delete':
                     currentState.map((item, index) => {
-                        if (item.index === state.editFolderId) {
+                        if (item.key === state.editFolderId) {
                             currentState.splice(index, 1)
                         }
                     })
@@ -48,19 +58,24 @@ export const FolderSlice = createSlice({
                     console.warn('error')
             }
 
+            /* 儲存到extension的storage */
             setDataToLocal('Juuten_getFolderLists', state.Juuten_folderLists)
         },
+
         folderAdd: (state, action) => {
             const color = action.payload.folderColor
             const newData = {
-                index: action.payload.index,
+                key: `Juuten_${Date.now()}`,
                 name: action.payload.name,
                 folderColor: color,
-                font: false
+                font: changeFontColor(color),
+                createDate: getCurrentDate(),
+                tags: [],
             }
             state.Juuten_folderLists.unshift(newData)
             state.addFolderAnimationId = newData
-            console.log(state.addFolderAnimationId)
+
+            /* 儲存到extension的storage */
             setDataToLocal('Juuten_getFolderLists', state.Juuten_folderLists)
         },
         editFolderId: (state, action) => {
@@ -68,6 +83,33 @@ export const FolderSlice = createSlice({
         },
         editFolderAnimationId: (state) => {
             state.addFolderAnimationId = ''
+        },
+
+        setFolderAutoFocusId: (state, action) => {
+            state.folderAutoFocusId = action.payload
+        },
+
+
+        tagEdit: (state, action) => {
+            switch (action.payload.type) {
+                case 'changeColor':
+                    state.tagCurrentColor = action.payload.color
+                    break
+                case 'deleteTag':
+                    break
+                case 'addTag':
+                    const font = [state.tagCurrentColor]
+                    const list = [...state.Juuten_tagLists]
+                    console.log(changeFontColor(font[0]))
+                    list.push({
+                        name: action.payload.name,
+                        font: changeFontColor(font[0]),
+                        color: state.tagCurrentColor
+                    })
+                    state.Juuten_tagLists = list
+                    break
+                default:
+            }
         }
     }
 })
@@ -75,7 +117,13 @@ export const FolderSlice = createSlice({
 
 export default FolderSlice.reducer
 export const selectFolder = (state) => state.folder
-export const addFolderEdit = (payload) => FolderSlice.actions.folderEdit(payload)
-export const addFolderAdd = (payload) => FolderSlice.actions.folderAdd(payload)
-export const addEditFolderId = (payload) => FolderSlice.actions.editFolderId(payload)
-export const addEditFolderAnimationId = (payload) => FolderSlice.actions.editFolderAnimationId(payload)
+
+export const {
+    tagEdit: addTagEdit,
+    setFolderAutoFocusId: addSetFolderAutoFocusId,
+    editFolderAnimationId: addEditFolderAnimationId,
+    editFolderId: addEditFolderId,
+    folderAdd: addFolderAdd,
+    folderEdit: addFolderEdit,
+    // setFolderNewName: addSetFolderNewName,
+} = FolderSlice.actions

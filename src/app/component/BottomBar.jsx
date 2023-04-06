@@ -5,25 +5,26 @@ import {
     addOpenStorage,
     addEditNote,
     addOpenEditToolbar,
-    addSetFocusFlag
+    addSetFocusFlag, addAddNewNote, selectCollection, addOpenAddNewNote
 } from "../../redux/slice/collectionSlice";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useNavigate, useParams} from "react-router-dom";
 import {global} from "../../assets/global";
 
 import Icon from "../../assets/svg.jsx";
 
-const {primary, warning} = global
+const {primary, warning, main} = global
 
 /* style */
-const Navbar = styled.div`
+const BottomBar = styled.div`
     position: absolute;
     left: 0;
-    top: 0;
+    bottom: 0;
     z-index: 2;
     width: 450px;
     height: 48px;
-    background-color: rgba(255,255,255,0.9);
+    background-color: rgba(255,255,255);
+    border: 1px solid ${primary};
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -56,13 +57,17 @@ const StorageCount = styled.div`
     }`
 
 
+
+
 const App = (p) => {
-    const {storage, navbarIcon, setSaveWarning, openEditId} = p
+    const {setSaveWarning, area} = p
+    const {
+        Juuten_Storage: storage,
+        openEditId
+    } = useSelector(selectCollection)
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-
-    /* fn */
     const back = () => {
         if (openEditId) {
             setSaveWarning(true)
@@ -71,41 +76,55 @@ const App = (p) => {
             navigate('/home')
         }
     }
-    const openStorage = (payload) => dispatch(addOpenStorage(payload))
-    const openBar = (payload) => dispatch(addOpenBar(payload))
-
+    const openStorage = () => {
+        dispatch(addOpenStorage('open'))
+    }
+    const openBar = () => {
+        dispatch(addOpenBar('open'))
+    }
     const addNewNote = () => {
-        dispatch(addSetFocusFlag(true))
-        dispatch(addEditNote({type: 'add'}))
+        // dispatch(addSetFocusFlag(true))
+        // dispatch(addAddNewNote())
+        dispatch(addOpenAddNewNote('open'))
     }
 
 
     return (
-        <Navbar>
+        <BottomBar>
 
             {/* 上一頁 */}
-            <Icon.Left styled={navbarIcon} onClick={() => back()}/>
-
-
-            {/* 搜尋區 */}
-            <input type="text"/>
+            {
+                area === 'home'
+                    ? ''
+                    : <Icon.Left
+                        styled={{color: main}}
+                        onClick={() => back()}/>
+            }
 
 
             {/* 加入新筆記 */}
-            <Icon.Plus styled={navbarIcon} onClick={() => addNewNote()}/>
+            <Icon.Note
+                styled={{color: main}}
+                onClick={() => addNewNote()}/>
 
 
             {/* 顯示暫存區數量 */}
-            <StorageCount>
-                <Icon.Box styled={navbarIcon} onClick={() => openStorage('open')}/>
-                {storage.length === 0 ? '' : <i onClick={() => openStorage('open')}>{storage.length}</i>}
+            <StorageCount onClick={() => openStorage()}>
+                <Icon.Box
+                    styled={{color: main}}/>
+                {
+                    storage.length === 0
+                        ? ''
+                        : <i>{storage.length}</i>
+                }
             </StorageCount>
 
-
             {/* 更多工具 Icon */}
-            <Icon.Bar styled={navbarIcon} onClick={() => openBar('open')}/>
+            <Icon.Bar
+                styled={{color: main}}
+                onClick={() => openBar('open')}/>
 
-        </Navbar>
+        </BottomBar>
     );
 };
 

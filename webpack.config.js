@@ -5,7 +5,8 @@ const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 
 
 module.exports = {
-    mode: 'development', //development production
+    mode: 'development',
+    // mode: 'production',
     entry: {
         popup: './src/popup.jsx',
     },
@@ -13,11 +14,12 @@ module.exports = {
         path: path.resolve(__dirname, 'dist'),
         filename: "popup.js"
     },
+    devtool: 'nosources-source-map',
     devServer: {
         static: {
             directory: path.resolve(__dirname, 'dist')
         },
-        port: 3000,
+        port: 3030,
         compress: true,
         open: true,
         hot: true,
@@ -27,28 +29,32 @@ module.exports = {
         topLevelAwait: true
     },
     module: {
-        rules: [{
-            test: /\.(jsx|js)$/,
-            exclude: /node_modules/,
-            use: {
-                loader: 'babel-loader',
-                options: {
-                    presets: ['@babel/preset-env', '@babel/preset-react',],
+        rules: [
+            {
+                test: /\.(jsx|js)$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env', '@babel/preset-react',],
+                    }
+                },
+            },
+            {
+                test: /\.(woff|woff2|ttf|eot|otf)$/,
+                exclude: /node_modules/,
+                type: 'asset/resource',
+                dependency: {not: ['url']},
+                generator: {
+                    filename: 'resources/[hash:10][ext][query]'
                 }
             },
-        }, {
-            test: /\.(woff|woff2|ttf|eot|otf)$/,
-            exclude: /node_modules/,
-            type: 'asset/resource',
-            dependency: { not: ['url'] },
-            generator: {
-                filename: 'resources/[hash:10][ext][query]'
-            }
-        }, {
-            test: /\.css$/i,
-            exclude: /node_modules/,
-            use: ['style-loader', 'css-loader']
-        },]
+            {
+                test: /\.css$/i,
+                exclude: /node_modules/,
+                use: ['style-loader', 'css-loader']
+            },
+        ]
     },
     performance: {
         hints: false,

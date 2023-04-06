@@ -1,88 +1,31 @@
 import {createAsyncThunk, createSlice, current} from "@reduxjs/toolkit";
 import {fetchData, getCurrentDate, setDataToLocal} from "../utils";
+import {Juuten_Storage, N1} from "../../assets/fakeData";
 // import store from "../store";
 
 const thunkData = createAsyncThunk(
-    '',
+    'folder/fetchFolderData',
     async (payload) => {
-        console.log('在函數裡')
+        console.log(payload)
+        const value = await fetchData(payload.index)
         return {
             index: payload.index,
-            value: await fetchData(payload.index),
+            value: value,
             fn: payload.fn
         }
     })
-
-
 export const CollectionSlice = createSlice({
     name: 'collection',
     initialState: {
-        Juuten_Storage: [{
-            key: 23,
-            msg: 'hi i am collection',
-            type: 'collection',
-            url: 'https://google.com',
-            favIconUrl: '',
-            pageTitle: 'david love lucy',
-            currentDate: '2022/10/10 12:10',
-            position: 203,
-            comment: []
-        },{
-            key: 24,
-            msg: 'hi i am ',
-            type: 'collection',
-            url: 'https://google.com',
-            favIconUrl: '',
-            pageTitle: 'david love lucy',
-            currentDate: '2022/10/10 12:10',
-            position: 203,
-            comment: []
-        },{
-            key: 25,
-            msg: 'ectiondsadasdasdasdasdasdsadasdasdasdasdasdasds',
-            type: 'collection',
-            url: 'https://google.com',
-            favIconUrl: '',
-            pageTitle: 'david love lucy',
-            currentDate: '2022/10/10 12:10',
-            position: 203,
-            comment: []
-        },{
-            key: 27,
-            msg: 'hi i am collection',
-            type: 'collection',
-            url: 'https://google.com',
-            favIconUrl: '',
-            pageTitle: 'david love lucy',
-            currentDate: '2022/10/10 12:10',
-            position: 203,
-            comment: []
-        },{
-            key: 26,
-            msg: 'hi i am collection',
-            type: 'collection',
-            url: 'https://google.com',
-            favIconUrl: '',
-            pageTitle: 'david love lucy',
-            currentDate: '2022/10/10 12:10',
-            position: 203,
-            comment: []
-        },{
-            key: 28,
-            msg: 'hi i am collection',
-            type: 'collection',
-            url: 'https://google.com',
-            favIconUrl: '',
-            pageTitle: 'david love lucy',
-            currentDate: '2022/10/10 12:10',
-            position: 203,
-            comment: []
-        },], //await fetchData('Juuten_Storage'),
 
+        /* 測試時替換 */
+        Juuten_Storage: Juuten_Storage,
+        // Juuten_Storage: await fetchData('Juuten_Storage'),
+        /////////////
 
+        openAddNewNote: false,
         openStorage: false,
         openBar: false,
-
         folderId: '',
         openEditToolbar: false,
         openEditId: '',
@@ -91,46 +34,20 @@ export const CollectionSlice = createSlice({
         addNewNoteAnimation: '',
         addNewCommentAnimation: '',
         storageAddAnimation: '',
-
-        N1: [{
-            key: 1,
-            type: 'collection',
-            favIconUrl: 'https://img.icons8.com/material/344/globe--v2.png',
-            url: 'https://google.com',
-            currentDate: '2022/10/10 12:11',
-            msg: `fds`,
-            comment: [{
-                key: 2,
-                type: 'comment',
-                currentDate: '2022/10/10 12:11',
-                msg: 'hi2',
-                comment: [{
-                    key: 4,
-                    type: 'comment',
-                    currentDate: '2022/10/10 12:11',
-                    msg: 'hi4',
-                    comment: []
-                }]
-            }, {
-                key: 3,
-                type: 'comment',
-                currentDate: '2022/10/10 12:11',
-                msg: 'hi3',
-                comment: [{
-                    key: 5,
-                    type: 'comment',
-                    currentDate: '2022/10/10 12:11',
-                    msg: 'hi5',
-                    comment: []
-                }]
-            }]
-        },],
+        useTool: false,
+        N1: N1
 
 
     },
     reducers: {
+        useTool: ({useTool}, {payload}) => {
+            useTool = payload
+        },
         addFolderId: (state, action) => {
             state.folderId = action.payload
+        },
+        openAddNewNote: (state, action) => {
+            state.openAddNewNote = action.payload === 'open'
         },
         openStorage: (state, action) => {
             state.openStorage = action.payload === 'open'
@@ -155,131 +72,236 @@ export const CollectionSlice = createSlice({
                     state.addNewCommentAnimation = ''
                     break
                 default:
+                    console.warn('addAnimation reducer error')
             }
         },
 
-        editNote: (state, action) => {
-            const id = state.folderId
-            const key = state.openEditId
-            const data = [...state[id]]
+        /* storage collection 位置切換 */
+        moveToStorageOrCollection: (state, action) => {
+            const folderId = state.folderId
+            const key = action.payload.key
+            const collection = [...state[folderId]]
+            const storage = [...state.Juuten_Storage]
 
-            switch (action.payload.type){
-                case 'add':
-                    const _key = Date.now()
-                    let newNote = {
-                        key: _key,
-                        type: 'note',
-                        msg: '',
-                        currentDate: getCurrentDate(),
-                        comment: [],
-                    }
-                    data.unshift(newNote)
-                    state.addNewNoteAnimation = newNote
-                    state.openEditId = _key
-                    state.openEditType = 'note'
-                    break
-                case 'delete':
-                    data.map((item, index) => {
+            switch (action.payload.toWhere) {
+                case 'toStorage':
+                    collection.map((item, index) => {
                         if (item.key === key) {
-                            data.splice(index, 1)
+                            item.type = 'storage'
+                            storage.unshift(item)
+                            collection.splice(index, 1)
                         }
                     })
                     break
                 case 'toCollection':
-                    console.log('jfgjf')
-                    const storage = [...state.Juuten_Storage]
-                    data.map((item, index) => {
+                    storage.map((item, idx) => {
                         if (item.key === key) {
-                            storage.unshift(item)
-                            data.splice(index, 1)
+                            item.type = 'collection'
+                            collection.unshift(item)
+                            storage.splice(idx, 1)
                         }
                     })
-                    state['Juuten_Storage'] = storage
-                    setDataToLocal('Juuten_Storage', state['Juuten_Storage'])
                     break
                 default:
-                    console.warn('editNote Error')
+                    console.warn('moveToStorageOrCollection reducer error')
             }
-            state[id] = data
+
+            state['Juuten_Storage'] = storage
+            setDataToLocal('Juuten_Storage', state['Juuten_Storage'])
+
+            state[folderId] = collection
+            setDataToLocal(folderId, state[folderId])
+        },
+        // moveToCollection: (state, action) => {
+        //     const folderId = state.folderId
+        //     const key = action.payload.key
+        //     const storage = [...state.Juuten_Storage]
+        //     const collection = [...state[folderId]]
+        //
+        //     storage.map((item, idx) => {
+        //         if (item.key === key) {
+        //             collection.unshift(item)
+        //             storage.splice(idx, 1)
+        //         }
+        //     })
+        //
+        //     state['Juuten_Storage'] = storage
+        //     setDataToLocal('Juuten_Storage', state['Juuten_Storage'])
+        //
+        //     state[folderId] = collection
+        //
+        // },
+
+        /* 新增筆記 */
+        addNewNote: (state, action) => {
+            const folderId = state.folderId
+            const data = [...state[folderId]]
+
+            const _key = Date.now()
+            let newNote = {
+                key: _key,
+                type: 'note',
+                msg: '',
+                currentDate: getCurrentDate(),
+                comment: []
+            }
+            data.unshift(newNote)
+            state.addNewNoteAnimation = newNote
+            state.openEditId = _key
+            state.openEditType = 'note'
+
+            state[folderId] = data
+            setDataToLocal(folderId, state[folderId])
+        },
+
+        /* 新增註記(comment) */
+        addComment: (state, action) => {
+            const id = state.folderId
+            const key = action.payload.key
+            const data = [...state[id]]
+
+            data.map((item, index) => {
+                if (item.key === key) {
+                    const _key = Date.now()
+                    let _newComment = {
+                        key: _key,
+                        type: 'comment',
+                        currentDate: getCurrentDate(),
+                        msg: '',
+                    }
+                    item.comment.push(_newComment)
+                    state.openEditId = _key
+                    state.addNewCommentAnimation = _key
+                }
+            })
             setDataToLocal(id, state[id])
         },
 
-        editComment: (state, action) => {
-            const _id = state.folderId
-            let _key = state.openEditId
-            const _data = [...state[state.folderId]]
-            const findData = (type, data, key) => {
-                if (!data) return
-                data.map((item, index) => {
-                    if (item.key === key) {
-                        switch (type) {
-                            case 'add':
-                                const _key = Date.now()
-                                let _newComment = {
-                                    key: _key,
-                                    type: 'comment',
-                                    currentDate: getCurrentDate(),
-                                    msg: '',
-                                    comment: [],
-                                }
-                                item.comment.push(_newComment)
-                                state.openEditId = _key
-                                state.addNewCommentAnimation = _key
-                                return
-                            case 'delete':
-                                data.splice(index, 1)
-                                return
-                            case 'modify':
-                                item.msg = action.payload.msg
-                                return
-                            default:
-                                console.warn('editComment Error')
-                        }
+        /* 修改錦集(collection)、註記(comment)和暫存區(storage)的文字 */
+        editCollectionOrStorage: (state, action) => {
+            let id, data
+
+            switch (action.payload.area) {
+                case 'collection':
+                    id = state.folderId
+                    data = [...state[id]]
+                    break
+                case 'storage':
+                    data = state.Juuten_Storage
+                    break
+                default:
+                    console.warn('area錯誤')
+            }
+            const key = state.openEditId
+
+            function findData(_data, _key) {
+                if (!_data) return
+                _data.map((item, index) => {
+                    if (item.key === _key) {
+                        item.msg = action.payload.msg
                     }
-                    const mapData = {...item}
-                    return findData(type, mapData.comment, key)
+                    const note = {...item}
+                    return findData(note.comment, key)
                 })
             }
-            findData(action.payload.type, _data, _key)
-            setDataToLocal(_id, state[_id])
+
+            findData(data, key)
+            setDataToLocal(id, state[id])
         },
 
-        addCollectionToThisFolder: (state, action) => {
-            const id = state.folderId
-            const storageData = [...state.Juuten_Storage]
-            const data = [...state[id]]
-            data.unshift(action.payload)
-            storageData.map((item, index) => {
-                if (item.key === action.payload.key) storageData.splice(index, 1)
-            })
+        /* 刪除錦集(collection)和暫存區(storage)筆記或註記(comment) */
+        deleteNoteOrComment: (state, action) => {
+            let id, data
+            switch (action.payload.area) {
+                case 'storage':
+                    id = 'Juuten_Storage'
+                    data = [...state[id]]
+                    break
+                case 'collection':
+                    id = state.folderId
+                    data = [...state[id]]
+                    break
+                default:
+                    console.warn('Area錯誤')
+            }
+            const key = state.openEditId
+            getData(data, key)
             state[id] = data
-            state.Juuten_Storage = storageData
-            state.addNewNoteAnimation = action.payload
-            setDataToLocal('Juuten_storage', state['Juuten_storage'])
+            state.openEditId = ''
             setDataToLocal(id, state[id])
-        }
+
+            function getData(_data, _key) {
+                if (_data === undefined) return
+                _data.map((item, idx) => {
+                    if (item.key === _key) {
+                        _data.splice(idx, 1)
+                        return
+                    }
+                    let note = {...item}
+                    return getData(note.comment, _key)
+                })
+            }
+        },
+
     },
-
-
     extraReducers: (builder) => {
-        builder.addCase(thunkData.fulfilled, (state, action) => {
-            const currentData = {...state, [action.payload.index]: action.payload.value}
-            action.payload.fn()
-            return currentData
-        })
-    }
+        builder
+            .addCase(thunkData.pending, () => {
+                console.log('pending')
+            })
+            .addCase(thunkData.fulfilled, (state, action) => {
+                console.log('fulfilled')
+                const currentData = {
+                    ...state,
+                    [action.payload.index]: action.payload.value
+                }
+                console.log(currentData)
+                action.payload.fn()
+                return currentData
+            })
+            .addCase(thunkData.rejected, () => {
+                console.log('reject')
+            })
+    },
+    // extraReducers: {
+    //     [thunkData.pending]: () => {
+    //         console.log('pending')
+    //     },
+    //     [thunkData.fulfilled]: (state, action) => {
+    //         console.log('fulfilled')
+    //         const currentData = {
+    //             ...state,
+    //             [action.payload.index]: action.payload.value
+    //         }
+    //         console.log(currentData)
+    //         action.payload.fn()
+    //         return currentData
+    //     },
+    //     [thunkData.rejected]: () => {
+    //         console.log('reject')
+    //     },
+    // }
 })
+
 
 export default CollectionSlice.reducer
 export const selectCollection = (state) => state.collection
 export const addFetchData = (payload) => thunkData(payload)
 
-export const addAddFolderId = (payload) => CollectionSlice.actions.addFolderId(payload)
-export const addOpenStorage = (payload) => CollectionSlice.actions.openStorage(payload)
-export const addOpenBar = (payload) => CollectionSlice.actions.openBar(payload)
-export const addOpenEditToolbar = (payload) => CollectionSlice.actions.openEditToolbar(payload)
-export const addEditNote = (payload) => CollectionSlice.actions.editNote(payload)
-export const addAddAnimation = (payload) => CollectionSlice.actions.addAnimation(payload)
-export const addSetFocusFlag = (payload) => CollectionSlice.actions.setFocusFlag(payload)
-export const addEditComment = (payload) => CollectionSlice.actions.editComment(payload)
-export const addAddCollectionToThisFolder = (payload) => CollectionSlice.actions.addCollectionToThisFolder(payload)
+
+export const {
+    editCollectionOrStorage: addEditCollectionOrStorage,
+    setFocusFlag: addSetFocusFlag,
+    addAnimation: addAddAnimation,
+    openEditToolbar: addOpenEditToolbar,
+    openBar: addOpenBar,
+    openStorage: addOpenStorage,
+    addFolderId: addAddFolderId,
+    useTool: addUseTool,
+    moveToStorageOrCollection: addMoveToStorageOrCollection,
+    // moveToCollection: addMoveToCollection,
+    addComment: addAddComment,
+    deleteNoteOrComment: addDeleteNoteOrComment,
+    addNewNote: addAddNewNote,
+    openAddNewNote: addOpenAddNewNote
+} = CollectionSlice.actions
