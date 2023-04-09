@@ -1,14 +1,13 @@
 import React from 'react';
 import styled from "styled-components";
 
-import {global} from "../../assets/global";
-const {transition_speed1, warning} = global
+import {global} from "../assets/global";
+const {transition_speed1, warning, font_size_m, max_width} = global
 
 const Page = styled.div`
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%) translateY(${({warning}) => warning ? '0' : '-200px'});
-    width: 350px;
+    position: fixed;
+    transform: translateY(${({warning}) => warning ? '5px' : '-50px'});
+    width: ${max_width - (max_width / 10)}px;
     height: 20px;  
     text-align: center; 
     background-color: ${warning};
@@ -16,7 +15,7 @@ const Page = styled.div`
     z-index: 8;
     border-radius: 10px;
     ${transition_speed1}
-    font-size: 0.8rem;`
+    font-size: ${font_size_m}px;`
 
 function Warning(props) {
 

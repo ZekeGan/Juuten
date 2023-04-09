@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import styled from "styled-components";
-import {global} from "../../assets/global";
-import {addEditFolderId, addFolderEdit, selectFolder} from "../../redux/slice/folderSlice";
+import {global} from "../assets/global";
+import {addEditFolderId, addFolderEdit, selectFolder} from "../redux/slice/folderSlice";
 import {useDispatch, useSelector} from "react-redux";
+import DraftComponent from "./DraftComponent.jsx";
 
-const {warning, transition_speed1, primary} = global
+const {warning, transition_speed1, primary, font_size_m} = global
 const Page = styled.div`
     display: flex;
     flex-wrap: wrap;
@@ -20,7 +21,7 @@ const Page = styled.div`
     z-index: 8;
     border-radius: 10px;
     ${transition_speed1}
-    font-size: 0.5rem;
+    font-size: ${font_size_m};
     > span {
         display: block;
         width: 100%;
@@ -46,6 +47,11 @@ function DeletingCheck(props) {
     const {delCheck, setDelCheck} = props
     const {editFolderId} = useSelector(selectFolder)
     const dispatch = useDispatch()
+    const draftRef = useRef(null)
+
+    useEffect(() => {
+        console.log(draftRef)
+    }, [])
     const doubleDelCheck = () => {
         setDelCheck(false)
         dispatch(addFolderEdit({type: 'delete', value: editFolderId}))
@@ -53,6 +59,7 @@ function DeletingCheck(props) {
     }
     return (
         <Page delCheck={delCheck}>
+            <DraftComponent ref={draftRef}/>
             <span>請注意： 如果刪除資料夾，資料夾內資料將會永久消失</span>
             <button className='JuutenDel-yes'
                     onClick={() => doubleDelCheck()}>

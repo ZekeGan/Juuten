@@ -13,7 +13,7 @@ import {global} from "../../assets/global";
 
 import Icon from "../../assets/svg.jsx";
 
-const {primary, warning, main} = global
+const {primary, warning, main, font_size_m, font_size_s, max_width} = global
 
 /* style */
 const BottomBar = styled.div`
@@ -21,7 +21,7 @@ const BottomBar = styled.div`
     left: 0;
     bottom: 0;
     z-index: 2;
-    width: 450px;
+    width: ${max_width}px;
     height: 48px;
     background-color: rgba(255,255,255);
     border: 1px solid ${primary};
@@ -36,7 +36,7 @@ const BottomBar = styled.div`
         background-color: ${primary};
         outline: none;
         padding-left: 15px;
-        font-size: 12px;
+        font-size: ${font_size_m}px;
     }`
 const StorageCount = styled.div`
     position: relative;
@@ -50,7 +50,7 @@ const StorageCount = styled.div`
         background-color: ${warning};
         color: white;
         font-style: normal;   
-        font-size: 0.5rem;
+        font-size: ${font_size_s}px;
         line-height: 15px;
         text-align: center;
         cursor: pointer;

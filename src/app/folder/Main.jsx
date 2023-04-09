@@ -12,33 +12,35 @@ import {useNavigate} from "react-router-dom";
 import {global} from "../../assets/global";
 import Icon from '../../assets/svg.jsx'
 import Navbar from "./FolderNavbar.jsx";
-import AddNewFolder from "./AddingNewFolder.jsx";
-import Warning from "../component/Warning.jsx";
-import Toolbar from "./Toolbar.jsx";
-import DeletingCheck from "./DeletingCheck.jsx";
-import Tag from './Tag.jsx'
+import AddNewFolder from "../../component/AddingNewFolder.jsx";
+import Warning from "../../component/Warning.jsx";
+import Toolbar from "../../component/FolderToolbar.jsx";
+import DeletingCheck from "../../component/DeletingCheck.jsx";
+import Tag from '../../component/Tag.jsx'
 import FolderName from "./FolderName.jsx";
 import {addFetchData} from "../../redux/slice/collectionSlice";
-import BottomBar from "../component/BottomBar.jsx";
-import Storage from "../collection/storage/Storage.jsx";
-import Bar from "../collection/bar/Bar.jsx";
+import BottomBar from "../bottomBar/BottomBar.jsx";
+import Storage from "../bottomBar/storage/Storage.jsx";
+import Bar from "../bottomBar/bar/Bar.jsx";
 
-const {primary, secondary, tertiary, transition_speed1, warning} = global
+const {primary, secondary, tertiary, transition_speed1, warning, max_height, max_width} = global
 
 
 const Folders = styled.div`
     position: relative;
-    width: 450px;
-    height: 600px;
+    width: ${max_width}px;
+    height: ${max_height}px;
     overflow: hidden;
     user-select: none;`
 const FolderSection = styled.div`
     position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 450px;
     height: calc(600px - 48px);
     overflow: scroll;
     overflow-x: hidden;
-    padding: 20px 20px;
     &::-webkit-scrollbar {
         width: 10px;
     }
@@ -48,9 +50,9 @@ const FolderSection = styled.div`
     }`
 
 /* folders */
-const Folder = styled.div`
+const Main = styled.div`
     position: relative;
-    width: 100%;
+    width: 80%;
     height: 80px;
     display: flex;
     flex-direction: column;
@@ -133,10 +135,7 @@ export default function App() {
         <Folders>
 
 
-            <Warning
-                warning={regTest}>
-                資料夾名稱不能含有 \ / : * ? ' " &lt; &gt; |
-            </Warning>
+            <Warning warning={regTest}>資料夾名稱不能含有 \ / : * ? ' " &lt; &gt; |</Warning>
             <Warning
                 warning={sameName}>
                 資料夾名稱重複
@@ -145,10 +144,10 @@ export default function App() {
 
             <DeletingCheck
                 delCheck={delCheck}
-                setDelCheck={() => setDelCheck()}/>
+                setDelCheck={() => setDelCheck()}
+            />
 
             <FolderSection>
-
                 {/* 新增資料夾 */}
                 <AddNewFolder
                     ref={childRef}
@@ -159,7 +158,7 @@ export default function App() {
                 {/* 資料夾列表 */}
                 {
                     Juuten_folderLists.map(item => (
-                        <Folder
+                        <Main
                             key={item.key}
                             id={`Juuten_folder_${item.key}`}
                             onDoubleClick={(e) => goIntoFolder(e, item.key)}
@@ -190,10 +189,11 @@ export default function App() {
                             {/*    && <Tag item={item}/>*/}
                             {/*}*/}
 
-                        </Folder>
+                        </Main>
                     ))
                 }
             </FolderSection>
+
 
             <Storage/>
 
@@ -203,6 +203,6 @@ export default function App() {
         </Folders>
     );
 }
-export {Folder}
+export {Main}
 
 // var color = 0.213 * rgbArr[0] + 0.715 * rgbArr[1] + 0.072 * rgbArr[2] > 255 / 2;

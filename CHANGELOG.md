@@ -1,3 +1,10 @@
+## Juuten v0.15.0 - 2023/04/09
+- 新增 React-beautiful-dnd 讓筆記可以自由地移動
+- 優化 讓字體或ICON大小定義在一組變數中
+
+## Juuten v0.14.0 - 2023/04/06
+- 新增 Draft.js package
+
 ## Juuten v0.13.0 - 2023/03/30
 - 優化 collection 獨立各 reducer 功能 
 

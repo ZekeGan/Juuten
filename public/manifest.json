@@ -1,7 +1,7 @@
 {
   "name": "Juuten - Highlight the Important",
   "description": "Highlight the Line and Collect Them!",
-  "version": "0.13.0",
+  "version": "0.15.0",
   "manifest_version": 3,
   "permissions": ["contextMenus", "tabs", "storage"],
   "background": {

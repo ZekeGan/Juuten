@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from "styled-components";
-import {global} from "../../assets/global";
+import {global} from "../assets/global";
 const {tertiary, secondary} = global
 const Bottom = styled.div`
     width: 80%;

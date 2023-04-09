@@ -1,5 +1,5 @@
 import {createSlice, current} from "@reduxjs/toolkit";
-import {fetchData, getCurrentDate, setDataToLocal} from "../utils";
+import {fetchData, getCurrentDate, setDataToLocal} from "../../utils";
 import {Juuten_folderLists} from "../../assets/fakeData";
 
 const changeFontColor = (colorValue) => {

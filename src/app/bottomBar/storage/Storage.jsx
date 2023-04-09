@@ -4,13 +4,12 @@ import {
     addOpenStorage,
     selectCollection
 } from "../../../redux/slice/collectionSlice";
-import {TextMain} from "../textArea/TextMain.jsx";
-import Toolbar from "../../component/Toolbar.jsx";
-import TextareaOfTextarea from "../../component/TextareaOfTextarea.jsx";
-import Url from "../../component/Url.jsx";
-import Note from '../../component/Note.jsx'
-import ThisIsBottom from "../../component/ThisIsBottom.jsx";
-import BottemBarTemplate from "../../component/BottemBarTemplate.jsx";
+import {TextMain} from "../../collection/textArea/TextMain.jsx";
+import Textarea from "../../../component/note/Textarea.jsx";
+import Url from "../../../component/note/Url.jsx";
+import Note from '../../../component/note/Note.jsx'
+import ThisIsBottom from "../../../component/ThisIsBottom.jsx";
+import BottemBarTemplate from "../../../component/BottemBarTemplate.jsx";
 
 
 function Storage(props) {
@@ -35,15 +34,10 @@ function Storage(props) {
                         <Note
                             key={item.key}
                             item={item}
-                            TextareaOfTextarea={
-                                <TextareaOfTextarea
-                                    item={item}/>
-                            }
-                            Url={
-                                <Url
-                                    item={item}/>
-                            }
-                        />
+                        >
+                            <Textarea item={item}/>
+                            <Url item={item}/>
+                        </Note>
                     ))
                 }
                 <ThisIsBottom/>

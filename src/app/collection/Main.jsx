@@ -4,34 +4,23 @@ import {useDispatch, useSelector} from "react-redux";
 import collectionSlice, {addAddFolderId, addOpenStorage, selectCollection} from "../../redux/slice/collectionSlice";
 import {global} from "../../assets/global";
 
-import Storage from "./storage/Storage.jsx";
-import Bar from "./bar/Bar.jsx";
+import Storage from "../bottomBar/storage/Storage.jsx";
+import Bar from "../bottomBar/bar/Bar.jsx";
 import TextMain from "./textArea/TextMain.jsx";
-import BottomBar from "../component/BottomBar.jsx";
+import BottomBar from "../bottomBar/BottomBar.jsx";
 import {useParams} from "react-router-dom";
-import AddNewNote from "../AddNewNote.jsx";
+import AddNewNote from "../bottomBar/AddNewNote.jsx";
+import Warning from "../../component/Warning.jsx";
 
 
-const {main, primary, transition_speed1} = global
+const {main, primary, transition_speed1, max_height, max_width} = global
 
 
 const Main = styled.div`
+    width: ${max_width}px;
+    height: ${max_height}px;
     position: relative;
-    width: 450px;
-    height: 600px;
-    position: relative;
-    overflow: hidden;
     background-color: ${primary};`
-
-
-/* Icon */
-const ellipsisIcon = `
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%) scale(1.1);
-    color: ${main};
-    cursor: pointer;`
 
 
 const Mask = styled.div`
@@ -66,7 +55,6 @@ export default function App() {
 
     return (
         <Main>
-
             <Mask
                 open={obj.openStorage || obj.openBar || obj.openAddNewNote}
                 onClick={() => close()}
@@ -80,15 +68,10 @@ export default function App() {
             />
 
             <AddNewNote/>
-
-            {/* 暫存區 */}
             <Storage/>
-
-            {/* 更多工具 */}
             <Bar/>
 
             <BottomBar
-                area={'collection'}
                 setSaveWarning={setSaveWarning}
             />
         </Main>

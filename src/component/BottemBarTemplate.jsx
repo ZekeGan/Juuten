@@ -1,16 +1,16 @@
 import React from 'react';
 import styled from "styled-components";
-import {global} from "../../assets/global";
-import Icon from "../../assets/svg.jsx";
+import {global} from "../assets/global";
+import Icon from "../assets/svg.jsx";
 import {useDispatch, useSelector} from "react-redux";
 
-const {primary, transition_speed1, tertiary} = global
+const {primary, transition_speed1, tertiary, max_width} = global
 
 const Main = styled.div`
     position: absolute;
     z-index: 3;
     bottom: -400px;
-    width: 450px;
+    width: ${max_width}px;
     height: 400px;
     background-color: ${primary}; 
     transform: translateY(${props => props.open ? '-400px' : 0});
@@ -34,15 +34,11 @@ function BottemBarTemplate(props) {
     const close = () => closeCallback()
 
     return (
-        <Main
-            open={open}>
-
+        <Main open={open}>
             <CloseBar onClick={() => close()}>
                 <Icon.X/>
             </CloseBar>
-
             {props.children}
-
         </Main>
     );
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {addOpenBar, addOpenStorage, selectCollection} from "../../../redux/slice/collectionSlice.js";
-import BottemBarTemplate from "../../component/BottemBarTemplate.jsx";
+import BottemBarTemplate from "../../../component/BottemBarTemplate.jsx";
 
 
 

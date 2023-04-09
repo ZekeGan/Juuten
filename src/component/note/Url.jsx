@@ -2,17 +2,17 @@ import React from 'react';
 import styled from "styled-components";
 import {global} from "../../assets/global";
 
-const {tertiary} = global
+const {tertiary, font_size_s, font_size_m} = global
 const Page = styled.div`
     display: flex;
     align-items: center;
-    font-size: 9px;
+    font-size: ${font_size_s}px;
     > img {
         height: 12px;
         margin-right: 6px;
     }   
     > .url > a {
-        font-size: 9px;
+        font-size: ${font_size_s}px;
         transform: scale(0.9);
         color: ${tertiary};
         text-decoration: none;

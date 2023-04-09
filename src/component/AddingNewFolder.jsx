@@ -1,12 +1,12 @@
 import React, {useState, forwardRef, useImperativeHandle} from 'react';
-import Icon from "../../assets/svg.jsx";
+import Icon from "../assets/svg.jsx";
 import {
     addEditFolderId,
     addFolderAdd,
     addSetFolderAutoFocusId,
     selectFolder
-} from "../../redux/slice/folderSlice";
-import {global} from "../../assets/global";
+} from "../redux/slice/folderSlice";
+import {global} from "../assets/global";
 import {useDispatch, useSelector} from "react-redux";
 import styled from "styled-components";
 

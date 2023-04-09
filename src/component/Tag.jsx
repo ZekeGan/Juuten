@@ -1,5 +1,8 @@
 import React from 'react';
 import styled from "styled-components";
+import {global} from "../assets/global";
+
+const {font_size_m} = global
 
 const Page = styled.div`
     padding: 5px 0;
@@ -10,7 +13,7 @@ const Page = styled.div`
     overflow: hidden;
 `
 const Tag = styled.div`
-    font-size: 10px;
+    font-size: ${font_size_m}px;
     height: 16px;
     line-height: 16px;
     background-color: red;

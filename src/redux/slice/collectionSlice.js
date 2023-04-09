@@ -1,7 +1,8 @@
 import {createAsyncThunk, createSlice, current} from "@reduxjs/toolkit";
-import {fetchData, getCurrentDate, setDataToLocal} from "../utils";
+import {fetchData, getCurrentDate, setDataToLocal} from "../../utils";
 import {Juuten_Storage, N1} from "../../assets/fakeData";
 // import store from "../store";
+import {convertToRaw, EditorState} from 'draft-js'
 
 const thunkData = createAsyncThunk(
     'folder/fetchFolderData',
@@ -34,6 +35,7 @@ export const CollectionSlice = createSlice({
         addNewNoteAnimation: '',
         addNewCommentAnimation: '',
         storageAddAnimation: '',
+        toggleCSS: [],
         useTool: false,
         N1: N1
 
@@ -134,64 +136,74 @@ export const CollectionSlice = createSlice({
 
         /* 新增筆記 */
         addNewNote: (state, action) => {
-            const folderId = state.folderId
+            const {folderId} = state
             const data = [...state[folderId]]
 
-            const _key = Date.now()
+            const _key = `Juuten_${Date.now()}`
             let newNote = {
                 key: _key,
-                type: 'note',
-                msg: '',
+                type: 'collection',
+                msg: action.payload,
                 currentDate: getCurrentDate(),
                 comment: []
             }
-            data.unshift(newNote)
-            state.addNewNoteAnimation = newNote
-            state.openEditId = _key
-            state.openEditType = 'note'
-
-            state[folderId] = data
-            setDataToLocal(folderId, state[folderId])
+            const newData = [newNote, ...data]
+            setDataToLocal(folderId, newData)
+            return {
+                ...state,
+                [folderId]: newData,
+                addNewNoteAnimation: newNote,
+                openEditType: 'note'
+            }
         },
 
         /* 新增註記(comment) */
         addComment: (state, action) => {
-            const id = state.folderId
-            const key = action.payload.key
-            const data = [...state[id]]
+            const {folderId, ...rest} = state
+            const data = rest[folderId]
+            let _key = state.openEditId
 
-            data.map((item, index) => {
-                if (item.key === key) {
-                    const _key = Date.now()
-                    let _newComment = {
+            const newCollectionData = data.map((item, index) => {
+                if (item.key === action.payload.key) {
+                    _key = `Juuten_${Date.now()}`
+                    const emptyDraftjsMsg = JSON.stringify(convertToRaw(EditorState.createEmpty().getCurrentContent()))
+                    const newComment = {
                         key: _key,
                         type: 'comment',
                         currentDate: getCurrentDate(),
-                        msg: '',
+                        msg: emptyDraftjsMsg,
                     }
-                    item.comment.push(_newComment)
-                    state.openEditId = _key
-                    state.addNewCommentAnimation = _key
+                    return {
+                        ...item,
+                        comment: [...item.comment, newComment]
+                    }
                 }
+                return item
             })
-            setDataToLocal(id, state[id])
+            setDataToLocal(folderId, newCollectionData)
+            return {
+                ...state,
+                [folderId]: newCollectionData,
+                openEditId: _key,
+                addNewCommentAnimation: _key
+            }
         },
 
         /* 修改錦集(collection)、註記(comment)和暫存區(storage)的文字 */
         editCollectionOrStorage: (state, action) => {
             let id, data
 
-            switch (action.payload.area) {
-                case 'collection':
-                    id = state.folderId
-                    data = [...state[id]]
-                    break
-                case 'storage':
-                    data = state.Juuten_Storage
-                    break
-                default:
-                    console.warn('area錯誤')
-            }
+            // switch (action.payload.area) {
+            //     case 'collection':
+            //         id = state.folderId
+            //         data = [...state[id]]
+            //         break
+            //     case 'storage':
+            //         data = state.Juuten_Storage
+            //         break
+            //     default:
+            //         console.warn('area錯誤')
+            // }
             const key = state.openEditId
 
             function findData(_data, _key) {
@@ -211,24 +223,20 @@ export const CollectionSlice = createSlice({
 
         /* 刪除錦集(collection)和暫存區(storage)筆記或註記(comment) */
         deleteNoteOrComment: (state, action) => {
-            let id, data
-            switch (action.payload.area) {
-                case 'storage':
-                    id = 'Juuten_Storage'
-                    data = [...state[id]]
-                    break
-                case 'collection':
-                    id = state.folderId
-                    data = [...state[id]]
-                    break
-                default:
-                    console.warn('Area錯誤')
+            const {area} = action.payload
+            const {openEditId} = state
+
+            const areaMap = {
+                storage: 'Juuten_Storage',
+                collection: state.folderId,
+                comment: state.folderId
             }
-            const key = state.openEditId
-            getData(data, key)
-            state[id] = data
-            state.openEditId = ''
-            setDataToLocal(id, state[id])
+            const folderId = areaMap[area]
+            let data = [...state[folderId]]
+            getData(data, openEditId)
+            state[folderId] = data
+            state.openEditId= ''
+            setDataToLocal(folderId, data)
 
             function getData(_data, _key) {
                 if (_data === undefined) return
@@ -237,10 +245,14 @@ export const CollectionSlice = createSlice({
                         _data.splice(idx, 1)
                         return
                     }
-                    let note = {...item}
-                    return getData(note.comment, _key)
+                    return getData(item.comment, _key)
                 })
             }
+        },
+
+        /*  */
+        changeToggleCSS: (state, action) => {
+            state.toggleCSS = action.payload
         },
 
     },
@@ -303,5 +315,6 @@ export const {
     addComment: addAddComment,
     deleteNoteOrComment: addDeleteNoteOrComment,
     addNewNote: addAddNewNote,
-    openAddNewNote: addOpenAddNewNote
+    openAddNewNote: addOpenAddNewNote,
+    changeToggleCSS: addChangeToggleCSS
 } = CollectionSlice.actions

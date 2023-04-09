@@ -4,7 +4,7 @@ import {
     Routes,
     Route
 } from "react-router-dom";
-import Home from './folder/Folder.jsx'
+import Home from './folder/Main.jsx'
 import Collection from './collection/Main.jsx'
 
 

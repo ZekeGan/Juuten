@@ -1,18 +1,18 @@
 import React, {useRef, useState, forwardRef} from 'react';
 import styled from "styled-components";
-import Icon from "../../assets/svg.jsx";
-import {global} from "../../assets/global";
+import Icon from "../assets/svg.jsx";
+import {global} from "../assets/global";
 import {
     addEditFolderId,
     addFolderEdit, addSetFolderNewName,
     addTagEdit,
     selectFolder
-} from "../../redux/slice/folderSlice";
+} from "../redux/slice/folderSlice";
 import {useDispatch, useSelector} from "react-redux";
 
-const {color, tagColor, secondary} = global
+const {color, tagColor, secondary, font_size_m, font_size_s} = global
 
-const Toolbar = styled.div`
+const FolderToolbar = styled.div`
     display: flex;
     position: absolute;
     left: 50%;
@@ -46,7 +46,7 @@ const Tags = styled.div`
             height: 25px;
             outline: none;
             border: none;
-            font-size: 12px;
+            font-size: ${font_size_m}px;
             margin-left: 10px;
             border-bottom: 1px solid black;
         }
@@ -74,7 +74,7 @@ const OneTag = styled.div`
     margin: 3px;
     padding: 2px 10px 2px 0;
     > span {
-        font-size: 10px;
+        font-size: ${font_size_s}px;
         line-height: 16px;
     }
 `
@@ -93,7 +93,7 @@ const Folder = styled.div`
             outline: none;
             border: none;
             margin-right: 10px;
-            font-size: 12px;
+            font-size: ${font_size_m}px;
             border-bottom: 1px solid black;
         }
         
@@ -201,7 +201,7 @@ const App = (p) => {
 
 
     return (
-        <Toolbar
+        <FolderToolbar
             onClick={(e) => {
                 e.stopPropagation()
                 tagOpen
@@ -308,7 +308,7 @@ const App = (p) => {
             </IconBox>
 
 
-        </Toolbar>
+        </FolderToolbar>
     );
 }
 

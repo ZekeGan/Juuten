@@ -1,6 +1,13 @@
 import React, {useLayoutEffect, useState} from 'react';
 import {useSelector} from "react-redux";
 import {selectCollection} from "../../redux/slice/collectionSlice";
+import styled from "styled-components";
+import {global} from "../../assets/global";
+
+const {font_size_m} = global
+
+const Counting = styled.div`
+    font-size: ${font_size_m}px;`
 
 function EditingCounting(props) {
     const [editCount, setEditCount] = useState(0)
@@ -15,12 +22,12 @@ function EditingCounting(props) {
 
 
     return(
-        <div>
+        <Counting>
             {editCount === 0 && 'Editing'}
             {editCount === 1 && 'Editing .'}
             {editCount === 2 && 'Editing . .'}
             {editCount === 3 && 'Editing . . .'}
-        </div>
+        </Counting>
     )
 }
 
