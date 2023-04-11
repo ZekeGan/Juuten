@@ -5,11 +5,11 @@ import {
     selectCollection
 } from "../../../redux/slice/collectionSlice";
 import {TextMain} from "../../collection/textArea/TextMain.jsx";
-import Textarea from "../../../component/note/Textarea.jsx";
-import Url from "../../../component/note/Url.jsx";
-import Note from '../../../component/note/Note.jsx'
+import Textarea from "../../collection/note/Textarea.jsx";
+import Url from "../../collection/note/Url.jsx";
+import Note from '../../collection/note/Note.jsx'
 import ThisIsBottom from "../../../component/ThisIsBottom.jsx";
-import BottemBarTemplate from "../../../component/BottemBarTemplate.jsx";
+import BottemBarTemplate from "../BottemBarTemplate.jsx";
 
 
 function Storage(props) {

@@ -1,7 +1,7 @@
 import React, {useEffect, useRef} from 'react';
-import {selectCollection} from "../../redux/slice/collectionSlice";
+import {selectCollection} from "../../../redux/slice/collectionSlice";
 import {useSelector} from "react-redux";
-import DraftComponent from "../DraftComponent.jsx";
+import DraftComponent from "../../../component/DraftComponent.jsx";
 import TextingToolbar from "./TextingToolbar.jsx";
 
 

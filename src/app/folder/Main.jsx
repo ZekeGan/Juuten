@@ -3,31 +3,32 @@ import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
 import {
     addEditFolderAnimationId,
-    addEditFolderId,
-    addFolderEdit,
-    addSetFolderAutoFocusId,
+    addEditFolderId, addRearrangeFolder,
     selectFolder,
 } from "../../redux/slice/folderSlice";
 import {useNavigate} from "react-router-dom";
 import {global} from "../../assets/global";
 import Icon from '../../assets/svg.jsx'
-import Navbar from "./FolderNavbar.jsx";
-import AddNewFolder from "../../component/AddingNewFolder.jsx";
+import AddNewFolder from "./AddingNewFolder.jsx";
 import Warning from "../../component/Warning.jsx";
-import Toolbar from "../../component/FolderToolbar.jsx";
+import Toolbar from "./FolderToolbar.jsx";
 import DeletingCheck from "../../component/DeletingCheck.jsx";
-import Tag from '../../component/Tag.jsx'
 import FolderName from "./FolderName.jsx";
-import {addFetchData} from "../../redux/slice/collectionSlice";
 import BottomBar from "../bottomBar/BottomBar.jsx";
 import Storage from "../bottomBar/storage/Storage.jsx";
 import Bar from "../bottomBar/bar/Bar.jsx";
+import AddNewNote from "../bottomBar/addNewNote/AddNewNote.jsx";
+import FolderBlock from "./FolderBlock.jsx";
+import SearchNote from "../bottomBar/search/SearchNote.jsx";
+import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
+import ThisIsBottom from "../../component/ThisIsBottom.jsx";
 
 const {primary, secondary, tertiary, transition_speed1, warning, max_height, max_width} = global
 
 
 const Folders = styled.div`
     position: relative;
+
     width: ${max_width}px;
     height: ${max_height}px;
     overflow: hidden;
@@ -37,10 +38,10 @@ const FolderSection = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 450px;
-    height: calc(600px - 48px);
+    width: 100%;
+    height: ${max_height}px;
+    padding-bottom: 48px;
     overflow: scroll;
-    overflow-x: hidden;
     &::-webkit-scrollbar {
         width: 10px;
     }
@@ -48,34 +49,6 @@ const FolderSection = styled.div`
         background-color: ${secondary};
         border-radius: 5px;
     }`
-
-/* folders */
-const Main = styled.div`
-    position: relative;
-    width: 80%;
-    height: 80px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    margin: 10px 0;
-    border-radius: 10px;    
-    background-color: ${p => p.folderColor};
-    // overflow: hidden;
-    ${transition_speed1}
-    box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
-    > div > svg {
-        opacity: ${({open}) => open ? 0 : 1};
-    }`
-
-
-/* icon style */
-const styleIcon = `
-    position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%);
-    color: ${primary};`
 
 
 export default function App() {
@@ -85,7 +58,6 @@ export default function App() {
     const [regTest, setRegTest] = useState(false)
     const [sameName, setSameName] = useState(false)
     const [delCheck, setDelCheck] = useState(false)
-    const childRef = useRef()
 
 
     /* ##新增資料夾後的動畫
@@ -101,27 +73,17 @@ export default function App() {
         }, 0)
     }, [addFolderAnimationId])
 
-    /* editFolderId === '' 代表沒有在編輯資料夾
-             * 在編輯A資料夾 無法進入A資料夾
-             * */
-    const goIntoFolder = (e, index) => {
+    function removeToolbar(e) {
         e.stopPropagation()
-        navigate('/collection/N1') // *****************************************<==== delete when build
-
-        // if (editFolderId || editFolderId === index) return
-        // console.log('enterFolder')
-        // const fn = () => navigate(`/collection/${index}`)
-        // dispatch(addFetchData({
-        //     index,
-        //     fn
-        // }))
+        dispatch(addEditFolderId(''))
+        return document.removeEventListener('click', removeToolbar ,false)
     }
 
-
-    const editFolder = (item) => {
-        dispatch(addEditFolderId(item.key))
-        // dispatch(addSetFolderAutoFocusId(item.key))
-    }
+    useEffect(() => {
+        if (!!editFolderId) {
+            document.addEventListener('click', removeToolbar, false)
+        }
+    }, [editFolderId])
 
     // const leaveEdit = (e) => {
     //     e.stopPropagation()
@@ -130,79 +92,72 @@ export default function App() {
     //
     // }
 
+    function dragEnd(e) {
+        const {destination, source} = e
+        dispatch(addRearrangeFolder({
+            destination,
+            source
+        }))
+    }
 
     return (
         <Folders>
-
-
             <Warning warning={regTest}>資料夾名稱不能含有 \ / : * ? ' " &lt; &gt; |</Warning>
-            <Warning
-                warning={sameName}>
-                資料夾名稱重複
-            </Warning>
-
+            <Warning warning={sameName}>資料夾名稱重複</Warning>
 
             <DeletingCheck
                 delCheck={delCheck}
-                setDelCheck={() => setDelCheck()}
+                // setDelCheck={() => setDelCheck()}
             />
-
-            <FolderSection>
-                {/* 新增資料夾 */}
-                <AddNewFolder
-                    ref={childRef}
-                    setRegTest={setRegTest}
-                    setSameName={setSameName}
-                />
-
-                {/* 資料夾列表 */}
-                {
-                    Juuten_folderLists.map(item => (
-                        <Main
-                            key={item.key}
-                            id={`Juuten_folder_${item.key}`}
-                            onDoubleClick={(e) => goIntoFolder(e, item.key)}
-                            open={editFolderId === item.key}
-                            folderColor={item.folderColor}
-                            animation={item === addFolderAnimationId}
-                        >
-                            <Icon.Ellipsis
-                                styled={styleIcon}
-                                onClick={() => editFolder(item)}/>
-
-                            {
-                                item.key === editFolderId
-                                    ? <Toolbar
-                                        item={item}
-                                        setDelCheck={setDelCheck}
-                                        setSameName={setSameName}/>
-                                    : ''
-                            }
-
-                            <FolderName
-                                font={item.font}>
-                                {item.name}
-                            </FolderName>
-
-                            {/*{*/}
-                            {/*    item.tags.length > 0*/}
-                            {/*    && <Tag item={item}/>*/}
-                            {/*}*/}
-
-                        </Main>
-                    ))
-                }
-            </FolderSection>
+            <DragDropContext
+                onDragEnd={(e) => dragEnd(e)}
+            >
+                <Droppable
+                    droppableId={`folder_drog_key`}
+                    // isDropDisabled={!(openEditId === item.key)}
+                >
+                    {
+                        (provided) => (
+                            <div
+                                ref={provided.innerRef}
+                                {...provided.droppableProps}
+                            >
+                                <FolderSection>
+                                    {/* 新增資料夾 */}
+                                    <div>
+                                        <AddNewFolder
+                                            setRegTest={setRegTest}
+                                            setSameName={setSameName}
+                                        />
+                                    </div>
+                                    {
+                                        Juuten_folderLists.map((item, idx) => (
+                                            <FolderBlock
+                                                key={item.key}
+                                                item={item}
+                                                idx={idx}
+                                                setDelCheck={setDelCheck}
+                                                setSameName={setSameName}
+                                            />
+                                        ))
+                                    }
+                                    {/*<ThisIsBottom/>*/}
+                                </FolderSection>
+                                {provided.placeholder}
+                            </div>
+                        )
+                    }
+                </Droppable>
+            </DragDropContext>
 
 
+            <SearchNote/>
             <Storage/>
-
+            <AddNewNote/>
             <Bar/>
-
             <BottomBar area={'home'}/>
         </Folders>
     );
 }
-export {Main}
 
 // var color = 0.213 * rgbArr[0] + 0.715 * rgbArr[1] + 0.072 * rgbArr[2] > 255 / 2;

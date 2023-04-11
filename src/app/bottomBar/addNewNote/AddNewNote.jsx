@@ -1,13 +1,13 @@
 import React, {useEffect, useRef, useState} from 'react';
-import BottemBarTemplate from "../../component/BottemBarTemplate.jsx";
+import BottemBarTemplate from "../BottemBarTemplate.jsx";
 import {useDispatch, useSelector} from "react-redux";
 import {Editor, EditorState, RichUtils, convertToRaw,} from 'draft-js'
 import {convertToHTML} from 'draft-convert'
-import {addAddNewNote, addOpenAddNewNote, selectCollection} from "../../redux/slice/collectionSlice";
+import {addAddNewNote, addOpenAddNewNote, selectCollection} from "../../../redux/slice/collectionSlice";
 import styled from "styled-components";
-import Icon from '../../assets/svg.jsx'
-import {global} from "../../assets/global";
-import DraftComponent from "../../component/DraftComponent.jsx";
+import Icon from '../../../assets/svg.jsx'
+import {global} from "../../../assets/global";
+import DraftComponent from "../../../component/DraftComponent.jsx";
 
 const {icon_size_l, secondary} = global
 const Main = styled.div`

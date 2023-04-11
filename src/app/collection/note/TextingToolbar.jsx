@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import styled from "styled-components";
-import {global} from "../../assets/global";
-import Icon from '../../assets/svg.jsx'
+import {global} from "../../../assets/global";
+import Icon from '../../../assets/svg.jsx'
 import {
     addAddComment,
     addDeleteNoteOrComment,
@@ -10,7 +10,7 @@ import {
     addOpenEditToolbar,
     addSetFocusFlag,
     selectCollection
-} from "../../redux/slice/collectionSlice";
+} from "../../../redux/slice/collectionSlice";
 import {useDispatch, useSelector} from "react-redux";
 import ShowEditCounting from './EditingCounting.jsx'
 import {convertToRaw} from "draft-js";

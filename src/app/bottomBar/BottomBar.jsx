@@ -5,7 +5,7 @@ import {
     addOpenStorage,
     addEditNote,
     addOpenEditToolbar,
-    addSetFocusFlag, addAddNewNote, selectCollection, addOpenAddNewNote
+    addSetFocusFlag, addAddNewNote, selectCollection, addOpenAddNewNote, addOpenSearchPage
 } from "../../redux/slice/collectionSlice";
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate, useParams} from "react-router-dom";
@@ -13,7 +13,7 @@ import {global} from "../../assets/global";
 
 import Icon from "../../assets/svg.jsx";
 
-const {primary, warning, main, font_size_m, font_size_s, max_width} = global
+const {primary, warning, main, font_size_m, font_size_s, max_width, icon_size_l} = global
 
 /* style */
 const BottomBar = styled.div`
@@ -88,6 +88,10 @@ const App = (p) => {
         dispatch(addOpenAddNewNote('open'))
     }
 
+    function searchNote() {
+        dispatch(addOpenSearchPage('open'))
+    }
+
 
     return (
         <BottomBar>
@@ -96,14 +100,22 @@ const App = (p) => {
             {
                 area === 'home'
                     ? ''
-                    : <Icon.Left
+                    : <Icon.House
+                        size={icon_size_l}
                         styled={{color: main}}
-                        onClick={() => back()}/>
+                        onClick={() => back()}
+                    />
             }
+            <Icon.Search
+                size={icon_size_l}
+                styled={{color: main}}
+                onClick={() => searchNote()}
+            />
 
 
             {/* 加入新筆記 */}
             <Icon.Note
+                size={icon_size_l}
                 styled={{color: main}}
                 onClick={() => addNewNote()}/>
 
@@ -111,7 +123,9 @@ const App = (p) => {
             {/* 顯示暫存區數量 */}
             <StorageCount onClick={() => openStorage()}>
                 <Icon.Box
-                    styled={{color: main}}/>
+                    size={icon_size_l}
+                    styled={{color: main}}
+                />
                 {
                     storage.length === 0
                         ? ''
@@ -121,8 +135,10 @@ const App = (p) => {
 
             {/* 更多工具 Icon */}
             <Icon.Bar
+                size={icon_size_l}
                 styled={{color: main}}
-                onClick={() => openBar('open')}/>
+                onClick={() => openBar('open')}
+            />
 
         </BottomBar>
     );

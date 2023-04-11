@@ -14,7 +14,7 @@ export const global = {
     tertiary: '#8A8A8A',
     quaternary: '#eff3f4',
     warning: '#9d201a',
-    max_width: 500,
+    max_width: 700,
     max_height: 600,
     transition_speed1: 'transition: 0.2s ease-out;',
     transition_speed1_delay: 'transition: 0.5s ease-out 1s;',
@@ -25,6 +25,7 @@ export const global = {
     font_size_s: 10,
     font_size_m: 12,
     font_size_l: 15,
+    font_size_xl: 20,
 
 
     color: [

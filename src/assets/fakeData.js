@@ -2,16 +2,9 @@ const Juuten_folderLists = [
     {
         key: '908084',
         name: '20221015_中華料理',
-        folderColor: '#1f1e33',
+        folderColor: 'pink',
         font: false,
         createDate: '',
-        tags: []
-    },
-    {
-        key: '0894890',
-        name: '20210519_日本料理',
-        folderColor: '#1f1e33',
-        font: false,
         tags: []
     },
     {
@@ -29,7 +22,49 @@ const Juuten_folderLists = [
         font: false,
         createDate: '',
         tags: []
-    }
+    },
+    {
+        key: '0894asas890',
+        name: '20210519_日本料理',
+        folderColor: 'skyblue',
+        font: false,
+        tags: []
+    },
+    {
+        key: '0sss890',
+        name: 'sus',
+        folderColor: '#1f1e33',
+        font: false,
+        tags: []
+    },
+    {
+        key: '0ssssdsd890',
+        name: 'sus',
+        folderColor: '#1f1e33',
+        font: false,
+        tags: []
+    },
+    {
+        key: '0894eg890',
+        name: 'sas',
+        folderColor: 'yellow',
+        font: false,
+        tags: []
+    },
+    {
+        key: '0894sdeg890',
+        name: 'sas',
+        folderColor: 'yellow',
+        font: false,
+        tags: []
+    },
+    {
+        key: '089aa4eg890',
+        name: 'sas',
+        folderColor: 'yellow',
+        font: false,
+        tags: []
+    },
 ]
 
 const N1 = [

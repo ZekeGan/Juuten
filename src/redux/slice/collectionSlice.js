@@ -26,10 +26,12 @@ export const CollectionSlice = createSlice({
 
         openAddNewNote: false,
         openStorage: false,
+        openSearchPage: false,
         openBar: false,
         folderId: '',
         openEditToolbar: false,
         openEditId: '',
+        openEditParentId: '',
         openEditType: '',
         focusFlag: true,
         addNewNoteAnimation: '',
@@ -42,24 +44,48 @@ export const CollectionSlice = createSlice({
 
     },
     reducers: {
-        useTool: ({useTool}, {payload}) => {
-            useTool = payload
+        useTool: (state, action) => {
+            return {
+                ...state,
+                useTool: action.payload
+            }
         },
         addFolderId: (state, action) => {
-            state.folderId = action.payload
+            return {
+                ...state,
+                folderId: action.payload
+            }
         },
         openAddNewNote: (state, action) => {
-            state.openAddNewNote = action.payload === 'open'
+            return {
+                ...state,
+                openAddNewNote: action.payload === 'open'
+            }
         },
         openStorage: (state, action) => {
-            state.openStorage = action.payload === 'open'
+            return {
+                ...state,
+                openStorage: action.payload === 'open'
+            }
+        },
+        openSearchPage: (state, action) => {
+            return {
+                ...state,
+                openSearchPage: action.payload === 'open'
+            }
         },
         openBar: (state, action) => {
-            state.openBar = action.payload === 'open'
+            return {
+                ...state,
+                openBar: action.payload === 'open'
+            }
         },
         openEditToolbar: (state, action) => {
-            state.openEditId = action.payload.key
-            state.openEditType = action.payload.type
+            return {
+                ...state,
+                openEditId: action.payload.key,
+                openEditType: action.payload.type
+            }
         },
         setFocusFlag: (state, action) => {
             state.focusFlag = action.payload
@@ -80,15 +106,42 @@ export const CollectionSlice = createSlice({
 
         /* storage collection 位置切換 */
         moveToStorageOrCollection: (state, action) => {
-            const folderId = state.folderId
-            const key = action.payload.key
+            const {
+                folderId,
+                Juuten_Storage: storage
+            } = state
+            const destination = action.payload.toWhere
+            // const key = action.payload.key
             const collection = [...state[folderId]]
-            const storage = [...state.Juuten_Storage]
+            // const data = {
+            //     toStorage: {
+            //         type: 'storage',
+            //         source: collection,
+            //         destinattion: storage,
+            //     },
+            //     toCollection: ''
+            // }
+
+            // const newCollection = collection.map((item, index) => {
+            //     if (item.key === action.payload.key) {
+            //         let newItem = data[destination].source.splice(index, 1)
+            //         newItem.type = data[destination].type
+            //         data[destination].destination.unshift(newItem)
+            //     }
+            // })
+
+            // const newStorage = storage.map((item, index) => {
+            //     if (item.key === action.payload.key) {
+            //         item.type = data[destination].type
+            //         data[destination].destination.unshift(item)
+            //         data[destination].destination.splice(index, 1)
+            //     }
+            // })
 
             switch (action.payload.toWhere) {
                 case 'toStorage':
                     collection.map((item, index) => {
-                        if (item.key === key) {
+                        if (item.key === action.payload.key) {
                             item.type = 'storage'
                             storage.unshift(item)
                             collection.splice(index, 1)
@@ -97,7 +150,7 @@ export const CollectionSlice = createSlice({
                     break
                 case 'toCollection':
                     storage.map((item, idx) => {
-                        if (item.key === key) {
+                        if (item.key === action.payload.key) {
                             item.type = 'collection'
                             collection.unshift(item)
                             storage.splice(idx, 1)
@@ -108,11 +161,13 @@ export const CollectionSlice = createSlice({
                     console.warn('moveToStorageOrCollection reducer error')
             }
 
-            state['Juuten_Storage'] = storage
-            setDataToLocal('Juuten_Storage', state['Juuten_Storage'])
 
+
+            state['Juuten_Storage'] = storage
             state[folderId] = collection
-            setDataToLocal(folderId, state[folderId])
+            setDataToLocal('Juuten_Storage', storage)
+            setDataToLocal(folderId, collection)
+
         },
         // moveToCollection: (state, action) => {
         //     const folderId = state.folderId
@@ -153,15 +208,15 @@ export const CollectionSlice = createSlice({
                 ...state,
                 [folderId]: newData,
                 addNewNoteAnimation: newNote,
-                openEditType: 'note'
+                openEditType: 'note',
             }
         },
 
         /* 新增註記(comment) */
         addComment: (state, action) => {
-            const {folderId, ...rest} = state
+            const {folderId, openEditId, ...rest} = state
             const data = rest[folderId]
-            let _key = state.openEditId
+            let _key
 
             const newCollectionData = data.map((item, index) => {
                 if (item.key === action.payload.key) {
@@ -185,7 +240,8 @@ export const CollectionSlice = createSlice({
                 ...state,
                 [folderId]: newCollectionData,
                 openEditId: _key,
-                addNewCommentAnimation: _key
+                addNewCommentAnimation: _key,
+                openEditParentId: action.payload.key
             }
         },
 
@@ -235,7 +291,7 @@ export const CollectionSlice = createSlice({
             let data = [...state[folderId]]
             getData(data, openEditId)
             state[folderId] = data
-            state.openEditId= ''
+            state.openEditId = ''
             setDataToLocal(folderId, data)
 
             function getData(_data, _key) {
@@ -250,11 +306,43 @@ export const CollectionSlice = createSlice({
             }
         },
 
-        /*  */
+        /* 紀錄當前Draftjs inline Style 樣式 */
         changeToggleCSS: (state, action) => {
-            state.toggleCSS = action.payload
+            return {
+                ...state,
+                toggleCSS: action.payload
+            }
         },
 
+        /* dnd 更換位置 */
+        dropEnd: (state, action) => {
+            const {destination, source} = action.payload
+            const {openEditId, folderId} = state
+            const data = state[folderId]
+            const newData = data.map((item, idx) => {
+                if (item.key === openEditId) {
+                    const newComment = [...item.comment]
+                    const [remove] = newComment.splice(source.index, 1)
+                    newComment.splice(destination.index, 0, remove)
+                    return {
+                        ...item,
+                        comment: newComment
+                    }
+                }
+                return item
+            })
+            return {
+                ...state,
+                [folderId]: newData,
+            }
+        },
+        rearrangeNote: (state, action) => {
+            const {destination, source} = action.payload
+            const {folderId} = state
+            const data = state[folderId]
+            const [remove] = data.splice(source.index, 1)
+            data.splice(destination.index, 0, remove)
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -308,6 +396,7 @@ export const {
     openEditToolbar: addOpenEditToolbar,
     openBar: addOpenBar,
     openStorage: addOpenStorage,
+    openSearchPage: addOpenSearchPage,
     addFolderId: addAddFolderId,
     useTool: addUseTool,
     moveToStorageOrCollection: addMoveToStorageOrCollection,
@@ -316,5 +405,7 @@ export const {
     deleteNoteOrComment: addDeleteNoteOrComment,
     addNewNote: addAddNewNote,
     openAddNewNote: addOpenAddNewNote,
-    changeToggleCSS: addChangeToggleCSS
+    changeToggleCSS: addChangeToggleCSS,
+    dropEnd: addDragEnd,
+    rearrangeNote: addRearrangeNote
 } = CollectionSlice.actions

@@ -42,8 +42,19 @@ export function setDataToLocal(name, data = []) {
     //     [name]: JSON.stringify(current)
     // })
 }
+export function deepCopy(obj) {
+    if (typeof obj !== 'object' || obj === null) {
+        return obj;
+    }
 
+    const newObj = Array.isArray(obj) ? [] : {};
 
+    Object.keys(obj).forEach(key => {
+        newObj[key] = deepCopy(obj[key]);
+    });
+
+    return newObj;
+}
 
 
 

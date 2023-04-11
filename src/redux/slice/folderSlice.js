@@ -1,5 +1,5 @@
 import {createSlice, current} from "@reduxjs/toolkit";
-import {fetchData, getCurrentDate, setDataToLocal} from "../../utils";
+import {deepCopy, fetchData, getCurrentDate, setDataToLocal} from "../../utils";
 import {Juuten_folderLists} from "../../assets/fakeData";
 
 const changeFontColor = (colorValue) => {
@@ -89,6 +89,15 @@ export const FolderSlice = createSlice({
             state.folderAutoFocusId = action.payload
         },
 
+        rearrangeFolder: (state, action) => {
+            const {Juuten_folderLists: list} = state
+            const {destination, source} = action.payload
+            const [remove] = list.splice(source.index, 1)
+            list.splice(destination.index, 0, remove)
+            setDataToLocal('Juuten_folderLists', list)
+
+        },
+
 
         tagEdit: (state, action) => {
             switch (action.payload.type) {
@@ -125,5 +134,6 @@ export const {
     editFolderId: addEditFolderId,
     folderAdd: addFolderAdd,
     folderEdit: addFolderEdit,
+    rearrangeFolder: addRearrangeFolder
     // setFolderNewName: addSetFolderNewName,
 } = FolderSlice.actions

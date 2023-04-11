@@ -1,13 +1,13 @@
 import React, {useRef, useState, forwardRef} from 'react';
 import styled from "styled-components";
-import Icon from "../assets/svg.jsx";
-import {global} from "../assets/global";
+import Icon from "../../assets/svg.jsx";
+import {global} from "../../assets/global";
 import {
     addEditFolderId,
     addFolderEdit, addSetFolderNewName,
     addTagEdit,
     selectFolder
-} from "../redux/slice/folderSlice";
+} from "../../redux/slice/folderSlice";
 import {useDispatch, useSelector} from "react-redux";
 
 const {color, tagColor, secondary, font_size_m, font_size_s} = global
@@ -16,7 +16,7 @@ const FolderToolbar = styled.div`
     display: flex;
     position: absolute;
     left: 50%;
-    top: 80px;
+    top: -100px;
     z-index: 10;
     // width: 420px;
     background-color: white;
@@ -63,7 +63,6 @@ const Tags = styled.div`
         flex-wrap: wrap;
     }
 `
-
 const OneTag = styled.div`
     display: flex;
     height: 20px;
@@ -80,7 +79,7 @@ const OneTag = styled.div`
 `
 
 const Folder = styled.div`
-    width: 168px;
+    width: 300px;
     padding: 4px 5px;
     border-right: 1px solid ${secondary};
     > .changeFolderName {
@@ -96,9 +95,7 @@ const Folder = styled.div`
             font-size: ${font_size_m}px;
             border-bottom: 1px solid black;
         }
-        
     }
-    
     > .Juuten_color {
         display: flex;
         flex-wrap: wrap;
@@ -133,17 +130,11 @@ const App = (p) => {
     const {setDelCheck, item, setSameName} = p
     const {Juuten_folderLists, tagCurrentColor, Juuten_tagLists} = useSelector(selectFolder)
     const dispatch = useDispatch()
-    // const tagRef = useRef(undefined)
     const [tagOpen, setTagOpen] = useState(false)
-    // const [tagAdd, setTagAdd] = useState(false)
     const [detectFolderName, setDetectFolderName] = useState('')
     const inputRef = useRef()
 
-
-
-
     const deleteFolder = () => setDelCheck(true)
-
 
     const changeFolderColor = (e, color) => {
         dispatch(addFolderEdit({
@@ -177,7 +168,6 @@ const App = (p) => {
     //     }))
     // }
 
-
     const saveFolderNewName = () => {
         if (Juuten_folderLists.find(item => item.name === detectFolderName)) {
             /* 檢測是否有重複名稱 */
@@ -192,24 +182,48 @@ const App = (p) => {
         inputRef.current.value = ''
     }
 
-    // const writeTag = () => {
-    //     if (Juuten_tagLists.find(item => item.name === tagRef.current.value)) setTagAdd(false)
-    //     else if (tagRef.current.value === '') setTagAdd(false)
-    //     else setTagAdd(true)
-    //     console.log(tagRef.current.value)
-    // }
 
 
     return (
         <FolderToolbar
-            onClick={(e) => {
-                e.stopPropagation()
-                tagOpen
-                && setTagOpen(false)
-            }}
-            onDoubleClick={(e) => {
-                e.stopPropagation()
-            }}>
+            onClick={(e) => {e.stopPropagation()}}
+            onDoubleClick={(e) => {e.stopPropagation()}}
+        >
+            <Folder>
+                <div
+                    className='changeFolderName'>
+                    <input
+                        type="text"
+                        id='Juuten_FolderName'
+                        ref={inputRef}
+                        onInput={(e) => setDetectFolderName(e.target.value)}
+                        placeholder='更改名稱'/>
+                    {
+                        detectFolderName !== ''
+                            && <Icon.Save onClick={() => saveFolderNewName()}/>
+                    }
+                </div>
+
+                <div
+                    className="Juuten_color">
+                    {
+                        color.map(item1 => (
+                            <ColorDot
+                                key={`Jutten_colorDot_${item1}`}
+                                exist={() => item.find(item2 => item2 === item1)}
+                                color={item1}
+                                onClick={(e) => changeFolderColor(e, item1)}/>
+                        ))
+                    }
+                </div>
+            </Folder>
+
+
+            <IconBox>
+                <Icon.Delete
+                    onClick={() => deleteFolder()}/>
+            </IconBox>
+
 
 
             {/*<Tags*/}
@@ -269,44 +283,6 @@ const App = (p) => {
             {/*        }*/}
             {/*    </div>*/}
             {/*</Tags>*/}
-
-            <Folder>
-                <div
-                    className='changeFolderName'>
-                    <input
-                        type="text"
-                        id='Juuten_FolderName'
-                        ref={inputRef}
-                        onInput={(e) => setDetectFolderName(e.target.value)}
-                        placeholder='更改名稱'/>
-                    {
-                        detectFolderName !== ''
-                            ? <Icon.Save onClick={() => saveFolderNewName()}/>
-                            : ''
-                    }
-
-                </div>
-
-                <div
-                    className="Juuten_color">
-                    {
-                        color.map(item1 => (
-                            <ColorDot
-                                key={`Jutten_colorDot_${item1}`}
-                                exist={() => item.find(item2 => item2 === item1)}
-                                color={item1}
-                                onClick={(e) => changeFolderColor(e, item1)}/>
-                        ))
-                    }
-                </div>
-            </Folder>
-
-
-            <IconBox>
-                <Icon.Delete
-                    onClick={() => deleteFolder()}/>
-            </IconBox>
-
 
         </FolderToolbar>
     );

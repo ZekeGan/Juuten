@@ -1,8 +1,8 @@
 import React, {useLayoutEffect, useState} from 'react';
 import {useSelector} from "react-redux";
-import {selectCollection} from "../../redux/slice/collectionSlice";
+import {selectCollection} from "../../../redux/slice/collectionSlice";
 import styled from "styled-components";
-import {global} from "../../assets/global";
+import {global} from "../../../assets/global";
 
 const {font_size_m} = global
 

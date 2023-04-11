@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 
 const Icon = styled.div`
-    width: 20px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -10,24 +9,28 @@ const Icon = styled.div`
 `
 
 
-
 const Ellipsis = (props) => {
     const {
         styled,
         onClick,
-        title
+        title,
+        size = 16
     } = props
     return (
         <Icon
             styled={styled}
-            onClick={onClick}>
+            onClick={onClick}
+        >
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
+                width={size}
+                height={size}
                 strokeWidth={1.5}
                 stroke="currentColor"
-                className="w-6 h-6">
+                className="w-6 h-6"
+            >
                 <title>{title}</title>
                 <path
                     strokeLinecap="round"
@@ -41,7 +44,8 @@ const Ellipsis_Rotate90 = (props) => {
     const {
         styled,
         onClick,
-        title
+        title,
+        size = 16
     } = props
     return (
         <Icon
@@ -49,8 +53,8 @@ const Ellipsis_Rotate90 = (props) => {
             onClick={onClick}>
             <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
+                width={size}
+                height={size}
                 fill="currentColor"
                 className="bi bi-three-dots"
                 viewBox="0 0 16 16">
@@ -65,15 +69,19 @@ const Left = (props) => {
     const {
         styled,
         onClick,
-        title
+        title,
+        size
     } = props
     return (
         <Icon
             styled={styled}
-            onClick={onClick}>
+            onClick={onClick}
+        >
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
+                width={size}
+                height={size}
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
@@ -91,7 +99,8 @@ const Right = (props) => {
     const {
         styled,
         onClick,
-        title
+        title,
+        size,
     } = props
     return (
         <Icon
@@ -100,6 +109,8 @@ const Right = (props) => {
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
+                width={size}
+                height={size}
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
@@ -117,7 +128,8 @@ const Down = (props) => {
     const {
         styled,
         onClick,
-        title
+        title,
+        size
     } = props
     return (
         <Icon
@@ -125,11 +137,13 @@ const Down = (props) => {
             onClick={onClick}>
             <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
+                width={size}
+                height={size}
                 fill="currentColor"
                 className="bi bi-arrow-bar-down"
-                viewBox="0 0 16 16">
+                viewBox="0 0 16 16"
+            >
+                <title>{title}</title>
                 <path
                     fillRule="evenodd"
                     d="M1 3.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13a.5.5 0 0 1-.5-.5zM8 6a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 0 1 .708-.708L7.5 12.293V6.5A.5.5 0 0 1 8 6z"/>
@@ -138,16 +152,25 @@ const Down = (props) => {
     )
 }
 const Up = (props) => {
-    const {styled, onClick, title} = props
+    const {
+        styled,
+        onClick,
+        title,
+        size,
+    } = props
     return (
-        <Icon styled={styled} onClick={onClick}>
+        <Icon
+            styled={styled}
+            onClick={onClick}
+        >
             <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
+                width={size}
+                height={size}
                 fill="currentColor"
                 className="bi bi-arrow-bar-up"
-                viewBox="0 0 16 16">
+                viewBox="0 0 16 16"
+            >
                 <title>{title}</title>
                 <path
                     fill-rule="evenodd"
@@ -160,7 +183,8 @@ const Plus = (props) => {
     const {
         styled,
         onClick,
-        title
+        title,
+        size = 16
     } = props
     return (
         <Icon
@@ -168,16 +192,15 @@ const Plus = (props) => {
             onClick={onClick}>
             <svg
                 xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-6 h-6">
-                <title>{title}</title>
-                <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 4.5v15m7.5-7.5h-15"/>
+                width={size}
+                height={size}
+                fill="currentColor"
+                className="bi bi-plus-lg"
+                viewBox="0 0 16 16"
+            >
+                <path fillRule="evenodd"
+                      d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"
+                />
             </svg>
         </Icon>
     )
@@ -186,7 +209,8 @@ const Box = (props) => {
     const {
         styled,
         onClick,
-        title
+        title,
+        size
     } = props
     return (
         <Icon
@@ -195,6 +219,8 @@ const Box = (props) => {
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
+                width={size}
+                height={size}
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
@@ -212,7 +238,8 @@ const Bar = (props) => {
     const {
         styled,
         onClick,
-        title
+        title,
+        size
     } = props
     return (
         <Icon
@@ -222,6 +249,8 @@ const Bar = (props) => {
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
+                width={size}
+                height={size}
                 strokeWidth={1.5}
                 stroke="currentColor"
                 className="w-6 h-6">
@@ -264,7 +293,7 @@ const Bold = (props) => {
         styled,
         onClick,
         title,
-        size = 12,
+        size = 16,
     } = props
     return (
         <Icon
@@ -341,7 +370,7 @@ const Save = (props) => {
         styled,
         onClick,
         title,
-        size = 12,
+        size = 16,
     } = props
     return (
         <Icon
@@ -366,7 +395,7 @@ const Delete = (props) => {
         styled,
         onClick,
         title,
-        size = 12
+        size = 16
     } = props
     return (
         <Icon
@@ -404,11 +433,12 @@ const X = (props) => {
                 width={size}
                 height={size}
                 fill="currentColor"
-                className="bi bi-x"
-                viewBox="0 0 16 16">
+                className="bi bi-x-lg"
+                viewBox="0 0 16 16"
+            >
                 <title>{title}</title>
                 <path
-                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                    d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
             </svg>
         </Icon>
     )
@@ -443,7 +473,7 @@ const Pen = (props) => {
         styled,
         onClick,
         title,
-        size = 12
+        size = 16
     } = props
     return (
         <Icon
@@ -468,7 +498,7 @@ const Chat = (props) => {
         styled,
         onClick,
         title,
-        size = 12
+        size = 16
     } = props
     return (
         <Icon
@@ -495,7 +525,7 @@ const BarLeft = (props) => {
         styled,
         onClick,
         title,
-        size = 12
+        size = 16
     } = props
     return (
         <Icon
@@ -521,7 +551,7 @@ const BarRight = (props) => {
         styled,
         onClick,
         title,
-        size = 12
+        size = 16
     } = props
     return (
         <Icon
@@ -638,10 +668,64 @@ const Grip = (props) => {
                 fill="currentColor"
                 className="bi bi-grip-vertical"
                 viewBox="0 0 16 16">
+                <title>{title}</title>
                 <path
                     d="M7 2a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zM7 5a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zM7 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm-3 3a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm-3 3a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
             </svg>
 
+        </Icon>
+    )
+}
+const House = (props) => {
+    const {
+        styled,
+        onClick,
+        title,
+        size = 16
+    } = props
+    return (
+        <Icon
+            styled={styled}
+            onClick={onClick}>
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width={size}
+                height={size}
+                fill="currentColor"
+                className="bi bi-house"
+                viewBox="0 0 16 16"
+            >
+                <title>{title}</title>
+                <path
+                    d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5ZM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5 5 5Z"/>
+            </svg>
+
+        </Icon>
+    )
+}
+const Search = (props) => {
+    const {
+        styled,
+        onClick,
+        title,
+        size = 16
+    } = props
+    return (
+        <Icon
+            styled={styled}
+            onClick={onClick}>
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width={size}
+                height={size}
+                fill="currentColor"
+                className="bi bi-search"
+                viewBox="0 0 16 16"
+            >
+                <title>{title}</title>
+                <path
+                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+            </svg>
         </Icon>
     )
 }
@@ -671,5 +755,7 @@ export default {
     BarTop,
     BarDown,
     Note,
-    Grip
+    Grip,
+    House,
+    Search,
 }
