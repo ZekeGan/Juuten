@@ -28,6 +28,7 @@ export const CollectionSlice = createSlice({
         openStorage: false,
         openSearchPage: false,
         openBar: false,
+        folderData: {},
         folderId: '',
         openEditToolbar: false,
         openEditId: '',
@@ -53,7 +54,8 @@ export const CollectionSlice = createSlice({
         addFolderId: (state, action) => {
             return {
                 ...state,
-                folderId: action.payload
+                folderData: action.payload,
+                folderId: action.payload.key
             }
         },
         openAddNewNote: (state, action) => {
@@ -315,33 +317,27 @@ export const CollectionSlice = createSlice({
         },
 
         /* dnd 更換位置 */
-        dropEnd: (state, action) => {
-            const {destination, source} = action.payload
+        rearrangeComment: (state, action) => {
+            const {destination, source, area} = action.payload
             const {openEditId, folderId} = state
-            const data = state[folderId]
-            const newData = data.map((item, idx) => {
+            const whatArea = area === 'textMain' ? folderId : 'Juuten_Storage'
+            const data = state[whatArea]
+            data.map((item, idx) => {
                 if (item.key === openEditId) {
-                    const newComment = [...item.comment]
-                    const [remove] = newComment.splice(source.index, 1)
-                    newComment.splice(destination.index, 0, remove)
-                    return {
-                        ...item,
-                        comment: newComment
-                    }
+                    const [remove] = item.comment.splice(source.index, 1)
+                    item.comment.splice(destination.index, 0, remove)
                 }
-                return item
             })
-            return {
-                ...state,
-                [folderId]: newData,
-            }
+            setDataToLocal(whatArea, data)
         },
         rearrangeNote: (state, action) => {
-            const {destination, source} = action.payload
+            const {destination, source, area} = action.payload
             const {folderId} = state
-            const data = state[folderId]
+            const whatArea = area === 'textMain' ? folderId : 'Juuten_Storage'
+            const data = state[whatArea]
             const [remove] = data.splice(source.index, 1)
             data.splice(destination.index, 0, remove)
+            setDataToLocal(whatArea, data)
         },
     },
     extraReducers: (builder) => {
@@ -406,6 +402,6 @@ export const {
     addNewNote: addAddNewNote,
     openAddNewNote: addOpenAddNewNote,
     changeToggleCSS: addChangeToggleCSS,
-    dropEnd: addDragEnd,
+    rearrangeComment: addRearrangeComment,
     rearrangeNote: addRearrangeNote
 } = CollectionSlice.actions

@@ -32,14 +32,14 @@ const Juuten_folderLists = [
     },
     {
         key: '0sss890',
-        name: 'sus',
+        name: '關於如何使用Typescript達到效能最佳化',
         folderColor: '#1f1e33',
         font: false,
         tags: []
     },
     {
-        key: '0ssssdsd890',
-        name: 'sus',
+        key: 'N1',
+        name: '關於如何使用Typescript達到效能最佳化',
         folderColor: '#1f1e33',
         font: false,
         tags: []

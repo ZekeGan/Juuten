@@ -14,6 +14,7 @@ const Main = styled.div`
     display: flex;
     flex-direction: column;
     height: 100%;
+    padding-top: 30px;
     margin: 0 3%;`
 
 

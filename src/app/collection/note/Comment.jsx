@@ -36,10 +36,9 @@ const DragHandle = styled.div`
     ${transition_speed1}`
 
 
-
 const App = (p, ref) => {
     const dispatch = useDispatch()
-    const {parentItem, comment, dragHandle} = p
+    const {parentItem, item, dragHandle, open, provided} = p
     const {addNewCommentAnimation, openEditId} = useSelector(selectCollection)
 
     useMemo(() => {
@@ -49,35 +48,14 @@ const App = (p, ref) => {
     }, [addNewCommentAnimation])
 
 
-
-
     return (
-        <>
-            {
-                comment.map((commentItem, idx) => (
-                    <Draggable
-                        key={`drag_key_${commentItem.key}`}
-                        draggableId={`draggableId_${commentItem.key}`}
-                        index={idx}
-                        isDragDisabled={!(openEditId === parentItem.key)}
-                    >
-                        {
-                            (provided) => (
-                                <div
-                                    ref={provided.innerRef}
-                                    {...provided.draggableProps}
-                                >
-                                    <Comment animation={addNewCommentAnimation === comment.key}>
-                                        <DragHandle open={openEditId === parentItem.key} {...provided.dragHandleProps}/>
-                                        <Textarea item={commentItem}/>
-                                    </Comment>
-                                </div>
-                            )
-                        }
-                    </Draggable>
-                ))
-            }
-        </>
+        <Comment animation={addNewCommentAnimation === item.key}>
+            <DragHandle
+                open={open}
+                {...provided.dragHandleProps}
+            />
+            <Textarea item={item}/>
+        </Comment>
 
     )
 

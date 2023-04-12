@@ -4,7 +4,6 @@ import {useDispatch, useSelector} from "react-redux";
 import collectionSlice, {
     addAddFolderId,
     addOpenStorage,
-    addRearrangeNote,
     selectCollection
 } from "../../redux/slice/collectionSlice";
 import {global} from "../../assets/global";
@@ -15,15 +14,18 @@ import TextMain from "./textArea/TextMain.jsx";
 import BottomBar from "../bottomBar/BottomBar.jsx";
 import {useParams} from "react-router-dom";
 import AddNewNote from "../bottomBar/addNewNote/AddNewNote.jsx";
-import Warning from "../../component/Warning.jsx";
 import SearchNote from "../bottomBar/search/SearchNote.jsx";
-import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
+import {selectFolder} from "../../redux/slice/folderSlice";
+import Mask from "../../component/Mask.jsx";
+import Bookmark from "../../component/Bookmark.jsx";
 
 
-const {main, primary, transition_speed1, max_height, max_width} = global
+const {main, primary, transition_speed1, max_height, max_width, primary_opacity} = global
 
 
 const Main = styled.div`
+    display: grid;
+    grid-template-rows: ${max_height - 48}px 48px auto;
     width: ${max_width}px;
     height: ${max_height}px;
     position: relative;
@@ -31,13 +33,8 @@ const Main = styled.div`
     background-color: ${primary};`
 
 
-const Mask = styled.div`
-    ${transition_speed1}
-    position: absolute;
-    z-index: ${({open}) => open ? '2' : '0'};
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,${({open}) => open ? '0.5' : '0'});`
+
+
 
 
 /*獲取資料的方式 :
@@ -49,62 +46,56 @@ const Mask = styled.div`
 export default function App() {
     const [saveWarning, setSaveWarning] = useState(false)
     const dispatch = useDispatch()
-    const obj = useSelector(selectCollection)
     const {id} = useParams()
+    const {Juuten_folderLists} = useSelector(selectFolder)
+    const obj = useSelector(selectCollection)
 
     const close = () => dispatch(addOpenStorage())
 
     useEffect(() => {
-        dispatch(addAddFolderId(id))
+        const [item] = Juuten_folderLists.filter(item => item.key === id)
+        dispatch(addAddFolderId(
+            item
+        ))
     }, [])
 
+    console.log(obj.folderData)
 
-    function dragEnd(e) {
-        const {destination, source} = e
-        if (!destination || !source) return
-        dispatch(addRearrangeNote({
-            destination,
-            source
-        }))
-    }
 
     return (
         <Main>
+
             <Mask
-                open={obj.openStorage || obj.openBar || obj.openAddNewNote}
-                onClick={() => close()}
+                open={obj.openBar || obj.openAddNewNote}
+                onClick={close}
             />
+
+            <Bookmark>
+                <div>{obj.folderData.name}</div>
+            </Bookmark>
 
             {/* 顯示筆記地方 */}
-            <DragDropContext
-                onDragEnd={(e) => dragEnd(e)}
-            >
-                <Droppable droppableId="drop-id">
-                    {(provided, snapshot) => (
-                        <div
-                            {...provided.droppableProps}
-                            ref={provided.innerRef}
-                        >
-                            <TextMain
-                                obj={obj}
-                                id={id}
-                                noteProvided={provided}
-                                saveWarning={saveWarning}
-                            />
-                        </div>
-                    )}
-                </Droppable>
-            </DragDropContext>
+            <div style={{gridRow: 1}}>
+                <TextMain
+                    obj={obj}
+                    id={id}
+                    saveWarning={saveWarning}
+                    area={'textMain'}
+                />
+            </div>
+
+            <div style={{gridRow: 2}}>
+                <BottomBar setSaveWarning={setSaveWarning}/>
+            </div>
+
+            <div style={{gridRow: 3}}>
+                <AddNewNote/>
+                <Storage/>
+                <Bar/>
+                <SearchNote/>
+            </div>
 
 
-            <AddNewNote/>
-            <Storage/>
-            <Bar/>
-            <SearchNote/>
-
-            <BottomBar
-                setSaveWarning={setSaveWarning}
-            />
         </Main>
     );
 }

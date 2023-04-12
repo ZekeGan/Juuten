@@ -1,7 +1,13 @@
 import React, {useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react';
 import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
-import {addAddAnimation, addDragEnd, addOpenEditToolbar, selectCollection,} from "../../../redux/slice/collectionSlice";
+import {
+    addAddAnimation,
+    addDragEnd,
+    addOpenEditToolbar,
+    addRearrangeNote,
+    selectCollection,
+} from "../../../redux/slice/collectionSlice";
 import {global, autoFocus} from "../../../assets/global";
 import Comment from "../note/Comment.jsx";
 import Textarea from "../note/Textarea.jsx";
@@ -24,7 +30,7 @@ const TextMain = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 5px 10px 10px 10px;
+    padding: 35px 10px 0 10px;
     overflow: scroll; 
     &::-webkit-scrollbar {
         width: 5px;
@@ -40,18 +46,20 @@ const TextMain = styled.div`
 
 export default function App(p) {
     const dispatch = useDispatch()
-    const {saveWarning, id, obj, noteProvided} = p
+    const {saveWarning, id, obj, area} = p
     const {addNewNoteAnimation, addNewCommentAnimation, openEditId} = useSelector(selectCollection)
     const data = obj[id]
 
     function dragEnd(e) {
         const {destination, source} = e
         if (!destination || !source) return
-        dispatch(addDragEnd({
+        dispatch(addRearrangeNote({
+            area,
             destination,
-            source,
+            source
         }))
     }
+
 
     /* 新增筆記後的動畫 */
     useMemo(() => {
@@ -60,56 +68,45 @@ export default function App(p) {
         }, 0)
     }, [addNewNoteAnimation])
 
+
     return (
-        <TextMain>
-            {
-                data.map((item, idx) => (
-                    <Draggable
-                        key={item.key}
-                        draggableId={`Note-drag-key-${item.key}`}
-                        index={idx}
+        <DragDropContext onDragEnd={(e) => dragEnd(e)}>
+            <Droppable droppableId={`${area}_note_dropId_solo`}>
+                {(provided, snapshot) => (
+                    <div
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
                     >
-                        {
-                            (noteProvided) => (
-                                <div
-                                    ref={noteProvided.innerRef}
-                                    {...noteProvided.draggableProps}
-                                >
-                                    <DragDropContext
-                                        onDragEnd={(e) => dragEnd(e)}
+                        <TextMain>
+                            {
+                                data.map((item, idx) => (
+                                    <Draggable
+                                        key={`${area}_note_key_${item.key}`}
+                                        draggableId={`${area}_note_dragId_${item.key}`}
+                                        index={idx}
                                     >
-                                        <Droppable
-                                            droppableId={`drog_key_${item.key}`}
-                                            isDropDisabled={!(openEditId === item.key)}
-                                        >
-                                            {(provided) => (
-                                                <div
-                                                    ref={provided.innerRef}
-                                                    {...provided.droppableProps}
-                                                >
-                                                    <Note
-                                                        item={item}
-                                                        noteProvided={noteProvided}
-                                                        provided={provided}
-                                                    />
-                                                </div>
-                                            )}
-                                        </Droppable>
+                                        {(provided) => (
+                                            <div
+                                                ref={provided.innerRef}
+                                                {...provided.draggableProps}
+                                            >
+                                                <Note
+                                                    item={item}
+                                                    area={area}
+                                                    noteProvided={provided}
+                                                />
+                                            </div>
+                                        )}
+                                    </Draggable>
+                                ))
+                            }
+                            {provided.placeholder}
+                            <ThisIsBottom/>
+                        </TextMain>
+                    </div>
+                )}
+            </Droppable>
+        </DragDropContext>
 
-                                    </DragDropContext>
-                                </div>
-
-                            )
-                        }
-                    </Draggable>
-
-                ))
-            }
-            {noteProvided.placeholder}
-            <ThisIsBottom/>
-        </TextMain>
     );
 }
-
-
-export {TextMain}

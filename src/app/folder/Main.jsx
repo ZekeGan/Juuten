@@ -22,6 +22,8 @@ import FolderBlock from "./FolderBlock.jsx";
 import SearchNote from "../bottomBar/search/SearchNote.jsx";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 import ThisIsBottom from "../../component/ThisIsBottom.jsx";
+import Mask from "../../component/Mask.jsx";
+import {selectCollection} from "../../redux/slice/collectionSlice";
 
 const {primary, secondary, tertiary, transition_speed1, warning, max_height, max_width} = global
 
@@ -55,6 +57,7 @@ export default function App() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const {Juuten_folderLists, editFolderId, addFolderAnimationId, folderAutoFocusId} = useSelector(selectFolder)
+    const {openBar,openAddNewNote} = useSelector(selectCollection)
     const [regTest, setRegTest] = useState(false)
     const [sameName, setSameName] = useState(false)
     const [delCheck, setDelCheck] = useState(false)
@@ -76,7 +79,7 @@ export default function App() {
     function removeToolbar(e) {
         e.stopPropagation()
         dispatch(addEditFolderId(''))
-        return document.removeEventListener('click', removeToolbar ,false)
+        return document.removeEventListener('click', removeToolbar, false)
     }
 
     useEffect(() => {
@@ -85,12 +88,6 @@ export default function App() {
         }
     }, [editFolderId])
 
-    // const leaveEdit = (e) => {
-    //     e.stopPropagation()
-    //     if (editFolderId) dispatch(addEditFolderId(''))
-    //     // dispatch(addSetFolderAutoFocusId(''))
-    //
-    // }
 
     function dragEnd(e) {
         const {destination, source} = e
@@ -109,44 +106,41 @@ export default function App() {
                 delCheck={delCheck}
                 // setDelCheck={() => setDelCheck()}
             />
-            <DragDropContext
-                onDragEnd={(e) => dragEnd(e)}
-            >
-                <Droppable
-                    droppableId={`folder_drog_key`}
-                    // isDropDisabled={!(openEditId === item.key)}
-                >
-                    {
-                        (provided) => (
-                            <div
-                                ref={provided.innerRef}
-                                {...provided.droppableProps}
-                            >
-                                <FolderSection>
-                                    {/* 新增資料夾 */}
-                                    <div>
-                                        <AddNewFolder
-                                            setRegTest={setRegTest}
+            <Mask open={openBar || openAddNewNote}/>
+
+
+
+
+            <DragDropContext onDragEnd={(e) => dragEnd(e)}>
+                <Droppable droppableId={`folder_drog_key`}>
+                    {(provided) => (
+                        <div
+                            ref={provided.innerRef}
+                            {...provided.droppableProps}
+                        >
+                            <FolderSection>
+                                {/* 新增資料夾 */}
+                                <div>
+                                    <AddNewFolder
+                                        setRegTest={setRegTest}
+                                        setSameName={setSameName}
+                                    />
+                                </div>
+                                {
+                                    Juuten_folderLists.map((item, idx) => (
+                                        <FolderBlock
+                                            key={item.key}
+                                            item={item}
+                                            idx={idx}
+                                            setDelCheck={setDelCheck}
                                             setSameName={setSameName}
                                         />
-                                    </div>
-                                    {
-                                        Juuten_folderLists.map((item, idx) => (
-                                            <FolderBlock
-                                                key={item.key}
-                                                item={item}
-                                                idx={idx}
-                                                setDelCheck={setDelCheck}
-                                                setSameName={setSameName}
-                                            />
-                                        ))
-                                    }
-                                    {/*<ThisIsBottom/>*/}
-                                </FolderSection>
-                                {provided.placeholder}
-                            </div>
-                        )
-                    }
+                                    ))
+                                }
+                            </FolderSection>
+                            {provided.placeholder}
+                        </div>
+                    )}
                 </Droppable>
             </DragDropContext>
 

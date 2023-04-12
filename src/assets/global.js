@@ -9,7 +9,7 @@ export const global = {
     main: '#f7c92e',
     fontColor: '#545454',
     primary: '#F0F2F5',
-    primary_opacity: 'rgba(240, 242, 245, 0.7)',
+    primary_opacity: 'rgba(240, 242, 245, 0.8)',
     secondary: '#cfd9de',
     tertiary: '#8A8A8A',
     quaternary: '#eff3f4',
