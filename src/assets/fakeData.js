@@ -24,7 +24,7 @@ const Juuten_folderLists = [
         tags: []
     },
     {
-        key: '0894asas890',
+        key: '089aas4asas890',
         name: '20210519_日本料理',
         folderColor: 'skyblue',
         font: false,
@@ -45,7 +45,7 @@ const Juuten_folderLists = [
         tags: []
     },
     {
-        key: '0894eg890',
+        key: 'sus',
         name: 'sas',
         folderColor: 'yellow',
         font: false,
@@ -59,7 +59,7 @@ const Juuten_folderLists = [
         tags: []
     },
     {
-        key: '089aa4eg890',
+        key: '089aa4eg89sw0',
         name: 'sas',
         folderColor: 'yellow',
         font: false,
@@ -123,6 +123,12 @@ const N1 = [
                 currentDate: '2022/10/10 12:11',
                 msg: '{"blocks":[{"key":"70fru","text":"最慘的難，去了已經看不到俄羅斯的未來在哪裡...","type":"unstyled","depth":0,"inlineStyleRanges":[{"offset":44,"length":3,"style":"CODE"},{"offset":106,"length":3,"style":"CODE"}],"entityRanges":[],"data":{}}],"entityMap":{}}',
                 comment: []
+            },  {
+                key: 'Juuten_2s55',
+                type: 'comment',
+                currentDate: '2022/10/10 12:11',
+                msg: '{"blocks":[{"key":"a1o9s","text":"xxx jsisja klslsp;a xxx okokoko xx kook9jxx j9j9kpxkpkopkxxkopkopkmxxxipjpkoopxxkpokopx,","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',
+                comment: []
             },
             {
                 key: 'Juuten_344',
@@ -159,7 +165,14 @@ const N1 = [
                 key: 'Juuten_5',
                 type: 'comment',
                 currentDate: '2022/10/10 12:11',
-                msg: '{"blocks":[{"key":"3spv9","text":"舉例有些遙遠，個人是看長期國際貿易和貿易聯盟零關稅加深供應鏈過度集中，供應堅韌性逐漸下降一堆國家工業製造都出現斷層，各類產品可能主要前3產國就可以占到市占7~9成，如同投資放在同個籃利潤大風險也大，現在風險發生利潤是要還回去的可能還要倒還，就如同長期政客為了當選低利率，風險發生通膨要全民一起還，俄國出口主要的自然資源又是附近國家很缺的+加上國貿較晚起步還不夠依賴，影響自然會比較少；現在中台貿易從現政府上任一來一年3.5兆漲到7兆台幣都不知道到底是不是假站美國邊，然後台幣升就阻時不時升跌就放跌...真的超獨厚出口資方老闆；供應堅韌性逐漸下降EX:疫情如果在晚個5年爆發搞不好那時台灣國內就已經沒有人生產口罩了","type":"unstyled","depth":0,"inlineStyleRanges":[{"offset":67,"length":1,"style":"CODE"},{"offset":77,"length":3,"style":"CODE"},{"offset":168,"length":1,"style":"CODE"},{"offset":208,"length":3,"style":"CODE"},{"offset":214,"length":1,"style":"CODE"},{"offset":248,"length":3,"style":"CODE"},{"offset":272,"length":3,"style":"CODE"},{"offset":282,"length":1,"style":"CODE"}],"entityRanges":[],"data":{}}],"entityMap":{}}',
+                msg: '{"blocks":[{"key":"3spv9","text":"舉例有些遙\遠\，個人是?看長期國際貿易和貿?易聯盟零關稅加深供應|鏈過度集中，供應堅\韌性逐漸下降一堆國家工業製造都出現斷層，各類產品可能主要前3產國就可以占到市占7~9成，如同投資放在同個籃利潤大風險也大，現在風險發生利潤是要還回去的可能還要倒還，就如同長期政客為了當選低利率，風險發生通膨要全民一起還，俄國出口主要的自然資源又是附近國家很缺的+加上國貿較晚起步還不夠依賴，影響自然會比較少；現在中台貿易從現政府上任一來一年3.5兆漲到7兆台幣都不知道到底是不是假站美國邊，然後台幣升就阻時不時升跌就放跌...真的超獨厚出口資方老闆；供應堅韌性逐漸下降EX:疫情如果在晚個5年爆發搞不好那時台灣國內就已經沒有人生產口罩了","type":"unstyled","depth":0,"inlineStyleRanges":[{"offset":67,"length":1,"style":"CODE"},{"offset":77,"length":3,"style":"CODE"},{"offset":168,"length":1,"style":"CODE"},{"offset":208,"length":3,"style":"CODE"},{"offset":214,"length":1,"style":"CODE"},{"offset":248,"length":3,"style":"CODE"},{"offset":272,"length":3,"style":"CODE"},{"offset":282,"length":1,"style":"CODE"}],"entityRanges":[],"data":{}}],"entityMap":{}}',
+                comment: []
+            },
+            {
+                key: 'Juuten_599',
+                type: 'comment',
+                currentDate: '2022/10/10 12:11',
+                msg: '{"blocks":[{"key":"2bk71","text":"這篇文?章將/討論如何在 JavaScript 中從數組中刪除未定義的值。該解決方案應返回一個排除未定義值的新數組。","type":"unstyled","depth":0,"inlineStyleRanges":[{"offset":1,"length":2,"style":"BOLD"},{"offset":4,"length":2,"style":"BOLD"},{"offset":7,"length":2,"style":"BOLD"},{"offset":11,"length":10,"style":"STRIKETHROUGH"},{"offset":24,"length":10,"style":"ITALIC"},{"offset":39,"length":17,"style":"UNDERLINE"}],"entityRanges":[],"data":{}}],"entityMap":{}}',
                 comment: []
             },
             //         {
@@ -171,6 +184,13 @@ const N1 = [
             //         }
         ]
     },
+    {
+        key: 'Juuten_2asww55',
+        type: 'collection',
+        currentDate: '2022/10/10 12:11',
+        msg: '{"blocks":[{"key":"70fru","text":"最慘的難，去了已經jjjjjjjjj看不到俄羅斯的未來在哪裡...","type":"unstyled","depth":0,"inlineStyleRanges":[{"offset":44,"length":3,"style":"CODE"},{"offset":106,"length":3,"style":"CODE"}],"entityRanges":[],"data":{}}],"entityMap":{}}',
+        comment: []
+    }
 ]
 
 

@@ -77,7 +77,7 @@ const EditToolbar = styled.div`
 
 export default function App(p) {
     const dispatch = useDispatch()
-    let {item, draftRef,} = p
+    let {item, draftRef, showToolbar} = p
     const {openEditId, openEditType, useTool, toggleCSS} = useSelector(selectCollection)
 
     const open = (payload) => {
@@ -114,90 +114,97 @@ export default function App(p) {
             {/* date place */}
             <DateBox open={openEditId === item.key}>
                 <div className={'build-date'}>{item.currentDate}</div>
+                {
+                    showToolbar
+                    && <div className={'icon-box'}>
+                        {
+                            item.type === 'collection'
+                            && <Icon.Chat
+                                size={icon_size_m}
+                                title={'新增留言'}
+                                onClick={() => addComment({key: item.key})}
+                            />
+                        }
+                        <Icon.Pen
+                            size={icon_size_m}
+                            onClick={() => open({key: item.key, type: item.type})}
+                        />
+                        {
+                            item.type === 'storage'
+                            && <Icon.BarTop
+                                size={icon_size_m}
+                                title={'加入至資料夾'}
+                                onClick={() => moveToStorageOrCollection({
+                                    key: item.key,
+                                    toWhere: 'toCollection'
+                                })}
+                            />
+                        }
+                        {
+                            item.type === 'collection'
+                            && <Icon.BarDown
+                                size={icon_size_m}
+                                title={'放入暫存區'}
+                                onClick={() => moveToStorageOrCollection({key: item.key, toWhere: 'toStorage'})}
+                            />
+                        }
+                    </div>
+                }
 
-                <div className={'icon-box'}>
-                    {
-                        item.type === 'collection'
-                        && <Icon.Chat
-                            size={icon_size_m}
-                            title={'新增留言'}
-                            onClick={() => addComment({key: item.key})}
-                        />
-                    }
-                    <Icon.Pen
-                        size={icon_size_m}
-                        onClick={() => open({key: item.key, type: item.type})}
-                    />
-                    {
-                        item.type === 'storage'
-                        && <Icon.BarTop
-                            size={icon_size_m}
-                            title={'加入至資料夾'}
-                            onClick={() => moveToStorageOrCollection({
-                                key: item.key,
-                                toWhere: 'toCollection'
-                            })}
-                        />
-                    }
-                    {
-                        item.type === 'collection'
-                        && <Icon.BarDown
-                            size={icon_size_m}
-                            title={'放入暫存區'}
-                            onClick={() => moveToStorageOrCollection({key: item.key, toWhere: 'toStorage'})}
-                        />
-                    }
-                </div>
 
             </DateBox>
 
             {/* editing 動畫 */}
-            <EditToolbar open={openEditId === item.key}>
-                <ShowEditCounting/>
-                <div className={'icon-box'}>
-                    <div className={'textingToolbar'}>
-                        <div
-                            className={'toggle-btn'}
-                            onMouseDown={(e) => draftRef.current.toggleStyle('BOLD', e)}
-                            style={toggleCSS.includes('BOLD') ? {fontWeight: 'bold'} : {}}
-                        >
-                            B
-                        </div>
-                        <div
-                            className={'toggle-btn'}
-                            onMouseDown={(e) => draftRef.current.toggleStyle('ITALIC', e)}
-                            style={toggleCSS.includes('ITALIC') ? {fontStyle: 'italic'} : {}}
-                        >
-                            I
-                        </div>
-                        <div
-                            className={'toggle-btn'}
-                            style={toggleCSS.includes('STRIKETHROUGH') ? {textDecoration: 'line-through'} : {}}
-                            onMouseDown={(e) => draftRef.current.toggleStyle('STRIKETHROUGH', e)}
-                        >
-                            S
-                        </div>
-                        <div
-                            className={'toggle-btn'}
-                            style={toggleCSS.includes('UNDERLINE') ? {textDecoration: 'underline'} : {}}
-                            onMouseDown={(e) => draftRef.current.toggleStyle('UNDERLINE', e)}
-                        >
-                            U
-                        </div>
+            {
+                showToolbar
+                && <EditToolbar open={openEditId === item.key}>
+                    <ShowEditCounting/>
+                    <div className={'icon-box'}>
+                        <div className={'textingToolbar'}>
+                            <div
+                                className={'toggle-btn'}
+                                onMouseDown={(e) => draftRef.current.toggleStyle('BOLD', e)}
+                                style={toggleCSS.includes('BOLD') ? {fontWeight: 'bold'} : {}}
+                            >
+                                B
+                            </div>
+                            <div
+                                className={'toggle-btn'}
+                                onMouseDown={(e) => draftRef.current.toggleStyle('ITALIC', e)}
+                                style={toggleCSS.includes('ITALIC') ? {fontStyle: 'italic'} : {}}
+                            >
+                                I
+                            </div>
+                            <div
+                                className={'toggle-btn'}
+                                style={toggleCSS.includes('STRIKETHROUGH') ? {textDecoration: 'line-through'} : {}}
+                                onMouseDown={(e) => draftRef.current.toggleStyle('STRIKETHROUGH', e)}
+                            >
+                                S
+                            </div>
+                            <div
+                                className={'toggle-btn'}
+                                style={toggleCSS.includes('UNDERLINE') ? {textDecoration: 'underline'} : {}}
+                                onMouseDown={(e) => draftRef.current.toggleStyle('UNDERLINE', e)}
+                            >
+                                U
+                            </div>
 
+                        </div>
+                        <Icon.Save
+                            size={icon_size_m}
+                            title={'儲存'}
+                            onClick={() => leaveEdit()}
+                        />
+                        <Icon.Delete
+                            size={icon_size_m}
+                            title={'刪除'}
+                            onClick={() => deleteNoteOrComment()}
+                        />
                     </div>
-                    <Icon.Save
-                        size={icon_size_m}
-                        title={'儲存'}
-                        onClick={() => leaveEdit()}
-                    />
-                    <Icon.Delete
-                        size={icon_size_m}
-                        title={'刪除'}
-                        onClick={() => deleteNoteOrComment()}
-                    />
-                </div>
-            </EditToolbar>
+                </EditToolbar>
+            }
+
 
         </TextingToolbar>
     );

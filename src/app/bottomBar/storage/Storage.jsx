@@ -11,8 +11,6 @@ import BottemBarTemplate from "../BottemBarTemplate.jsx";
 function Storage(props) {
     const obj = useSelector(selectCollection)
     const dispatch = useDispatch()
-
-
     return (
         <BottemBarTemplate
             open={obj.openStorage}

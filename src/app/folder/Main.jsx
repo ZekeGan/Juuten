@@ -1,31 +1,30 @@
 import React, {useState, useEffect, useMemo, useRef} from 'react';
 import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
+import {DragDropContext, Droppable} from "react-beautiful-dnd";
 import {
     addEditFolderAnimationId,
-    addEditFolderId, addRearrangeFolder,
+    addEditFolderId,
+    addRearrangeFolder,
     selectFolder,
 } from "../../redux/slice/folderSlice";
 import {useNavigate} from "react-router-dom";
 import {global} from "../../assets/global";
-import Icon from '../../assets/svg.jsx'
+import {selectCollection} from "../../redux/slice/collectionSlice";
+
 import AddNewFolder from "./AddingNewFolder.jsx";
 import Warning from "../../component/Warning.jsx";
-import Toolbar from "./FolderToolbar.jsx";
 import DeletingCheck from "../../component/DeletingCheck.jsx";
-import FolderName from "./FolderName.jsx";
 import BottomBar from "../bottomBar/BottomBar.jsx";
 import Storage from "../bottomBar/storage/Storage.jsx";
 import Bar from "../bottomBar/bar/Bar.jsx";
 import AddNewNote from "../bottomBar/addNewNote/AddNewNote.jsx";
 import FolderBlock from "./FolderBlock.jsx";
 import SearchNote from "../bottomBar/search/SearchNote.jsx";
-import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
-import ThisIsBottom from "../../component/ThisIsBottom.jsx";
 import Mask from "../../component/Mask.jsx";
-import {selectCollection} from "../../redux/slice/collectionSlice";
+import Navbar from "../navbar/Navbar.jsx";
 
-const {primary, secondary, tertiary, transition_speed1, warning, max_height, max_width} = global
+const {primary, secondary, max_height, max_width} = global
 
 
 const Folders = styled.div`
@@ -42,7 +41,7 @@ const FolderSection = styled.div`
     align-items: center;
     width: 100%;
     height: ${max_height}px;
-    padding-bottom: 48px;
+    padding: 30px 0 48px 0;
     overflow: scroll;
     &::-webkit-scrollbar {
         width: 10px;
@@ -57,7 +56,7 @@ export default function App() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const {Juuten_folderLists, editFolderId, addFolderAnimationId, folderAutoFocusId} = useSelector(selectFolder)
-    const {openBar,openAddNewNote} = useSelector(selectCollection)
+    const {openBar, openAddNewNote} = useSelector(selectCollection)
     const [regTest, setRegTest] = useState(false)
     const [sameName, setSameName] = useState(false)
     const [delCheck, setDelCheck] = useState(false)
@@ -108,7 +107,7 @@ export default function App() {
             />
             <Mask open={openBar || openAddNewNote}/>
 
-
+            <Navbar area={'home'} text={'Juuten'}/>
 
 
             <DragDropContext onDragEnd={(e) => dragEnd(e)}>
@@ -137,8 +136,8 @@ export default function App() {
                                         />
                                     ))
                                 }
+                                {provided.placeholder}
                             </FolderSection>
-                            {provided.placeholder}
                         </div>
                     )}
                 </Droppable>
@@ -149,7 +148,7 @@ export default function App() {
             <Storage/>
             <AddNewNote/>
             <Bar/>
-            <BottomBar area={'home'}/>
+            <BottomBar/>
         </Folders>
     );
 }

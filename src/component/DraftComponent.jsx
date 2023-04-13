@@ -2,18 +2,26 @@ import React, {useState, forwardRef, useImperativeHandle, useEffect, useRef} fro
 import {EditorState, RichUtils, Editor, convertFromRaw, convertToRaw} from 'draft-js'
 import {useDispatch} from "react-redux";
 import {addChangeToggleCSS} from "../redux/slice/collectionSlice";
+import {global} from "../assets/global";
+
+const {main} = global
 
 const DraftComponent = forwardRef((props, ref) => {
     const dispatch = useDispatch()
     const mainRef = useRef(null)
     const {
-        item = null,
+        item = '',
         readOnly = false
     } = props
     const [editorState, setEditorState] = useState(() => {
         if (item) return EditorState.createWithContent(convertFromRaw(JSON.parse(item)))
         else return EditorState.createEmpty()
     })
+    const styleMap = {
+        'HIGHLIGHT': {
+            'backgroundColor': main,
+        }
+    };
 
     function onChange(state) {
         dispatch(addChangeToggleCSS(state.getCurrentInlineStyle().toJS()))
@@ -37,14 +45,19 @@ const DraftComponent = forwardRef((props, ref) => {
             return JSON.stringify(convertToRaw(editorState.getCurrentContent()))
         },
         hasText: () => {
-          return editorState.getCurrentContent().hasText()
+            return editorState.getCurrentContent().hasText()
+        },
+        upDate: (state) => {
+            const newState = EditorState.createWithContent(convertFromRaw(JSON.parse(state)))
+            onChange(newState)
         }
-    }), [editorState])
 
+    }), [editorState])
 
 
     return (
         <Editor
+            customStyleMap={styleMap}
             editorState={editorState}
             onChange={onChange}
             readOnly={readOnly}

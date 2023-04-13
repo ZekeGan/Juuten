@@ -59,23 +59,12 @@ const StorageCount = styled.div`
 
 
 
-const App = (p) => {
-    const {setSaveWarning, area} = p
+const App = () => {
     const {
         Juuten_Storage: storage,
-        openEditId
     } = useSelector(selectCollection)
     const dispatch = useDispatch()
-    const navigate = useNavigate()
 
-    const back = () => {
-        if (openEditId) {
-            setSaveWarning(true)
-            setTimeout(() => setSaveWarning(false), 3000)
-        } else {
-            navigate('/home')
-        }
-    }
     const openStorage = () => {
         dispatch(addOpenStorage('open'))
     }
@@ -95,18 +84,8 @@ const App = (p) => {
 
     return (
         <BottomBar>
-
-            {/* 上一頁 */}
-            {
-                area === 'home'
-                    ? ''
-                    : <Icon.House
-                        size={icon_size_l}
-                        styled={{color: main}}
-                        onClick={() => back()}
-                    />
-            }
             <Icon.Search
+                title={'搜尋筆記'}
                 size={icon_size_l}
                 styled={{color: main}}
                 onClick={() => searchNote()}
@@ -114,7 +93,8 @@ const App = (p) => {
 
 
             {/* 加入新筆記 */}
-            <Icon.Note
+            <Icon.Plus
+                title={'新增筆記'}
                 size={icon_size_l}
                 styled={{color: main}}
                 onClick={() => addNewNote()}/>
@@ -123,6 +103,7 @@ const App = (p) => {
             {/* 顯示暫存區數量 */}
             <StorageCount onClick={() => openStorage()}>
                 <Icon.Box
+                    title={'置物區'}
                     size={icon_size_l}
                     styled={{color: main}}
                 />
@@ -135,6 +116,7 @@ const App = (p) => {
 
             {/* 更多工具 Icon */}
             <Icon.Bar
+                title={'更多'}
                 size={icon_size_l}
                 styled={{color: main}}
                 onClick={() => openBar('open')}

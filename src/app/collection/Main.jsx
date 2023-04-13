@@ -17,10 +17,12 @@ import AddNewNote from "../bottomBar/addNewNote/AddNewNote.jsx";
 import SearchNote from "../bottomBar/search/SearchNote.jsx";
 import {selectFolder} from "../../redux/slice/folderSlice";
 import Mask from "../../component/Mask.jsx";
-import Bookmark from "../../component/Bookmark.jsx";
+import Navbar from "../navbar/Navbar.jsx";
+import Icon from '../../assets/svg.jsx'
+import JInput from "../../component/JInput.jsx";
 
 
-const {main, primary, transition_speed1, max_height, max_width, primary_opacity} = global
+const {main, primary, transition_speed1, max_height, max_width, primary_opacity, icon_size_s} = global
 
 
 const Main = styled.div`
@@ -45,6 +47,7 @@ const Main = styled.div`
 *   */
 export default function App() {
     const [saveWarning, setSaveWarning] = useState(false)
+    const [hideNav, setHideNav] = useState(false)
     const dispatch = useDispatch()
     const {id} = useParams()
     const {Juuten_folderLists} = useSelector(selectFolder)
@@ -59,33 +62,31 @@ export default function App() {
         ))
     }, [])
 
-    console.log(obj.folderData)
-
 
     return (
         <Main>
 
-            <Mask
-                open={obj.openBar || obj.openAddNewNote}
-                onClick={close}
+            <Navbar
+                hide={hideNav}
+                text={obj.folderData.name}
+                setSaveWarning={setSaveWarning}
             />
-
-            <Bookmark>
-                <div>{obj.folderData.name}</div>
-            </Bookmark>
 
             {/* 顯示筆記地方 */}
             <div style={{gridRow: 1}}>
                 <TextMain
                     obj={obj}
                     id={id}
+                    setHideNav={setHideNav}
                     saveWarning={saveWarning}
                     area={'textMain'}
                 />
             </div>
 
+
+
             <div style={{gridRow: 2}}>
-                <BottomBar setSaveWarning={setSaveWarning}/>
+                <BottomBar setHideNav={setHideNav}/>
             </div>
 
             <div style={{gridRow: 3}}>

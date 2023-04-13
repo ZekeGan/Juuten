@@ -10,7 +10,7 @@ const Page = styled.div`
     flex-direction: column;
     background-color: ${({noteType}) => noteType ? '#fffab9' : 'white'};
     border-radius: 10px;
-    box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.2);
+    box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.1);
     overflow: hidden;
     width: ${max_width * 0.95}px;
     margin: 5px 0;
@@ -55,15 +55,20 @@ function NoteTemplate(
 
     return (
         <Page add={add}>
-            <NoteDragHandle
-                show={handleShow}
-                onMouseEnter={() => setHandleShow(true)}
-                onMouseDown={() => setIsClick(true)}
-                onMouseLeave={() => !isClick && setHandleShow(false)}
-                {...provided?.dragHandleProps}
-            >
-                <div className={'handle'}/>
-            </NoteDragHandle>
+            {
+                !!Object.keys(provided).length
+                && <NoteDragHandle
+                    show={handleShow}
+                    onMouseEnter={() => setHandleShow(true)}
+                    onMouseDown={() => setIsClick(true)}
+                    onMouseLeave={() => !isClick && setHandleShow(false)}
+                    {...provided?.dragHandleProps}
+                >
+                    <div className={'handle'}/>
+                </NoteDragHandle>
+            }
+
+
             {children}
         </Page>
     );

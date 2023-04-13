@@ -9,13 +9,14 @@ const {primary, transition_speed1, tertiary, max_width, max_height, icon_size_s,
 
 const Main = styled.div`
     width: ${max_width}px;
-    height: ${(p) => p.fullPage ? (max_height - 30) : '400'}px;
+    height: ${(p) => p.fullPage ? (max_height) : '400'}px;
     position: absolute;
     z-index: 3;
-    bottom: ${(p) => p.fullPage ? `-${(max_height - 30)}` : '-400'}px;
+    bottom: ${(p) => p.fullPage ? `-${(max_height)}` : '-400'}px;
     background-color: ${primary}; 
-    transform: translateY(${props => props.open ? props.fullPage ? `-${(max_height - 30)}px` : '-400px' : '0'});
-    ${transition_speed1}`
+    transform: translateY(${props => props.open ? props.fullPage ? `-${(max_height)}px` : '-400px' : '0'});
+    ${transition_speed1}
+    ${(p) => !p.fullPage && `border-top: 1px solid ${secondary};` }`
 
 
 const CloseBar = styled.div`
@@ -38,6 +39,7 @@ const Container = styled.div`
     height: 100%;
     overflow-y: scroll;
     overflow-x: hidden;
+    // margin-top: 30px;
     &::-webkit-scrollbar {
         width: 5px;
     }

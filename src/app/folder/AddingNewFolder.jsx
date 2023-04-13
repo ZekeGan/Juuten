@@ -11,43 +11,10 @@ import {useDispatch, useSelector} from "react-redux";
 import styled from "styled-components";
 import FolderTemplate from "./FolderTemplate.jsx";
 import {Draggable} from "react-beautiful-dnd";
+import JInput from "../../component/JInput.jsx";
 
 const {main, primary, secondary, transition_speed1, icon_size_xl} = global
 
-// const Folder = styled.div`
-//     display: flex;
-//     flex-wrap: wrap;
-//     justify-content: center;
-//     align-items: center;
-//     width: 100%;
-//     height: 40px;
-//     border-radius: 5px;
-//     background-color: ${p => p.folderColor};
-//     overflow: hidden;
-//     ${transition_speed1}
-//     box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
-//      > .container {
-//         position: relative;
-//         display: flex;
-//         justify-content: center;
-//         align-items: center;
-//         width: 100%;
-//         height: 40px;
-//         ${transition_speed1}
-//         > input {
-//             height: 50%;
-//             width: 80%;
-//             background-color: transparent;
-//             outline: none;
-//             border: none;
-//             overflow: hidden;
-//             border-bottom: 2px solid ${primary};
-//             resize: none;
-//             padding-bottom: 5px;
-//
-//         }
-//      }
-// `
 
 const Container = styled.div`
     position: absolute;
@@ -67,18 +34,7 @@ const Container = styled.div`
     }
 `
 
-const NewFolderInput = styled.input`
-    height: 50%;
-    width: 70%;
-    background-color: transparent;
-    outline: none;
-    border: none;
-    overflow: hidden;
-    border-bottom: 2px solid ${main};
-    resize: none;
-    padding-bottom: 5px;
-    margin: 0 5%;
-`
+
 
 const MyComponent = (p, ref) => {
     const [newFolder, setNewFolder] = useState(false)
@@ -153,9 +109,7 @@ const MyComponent = (p, ref) => {
                     styled={`color: ${main}`}
                     onClick={(e) => createdNewFolderOrNot(e, 'stop')}
                 />
-                <NewFolderInput
-                    ref={inputRef}
-                />
+                <JInput mRef={inputRef}/>
                 <Icon.Save
                     size={icon_size_xl}
                     styled={`color: ${main}`}

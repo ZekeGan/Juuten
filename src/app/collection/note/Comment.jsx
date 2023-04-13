@@ -36,9 +36,8 @@ const DragHandle = styled.div`
     ${transition_speed1}`
 
 
-const App = (p, ref) => {
+const App = ({item, open, provided = false, showToolbar = true}) => {
     const dispatch = useDispatch()
-    const {parentItem, item, dragHandle, open, provided} = p
     const {addNewCommentAnimation, openEditId} = useSelector(selectCollection)
 
     useMemo(() => {
@@ -47,14 +46,13 @@ const App = (p, ref) => {
         }, 0)
     }, [addNewCommentAnimation])
 
-
     return (
         <Comment animation={addNewCommentAnimation === item.key}>
             <DragHandle
                 open={open}
-                {...provided.dragHandleProps}
+                {...provided?.dragHandleProps}
             />
-            <Textarea item={item}/>
+            <Textarea item={item} showToolbar={showToolbar}/>
         </Comment>
 
     )

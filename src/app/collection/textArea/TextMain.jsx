@@ -26,11 +26,11 @@ const TextMain = styled.div`
     position: relative;
     z-index: 1;
     width: ${max_width}px;
-    height: ${max_height}px;
+    height: ${({area}) => area ? '100%' : `${max_height}px`};
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 35px 10px 0 10px;
+    padding: ${({area}) => area ? '30px' : '50px'} 10px 0 10px;
     overflow: scroll; 
     &::-webkit-scrollbar {
         width: 5px;
@@ -46,9 +46,12 @@ const TextMain = styled.div`
 
 export default function App(p) {
     const dispatch = useDispatch()
-    const {saveWarning, id, obj, area} = p
+    const {saveWarning, id, obj, area, setHideNav} = p
     const {addNewNoteAnimation, addNewCommentAnimation, openEditId} = useSelector(selectCollection)
     const data = obj[id]
+    const textMainRef = useRef(null)
+    const [prevScroll, setPrevScroll] = useState(0)
+
 
     function dragEnd(e) {
         const {destination, source} = e
@@ -68,16 +71,32 @@ export default function App(p) {
         }, 0)
     }, [addNewNoteAnimation])
 
+    function handleScroll() {
+        const currentScrollPos = textMainRef.current.scrollTop;
+        if (prevScroll < currentScrollPos && textMainRef.current.scrollTop !== 0) {
+            setHideNav(true)
+        } else {
+            setHideNav(false)
+        }
+        setPrevScroll(currentScrollPos)
+        return () => textMainRef.current.removeEventListener('scroll', handleScroll, false)
+    }
+
+    useEffect(() => {
+        if (!textMainRef.current) return
+        textMainRef.current.addEventListener('scroll', handleScroll, false);
+    }, [prevScroll]);
 
     return (
-        <DragDropContext onDragEnd={(e) => dragEnd(e)}>
+        <DragDropContext
+            onDragEnd={(e) => dragEnd(e)}>
             <Droppable droppableId={`${area}_note_dropId_solo`}>
                 {(provided, snapshot) => (
                     <div
                         {...provided.droppableProps}
                         ref={provided.innerRef}
                     >
-                        <TextMain>
+                        <TextMain ref={textMainRef} area={area === 'storage'}>
                             {
                                 data.map((item, idx) => (
                                     <Draggable

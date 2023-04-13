@@ -11,7 +11,7 @@ const Main = styled.div`
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    margin: 10px 0;
+    margin: 10px 0 10px 0;
     border-radius: 10px;   
     background-color: ${p => p.folderColor};
     ${transition_speed1}

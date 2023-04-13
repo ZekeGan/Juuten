@@ -40,7 +40,8 @@ export const CollectionSlice = createSlice({
         storageAddAnimation: '',
         toggleCSS: [],
         useTool: false,
-        N1: N1
+        N1: N1,
+        sus: N1,
 
 
     },

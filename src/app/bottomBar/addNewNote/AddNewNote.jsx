@@ -81,7 +81,9 @@ function AddNewNote(props) {
     function addNewNote() {
         if (!draftRef.current.hasText()) return
         dispatch(addAddNewNote(draftRef.current.getJSONData()))
+        console.log(draftRef.current.getJSONData())
         dispatch(addOpenAddNewNote())
+
     }
 
     useEffect(() => {
