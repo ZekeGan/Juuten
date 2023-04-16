@@ -1,8 +1,8 @@
-import React, {useRef} from 'react';
+import React from 'react';
 import styled from "styled-components";
-import {global} from "../assets/global";
+import {useSelector} from "react-redux";
+import {selectGlobal} from "../redux/slice/globalSlice";
 
-const {main, primary} = global
 
 const NewFolderInput = styled.input`
     height: 50%;
@@ -11,7 +11,7 @@ const NewFolderInput = styled.input`
     outline: none;
     border: none;
     overflow: hidden;
-    border-bottom: 2px solid ${main};
+    border-bottom: 2px solid ${({config}) => config.main};
     resize: none;
     padding-bottom: 5px;
     margin: 0 5%;
@@ -28,12 +28,14 @@ const NormalInput = styled.input`
     padding: 0 3%`
 
 function JInput({type = false, mRef, callback}) {
+    const {configuration: config} = useSelector(selectGlobal)
+
     return (
         <>
             {
                 type
                     ? <NormalInput ref={mRef} onChange={callback}/>
-                    :  <NewFolderInput ref={mRef} onChange={callback}/>
+                    :  <NewFolderInput config={config} ref={mRef} onChange={callback}/>
             }
         </>
     );

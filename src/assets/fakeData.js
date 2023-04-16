@@ -116,6 +116,7 @@ const N1 = [
         url: 'https://www.youtube.com/watch?v=HSW6qfRUT9w',
         currentDate: '2022/10/10 12:11',
         msg: `{"blocks":[{"key":"an8qb","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}`,
+        isOpenComment: false,
         comment: [
             {
                 key: 'Juuten_255',
@@ -146,6 +147,7 @@ const N1 = [
         url: 'https://www.youtube.com/watch?v=HSW6qfRUT9w',
         currentDate: '2022/10/10 12:11',
         msg: `{"blocks":[{"key":"8s8rf","text":"本影片的資料主要來源為網上與社群媒體，資料眾","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"fuqhl","text":"多未能一一查","type":"header-three","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"ctr4","text":"，資訊並不一定百分之百正確，內容僅供參考。志在分享，如有誤點，歡迎指正。","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}`,
+        isOpenComment: true,
         comment: [
             {
                 key: 'Juuten_2',
@@ -189,6 +191,7 @@ const N1 = [
         type: 'collection',
         currentDate: '2022/10/10 12:11',
         msg: '{"blocks":[{"key":"70fru","text":"最慘的難，去了已經jjjjjjjjj看不到俄羅斯的未來在哪裡...","type":"unstyled","depth":0,"inlineStyleRanges":[{"offset":44,"length":3,"style":"CODE"},{"offset":106,"length":3,"style":"CODE"}],"entityRanges":[],"data":{}}],"entityMap":{}}',
+        isOpenComment: false,
         comment: []
     }
 ]

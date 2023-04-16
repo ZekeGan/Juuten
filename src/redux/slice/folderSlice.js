@@ -1,6 +1,7 @@
 import {createSlice, current} from "@reduxjs/toolkit";
 import {deepCopy, fetchData, getCurrentDate, setDataToLocal} from "../../utils";
 import {Juuten_folderLists} from "../../assets/fakeData";
+import {initialConfiguration} from "../../assets/global";
 
 const changeFontColor = (colorValue) => {
     let cut = colorValue.replace('#', '')

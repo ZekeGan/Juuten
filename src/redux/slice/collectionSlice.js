@@ -1,7 +1,6 @@
 import {createAsyncThunk, createSlice, current} from "@reduxjs/toolkit";
 import {fetchData, getCurrentDate, setDataToLocal} from "../../utils";
 import {Juuten_Storage, N1} from "../../assets/fakeData";
-// import store from "../store";
 import {convertToRaw, EditorState} from 'draft-js'
 
 const thunkData = createAsyncThunk(
@@ -219,26 +218,27 @@ export const CollectionSlice = createSlice({
         addComment: (state, action) => {
             const {folderId, openEditId, ...rest} = state
             const data = rest[folderId]
-            let _key
+
+            const _key = `Juuten_${Date.now()}`
+            const newComment = {
+                key: _key,
+                type: 'comment',
+                currentDate: getCurrentDate(),
+                msg: JSON.stringify(convertToRaw(EditorState.createEmpty().getCurrentContent()))
+            }
 
             const newCollectionData = data.map((item, index) => {
                 if (item.key === action.payload.key) {
-                    _key = `Juuten_${Date.now()}`
-                    const emptyDraftjsMsg = JSON.stringify(convertToRaw(EditorState.createEmpty().getCurrentContent()))
-                    const newComment = {
-                        key: _key,
-                        type: 'comment',
-                        currentDate: getCurrentDate(),
-                        msg: emptyDraftjsMsg,
-                    }
                     return {
                         ...item,
-                        comment: [...item.comment, newComment]
+                        comment: [newComment, ...item.comment]
                     }
                 }
                 return item
             })
+
             setDataToLocal(folderId, newCollectionData)
+
             return {
                 ...state,
                 [folderId]: newCollectionData,
@@ -340,6 +340,29 @@ export const CollectionSlice = createSlice({
             data.splice(destination.index, 0, remove)
             setDataToLocal(whatArea, data)
         },
+
+        openOrCloseComment: (state, action) => {
+            const {folderId} = state
+            const data = state[folderId]
+
+            const newData = data.map(item => {
+                if (item.key === action.payload) {
+                    return {
+                        ...item,
+                        isOpenComment: !item.isOpenComment
+                    }
+                }
+                else {
+                    return item
+                }
+
+            })
+            return {
+                ...state,
+                [folderId]: newData
+            }
+
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -404,5 +427,6 @@ export const {
     openAddNewNote: addOpenAddNewNote,
     changeToggleCSS: addChangeToggleCSS,
     rearrangeComment: addRearrangeComment,
-    rearrangeNote: addRearrangeNote
+    rearrangeNote: addRearrangeNote,
+    openOrCloseComment: addOpenOrCloseComment
 } = CollectionSlice.actions

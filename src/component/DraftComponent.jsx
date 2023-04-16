@@ -1,14 +1,15 @@
 import React, {useState, forwardRef, useImperativeHandle, useEffect, useRef} from 'react';
 import {EditorState, RichUtils, Editor, convertFromRaw, convertToRaw} from 'draft-js'
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {addChangeToggleCSS} from "../redux/slice/collectionSlice";
-import {global} from "../assets/global";
+import {selectGlobal} from "../redux/slice/globalSlice";
 
-const {main} = global
 
 const DraftComponent = forwardRef((props, ref) => {
     const dispatch = useDispatch()
     const mainRef = useRef(null)
+    const {configuration: config} = useSelector(selectGlobal)
+
     const {
         item = '',
         readOnly = false
@@ -19,7 +20,10 @@ const DraftComponent = forwardRef((props, ref) => {
     })
     const styleMap = {
         'HIGHLIGHT': {
-            'backgroundColor': main,
+            'backgroundColor': config.main,
+        },
+        'FONT_SIZE': {
+            fontSize: config.font_size_l
         }
     };
 

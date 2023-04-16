@@ -1,32 +1,28 @@
-import {createGlobalStyle} from "styled-components";
-import {addSetFocusFlag} from "../redux/slice/collectionSlice";
-
-const GlobalStyle = createGlobalStyle`
-
-`
-export default GlobalStyle
-export const global = {
-    main: '#f7c92e',
-    fontColor: '#545454',
-    primary: '#F0F2F5',
-    primary_opacity: 'rgba(255, 255, 255)',
-    secondary: '#cfd9de',
-    tertiary: '#8A8A8A',
-    quaternary: '#eff3f4',
-    warning: '#9d201a',
+export const initialConfiguration = {
     max_width: 700,
     max_height: 600,
-    transition_speed1: 'transition: 0.2s ease-out;',
-    transition_speed1_delay: 'transition: 0.5s ease-out 1s;',
-    transition_speed2: 'transition: 0.5s ease-out;',
+
     icon_size_s: 12,
     icon_size_m: 15,
     icon_size_l: 18,
     font_size_s: 10,
+
     font_size_m: 12,
     font_size_l: 15,
     font_size_xl: 20,
 
+    main: '#f7c92e',
+    fontColor: '#545454',
+    WandB: '#ffffff',
+    primary: '#F0F2F5',
+    primary_opacity: 'rgba(255, 255, 255)',
+    secondary: '#e6e6e6',
+    tertiary: '#cfd9de',
+    quaternary: '#8A8A8A',
+    warning: '#9d201a',
+
+    showStorageCount: false,
+    thisIsBottom: false,
 
     color: [
         '#ffffff',
@@ -43,6 +39,20 @@ export const global = {
         '#4ebafd',
         '#5882f8'
     ],
+    mainColor: [
+        '#f7c92e',
+        '#f24726',
+        '#cee741',
+        '#fac710',
+        '#da0063',
+        '#8fd14f',
+        '#2d9bf0',
+        '#808080',
+        '#9510ac',
+        '#0ca789',
+        '#414bb2',
+        '#1a1a1a'
+    ],
     tagColor: [
         '#f24726',
         '#cee741',
@@ -58,13 +68,28 @@ export const global = {
         '#1a1a1a'
     ],
 }
+export const toggleProps = [
+    {
+        icon: 'B',
+        style: 'font-weight: bold;',
+        keyword: 'BOLD',
+    },
+    {
+        icon: 'I',
+        style: 'font-style: italic;',
+        keyword: 'ITALIC',
+    },
+    {
+        icon: 'S',
+        style: 'text-decoration: line-through;',
+        keyword: 'STRIKETHROUGH',
+    },
+    {
+        icon: 'U',
+        style: 'text-decoration: underline',
+        keyword: 'UNDERLINE',
+    }
+]
 
-export const autoFocus = (textarea, dispatchFunction) => {
-    if (!textarea) return
-    const end = textarea.value.length
-    textarea.setSelectionRange(end, end)
-    dispatchFunction(addSetFocusFlag(false))
-    textarea.focus()
-}
 
 
