@@ -1,4 +1,9 @@
 /* 從 sync storage獲取 dataName數據 */
+'use strict';
+
+
+import {convertToRaw, EditorState} from "draft-js";
+
 const fetchMsg = async (dataName) => {
     try {
         return new Promise((resolve) => {
@@ -16,14 +21,16 @@ const fetchMsg = async (dataName) => {
 }
 
 const addNewMsg = (obj) => {
-    const {msg, pageTitle, favIconUrl, url} = obj
+    const { pageTitle, favIconUrl, url} = obj
+    const selection = document.getSelection().toString()
     const position = document.documentElement.scrollTop
     const currentDate = getCurrentDate()
-    const key = Date.now()
+    const key = `Juuten_${Date.now()}`
+    console.log(selection)
     return {
         key,
-        msg,
-        type: 'collection',
+        msg: JSON.stringify(convertToRaw(EditorState.createWithText(selection).getCurrentContent())),
+        type: 'storage',
         url,
         favIconUrl,
         pageTitle,
@@ -38,15 +45,15 @@ const addNewMsg = (obj) => {
 chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
 
     if (req.type !== 'fromBackground') return
-    let oldData
     fetchMsg('Juuten_Storage')
         .then(res => {
-            let newData = addNewMsg(req)
-            oldData = res
-            oldData.unshift(newData)
+            console.log(res)
+            let newData = [addNewMsg(req), ...res]
+
+            console.log(newData)
 
             chrome.storage.sync.set({
-                ['Juuten_Storage']: JSON.stringify(oldData)
+                ['Juuten_Storage']: JSON.stringify(newData)
             })
         })
         .catch(error => {
@@ -65,6 +72,25 @@ const getCurrentDate = () => {
     const minute = date.getMinutes()
     return `${year}/${month}/${day} ${hour}:${minute}`
 }
+
+
+document.addEventListener("mouseup", function (event) {
+    const selection = window.getSelection().toString();
+    if (selection) {
+        const tooltip = document.createElement("div");
+        tooltip.innerText = "Click to do something";
+        tooltip.style.position = 'fixed'
+        tooltip.style.top = event.pageY + "px";
+        tooltip.style.left = event.pageX + "px";
+        document.body.appendChild(tooltip);
+        document.addEventListener("click", function hideTooltip(event) {
+            if (!tooltip.contains(event.target)) {
+                document.removeEventListener("click", hideTooltip);
+                tooltip.remove();
+            }
+        });
+    }
+});
 
 
 // 監聽來自 backgroundscript.js 的消息

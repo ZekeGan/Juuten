@@ -9,10 +9,12 @@ module.exports = {
     // mode: 'production',
     entry: {
         popup: './src/popup.jsx',
+        background: './src/background.js',
+        content: './src/content.js'
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: "popup.js"
+        filename: "[name].js"
     },
     devtool: 'nosources-source-map',
     devServer: {
@@ -70,8 +72,8 @@ module.exports = {
         new CopyPlugin({
             patterns: [
                 {from: "public"},
-                {from: "src/background.js"},
-                {from: "src/content.js"}
+                // {from: "src/background.js"},
+                // {from: "src/content.js"}
             ],
         }),
 

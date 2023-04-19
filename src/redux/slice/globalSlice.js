@@ -1,23 +1,29 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {initialConfiguration} from "../../assets/global";
+import {fetchDataObject, setDataToLocal} from "../../utils";
 
 
 export const GlobalSlice = createSlice({
     name: 'global',
     initialState: {
-        configuration: initialConfiguration,
-        // configuration: !!await fetchData('Juuten_getFolderLists') ? await fetchData('Juuten_getFolderLists') : global,
+        // configuration: initialConfiguration,
+        configuration: await fetchDataObject('Juuten_Configuration')
 
     },
     reducers: {
         setConfiguration: (state, action) => {
             console.log(action.payload)
+
+            const newConfig = {
+                ...state.configuration,
+                [action.payload.key]: action.payload.value
+            }
+            console.log(newConfig)
+
+            setDataToLocal('Juuten_Configuration', newConfig)
             return {
                 ...state,
-                configuration: {
-                    ...state.configuration,
-                    [action.payload.key]: action.payload.value
-                }
+                configuration: newConfig
             }
         },
 

@@ -1,41 +1,36 @@
 import React, {useState, useEffect, useMemo, useRef} from 'react';
 import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
-import {DragDropContext, Droppable} from "react-beautiful-dnd";
+import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 import {
     addEditFolderAnimationId,
     addEditFolderId, addFolderEdit,
     addRearrangeFolder,
     selectFolder,
 } from "../../redux/slice/folderSlice";
-import {useNavigate} from "react-router-dom";
+import {selectGlobal} from "../../redux/slice/globalSlice";
 import {selectCollection} from "../../redux/slice/collectionSlice";
 
-import AddNewFolder from "./AddingNewFolder.jsx";
-import Warning from "../../component/pureComponent/Warning.jsx";
-import DeletingCheck from "../../component/pureComponent/DeletingCheck.jsx";
-import BottomBar from "../bottomBar/BottomBar.jsx";
-import Storage from "../bottomBar/storage/Storage.jsx";
-import Bar from "../bottomBar/bar/Bar.jsx";
-import AddNewNote from "../bottomBar/addNewNote/AddNewNote.jsx";
-import FolderBlock from "./FolderBlock.jsx";
-import SearchNote from "../bottomBar/search/SearchNote.jsx";
-import Mask from "../../component/pureComponent/Mask.jsx";
-import Navbar from "../navbar/Navbar.jsx";
-import {selectGlobal} from "../../redux/slice/globalSlice";
-import ExportToHTML from "../../component/ExportToHTML.jsx";
-
+import AddNewFolder from "../../component/optimizationComponent/folder/AddingNewFolder.jsx";
+import Warning from "../../component/optimizationComponent/Warning.jsx";
+import DeletingCheck from "../../component/optimizationComponent/DeletingCheck.jsx";
+import BottomBar from "../../component/optimizationComponent/bottomBar/BottomBar.jsx";
+import Storage from "../../component/optimizationComponent/bottomBar/storage/Storage.jsx";
+import Bar from "../../component/optimizationComponent/bottomBar/bar/Bar.jsx";
+import AddNewNote from "../../component/optimizationComponent/bottomBar/addNewNote/AddNewNote.jsx";
+import FolderBlock from "../../component/optimizationComponent/folder/FolderBlock.jsx";
+import SearchNote from "../../component/optimizationComponent/bottomBar/search/SearchNote.jsx";
+import Mask from "../../component/optimizationComponent/pureComponent/Mask.jsx";
+import Navbar from "../../component/optimizationComponent/navbar/Navbar.jsx";
+import useHideBar from "../../hooks/useHideBar";
 
 
 const Folders = styled.div`
     position: relative;
-
     width: ${({config}) => config.max_width}px;
     height: ${({config}) => config.max_height}px;
     overflow: hidden;
     user-select: none;`
-
-
 const FolderSection = styled.div`
     position: relative;
     display: flex;
@@ -56,13 +51,16 @@ const FolderSection = styled.div`
 
 export default function App() {
     const dispatch = useDispatch()
-    const {Juuten_folderLists, editFolderId, addFolderAnimationId, folderAutoFocusId} = useSelector(selectFolder)
+    const {Juuten_folderLists, editFolderId, addFolderAnimationId} = useSelector(selectFolder)
     const collectionObj = useSelector(selectCollection)
+    const {Juuten_Storage, openAddNewNote, openBar} = useSelector(selectCollection)
+    const {configuration: config} = useSelector(selectGlobal)
 
     const [regTest, setRegTest] = useState(false)
-    const [sameName, setSameName] = useState(false)
     const [delCheck, setDelCheck] = useState(false)
-    const {configuration: config} = useSelector(selectGlobal)
+    const folderRef = useRef(null)
+    const [reset, setReset] = useState(false)
+    const hideNav = useHideBar(folderRef.current)
 
     const allFoldersData = useMemo(() => {
         return Juuten_folderLists
@@ -73,7 +71,12 @@ export default function App() {
                 }
                 return output
             }, {})
-    }, [collectionObj.openBar])
+    }, [openBar])
+
+    useEffect(() => {
+        setReset(prev => !prev)
+    }, [folderRef])
+
 
     /* ##新增資料夾後的動畫
     *    概念:
@@ -106,20 +109,14 @@ export default function App() {
         dispatch(addEditFolderId())
     }
 
-
     function dragEnd(e) {
         const {destination, source} = e
-        dispatch(addRearrangeFolder({
-            destination,
-            source
-        }))
+        dispatch(addRearrangeFolder({destination, source}))
     }
 
     return (
-        // <ExportToHTML data={allFoldersData} config={config}/>
         <Folders config={config}>
             <Warning warning={regTest}>資料夾名稱不能含有 \ / : * ? ' " &lt; &gt; |</Warning>
-            <Warning warning={sameName}>資料夾名稱重複</Warning>
             <DeletingCheck
                 delCheck={delCheck}
                 setDelCheck={setDelCheck}
@@ -127,8 +124,8 @@ export default function App() {
             />
 
 
-            <Mask open={collectionObj.openAddNewNote}/>
-            <Navbar area={'home'} text={'Juuten'}/>
+            <Mask open={openAddNewNote}/>
+            <Navbar hide={hideNav} area={'home'} name={'Juuten'}/>
 
 
             <DragDropContext onDragEnd={(e) => dragEnd(e)}>
@@ -138,25 +135,34 @@ export default function App() {
                             ref={provided.innerRef}
                             {...provided.droppableProps}
                         >
-                            <FolderSection config={config}>
+                            <FolderSection config={config} ref={folderRef}>
                                 {/* 新增資料夾 */}
                                 <div>
                                     <AddNewFolder
                                         setRegTest={setRegTest}
-                                        setSameName={setSameName}
                                     />
                                 </div>
-                                {
-                                    Juuten_folderLists.map((item, idx) => (
-                                        <FolderBlock
-                                            key={item.key}
-                                            item={item}
-                                            idx={idx}
-                                            setDelCheck={setDelCheck}
-                                            setSameName={setSameName}
-                                        />
-                                    ))
-                                }
+                                {Juuten_folderLists.map((item, idx) =>
+                                    (<Draggable
+                                        key={`folder_drag_key_${item.key}`}
+                                        draggableId={`draggableId_${item.key}`}
+                                        index={idx}
+                                    >
+                                        {(provided) =>
+                                            (<div
+                                                ref={provided.innerRef}
+                                                {...provided.draggableProps}
+                                            >
+                                                <FolderBlock
+                                                    item={item}
+                                                    setDelCheck={setDelCheck}
+                                                    openToolbar={item.key === editFolderId}
+                                                    provided={provided}
+                                                />
+                                            </div>)
+                                        }
+                                    </Draggable>)
+                                )}
                                 {provided.placeholder}
                             </FolderSection>
                         </div>
@@ -165,11 +171,19 @@ export default function App() {
             </DragDropContext>
 
 
+            <BottomBar
+                hide={hideNav}
+                storageLen={Juuten_Storage.length}
+            />
+
             <SearchNote/>
-            <Storage/>
-            <AddNewNote/>
-            <Bar area={'folder'} data={allFoldersData}/>
-            <BottomBar/>
+            <Storage where={'folder'}/>
+            <AddNewNote area={'folder'}/>
+            <Bar
+                area={'folder'}
+                data={allFoldersData}
+            />
+
         </Folders>
     );
 }

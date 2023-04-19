@@ -21,7 +21,6 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
             tab.id,
             {
                 type: 'fromBackground',
-                msg: info.selectionText,
                 pageTitle: tab.title,
                 favIconUrl: tab.favIconUrl,
                 url: tab.url,

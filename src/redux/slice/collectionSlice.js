@@ -5,13 +5,14 @@ import {convertToRaw, EditorState} from 'draft-js'
 
 const thunkData = createAsyncThunk(
     'folder/fetchFolderData',
-    async (payload) => {
-        console.log(payload)
-        const value = await fetchData(payload.index)
+    async ({item, fn}) => {
+        console.log(item)
+        console.log(fn)
+        const value = await fetchData(item.key)
         return {
-            index: payload.index,
-            value: value,
-            fn: payload.fn
+            item,
+            value,
+            fn,
         }
     })
 export const CollectionSlice = createSlice({
@@ -19,8 +20,8 @@ export const CollectionSlice = createSlice({
     initialState: {
 
         /* 測試時替換 */
-        Juuten_Storage: Juuten_Storage,
-        // Juuten_Storage: await fetchData('Juuten_Storage'),
+        // Juuten_Storage: Juuten_Storage,
+        Juuten_Storage: await fetchData('Juuten_Storage'),
         /////////////
 
         openAddNewNote: false,
@@ -45,12 +46,6 @@ export const CollectionSlice = createSlice({
 
     },
     reducers: {
-        useTool: (state, action) => {
-            return {
-                ...state,
-                useTool: action.payload
-            }
-        },
         addFolderId: (state, action) => {
             return {
                 ...state,
@@ -58,39 +53,41 @@ export const CollectionSlice = createSlice({
                 folderId: action.payload.key
             }
         },
+
         openAddNewNote: (state, action) => {
             return {
                 ...state,
                 openAddNewNote: action.payload === 'open'
             }
         },
+
         openStorage: (state, action) => {
             return {
                 ...state,
                 openStorage: action.payload === 'open'
             }
         },
+
         openSearchPage: (state, action) => {
             return {
                 ...state,
                 openSearchPage: action.payload === 'open'
             }
         },
+
         openBar: (state, action) => {
             return {
                 ...state,
                 openBar: action.payload === 'open'
             }
         },
+
         openEditToolbar: (state, action) => {
             return {
                 ...state,
                 openEditId: action.payload.key,
                 openEditType: action.payload.type
             }
-        },
-        setFocusFlag: (state, action) => {
-            state.focusFlag = action.payload
         },
 
         addAnimation: (state, action) => {
@@ -105,40 +102,11 @@ export const CollectionSlice = createSlice({
                     console.warn('addAnimation reducer error')
             }
         },
-
         /* storage collection 位置切換 */
         moveToStorageOrCollection: (state, action) => {
-            const {
-                folderId,
-                Juuten_Storage: storage
-            } = state
-            const destination = action.payload.toWhere
-            // const key = action.payload.key
+            const {folderId, Juuten_Storage: storage} = state
             const collection = [...state[folderId]]
-            // const data = {
-            //     toStorage: {
-            //         type: 'storage',
-            //         source: collection,
-            //         destinattion: storage,
-            //     },
-            //     toCollection: ''
-            // }
 
-            // const newCollection = collection.map((item, index) => {
-            //     if (item.key === action.payload.key) {
-            //         let newItem = data[destination].source.splice(index, 1)
-            //         newItem.type = data[destination].type
-            //         data[destination].destination.unshift(newItem)
-            //     }
-            // })
-
-            // const newStorage = storage.map((item, index) => {
-            //     if (item.key === action.payload.key) {
-            //         item.type = data[destination].type
-            //         data[destination].destination.unshift(item)
-            //         data[destination].destination.splice(index, 1)
-            //     }
-            // })
 
             switch (action.payload.toWhere) {
                 case 'toStorage':
@@ -164,56 +132,36 @@ export const CollectionSlice = createSlice({
             }
 
 
-
             state['Juuten_Storage'] = storage
             state[folderId] = collection
             setDataToLocal('Juuten_Storage', storage)
             setDataToLocal(folderId, collection)
-
         },
-        // moveToCollection: (state, action) => {
-        //     const folderId = state.folderId
-        //     const key = action.payload.key
-        //     const storage = [...state.Juuten_Storage]
-        //     const collection = [...state[folderId]]
-        //
-        //     storage.map((item, idx) => {
-        //         if (item.key === key) {
-        //             collection.unshift(item)
-        //             storage.splice(idx, 1)
-        //         }
-        //     })
-        //
-        //     state['Juuten_Storage'] = storage
-        //     setDataToLocal('Juuten_Storage', state['Juuten_Storage'])
-        //
-        //     state[folderId] = collection
-        //
-        // },
-
         /* 新增筆記 */
         addNewNote: (state, action) => {
+            const {area, text} = action.payload
             const {folderId} = state
-            const data = [...state[folderId]]
+            const where = area === 'collection' ? folderId : 'Juuten_Storage'
+            const data = [...state[where]]
+
 
             const _key = `Juuten_${Date.now()}`
             let newNote = {
                 key: _key,
-                type: 'collection',
-                msg: action.payload,
+                type: area === 'collection' ? 'collection' : 'storage',
+                msg: text,
                 currentDate: getCurrentDate(),
-                comment: []
+                comment: [],
+                isOpenComment: false,
             }
             const newData = [newNote, ...data]
-            setDataToLocal(folderId, newData)
+            setDataToLocal(where, newData)
             return {
                 ...state,
-                [folderId]: newData,
+                [where]: newData,
                 addNewNoteAnimation: newNote,
-                openEditType: 'note',
             }
         },
-
         /* 新增註記(comment) */
         addComment: (state, action) => {
             const {folderId, openEditId, ...rest} = state
@@ -231,6 +179,7 @@ export const CollectionSlice = createSlice({
                 if (item.key === action.payload.key) {
                     return {
                         ...item,
+                        isOpenComment: true,
                         comment: [newComment, ...item.comment]
                     }
                 }
@@ -247,7 +196,6 @@ export const CollectionSlice = createSlice({
                 openEditParentId: action.payload.key
             }
         },
-
         /* 修改錦集(collection)、註記(comment)和暫存區(storage)的文字 */
         editCollectionOrStorage: (state, action) => {
             let id, data
@@ -279,7 +227,6 @@ export const CollectionSlice = createSlice({
             findData(data, key)
             setDataToLocal(id, state[id])
         },
-
         /* 刪除錦集(collection)和暫存區(storage)筆記或註記(comment) */
         deleteNoteOrComment: (state, action) => {
             const {area} = action.payload
@@ -308,9 +255,9 @@ export const CollectionSlice = createSlice({
                 })
             }
         },
-
         /* 紀錄當前Draftjs inline Style 樣式 */
         changeToggleCSS: (state, action) => {
+            console.log('error')
             return {
                 ...state,
                 toggleCSS: action.payload
@@ -321,7 +268,9 @@ export const CollectionSlice = createSlice({
         rearrangeComment: (state, action) => {
             const {destination, source, area} = action.payload
             const {openEditId, folderId} = state
-            const whatArea = area === 'textMain' ? folderId : 'Juuten_Storage'
+            const whatArea = area === 'textMain'
+                ? folderId
+                : 'Juuten_Storage'
             const data = state[whatArea]
             data.map((item, idx) => {
                 if (item.key === openEditId) {
@@ -331,13 +280,18 @@ export const CollectionSlice = createSlice({
             })
             setDataToLocal(whatArea, data)
         },
+
         rearrangeNote: (state, action) => {
             const {destination, source, area} = action.payload
             const {folderId} = state
-            const whatArea = area === 'textMain' ? folderId : 'Juuten_Storage'
+            const whatArea = area === 'textMain'
+                ? folderId
+                : 'Juuten_Storage'
             const data = state[whatArea]
+
             const [remove] = data.splice(source.index, 1)
             data.splice(destination.index, 0, remove)
+
             setDataToLocal(whatArea, data)
         },
 
@@ -345,62 +299,47 @@ export const CollectionSlice = createSlice({
             const {folderId} = state
             const data = state[folderId]
 
+            console.log(action.payload + '---------------------------------')
             const newData = data.map(item => {
                 if (item.key === action.payload) {
                     return {
                         ...item,
                         isOpenComment: !item.isOpenComment
                     }
-                }
-                else {
+                } else {
                     return item
                 }
 
             })
+
             return {
                 ...state,
                 [folderId]: newData
             }
-
         }
     },
-    extraReducers: (builder) => {
-        builder
-            .addCase(thunkData.pending, () => {
-                console.log('pending')
-            })
-            .addCase(thunkData.fulfilled, (state, action) => {
-                console.log('fulfilled')
-                const currentData = {
-                    ...state,
-                    [action.payload.index]: action.payload.value
-                }
-                console.log(currentData)
-                action.payload.fn()
-                return currentData
-            })
-            .addCase(thunkData.rejected, () => {
-                console.log('reject')
-            })
+    extraReducers: {
+        [thunkData.pending]: () => {
+            console.log('pending')
+        },
+        [thunkData.fulfilled]: (state, action) => {
+            const {item, value, fn} = action.payload
+            console.log('fulfilled')
+            const currentData = {
+                ...state,
+                folderData: item,
+                [item.key]: value
+            }
+            console.log(currentData)
+            fn()
+            return currentData
+        },
+        [thunkData.rejected]: () => {
+            console.warn('reject')
+        },
+
+
     },
-    // extraReducers: {
-    //     [thunkData.pending]: () => {
-    //         console.log('pending')
-    //     },
-    //     [thunkData.fulfilled]: (state, action) => {
-    //         console.log('fulfilled')
-    //         const currentData = {
-    //             ...state,
-    //             [action.payload.index]: action.payload.value
-    //         }
-    //         console.log(currentData)
-    //         action.payload.fn()
-    //         return currentData
-    //     },
-    //     [thunkData.rejected]: () => {
-    //         console.log('reject')
-    //     },
-    // }
 })
 
 
@@ -411,21 +350,17 @@ export const addFetchData = (payload) => thunkData(payload)
 
 export const {
     editCollectionOrStorage: addEditCollectionOrStorage,
-    setFocusFlag: addSetFocusFlag,
     addAnimation: addAddAnimation,
     openEditToolbar: addOpenEditToolbar,
     openBar: addOpenBar,
     openStorage: addOpenStorage,
     openSearchPage: addOpenSearchPage,
     addFolderId: addAddFolderId,
-    useTool: addUseTool,
     moveToStorageOrCollection: addMoveToStorageOrCollection,
-    // moveToCollection: addMoveToCollection,
     addComment: addAddComment,
     deleteNoteOrComment: addDeleteNoteOrComment,
     addNewNote: addAddNewNote,
     openAddNewNote: addOpenAddNewNote,
-    changeToggleCSS: addChangeToggleCSS,
     rearrangeComment: addRearrangeComment,
     rearrangeNote: addRearrangeNote,
     openOrCloseComment: addOpenOrCloseComment

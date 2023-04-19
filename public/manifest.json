@@ -5,7 +5,8 @@
   "manifest_version": 3,
   "permissions": ["contextMenus", "tabs", "storage"],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "type": "module"
   },
   "content_scripts":[{
     "matches": ["<all_urls>"],
@@ -14,5 +15,11 @@
   "action": {
     "default_popup": "index.html",
     "default_title": "Juuten"
-  }
+  },
+  "web_accessible_resources": [
+    {
+      "matches": ["<all_urls>"],
+      "resources": ["contentMain.js"]
+    }
+  ]
 }

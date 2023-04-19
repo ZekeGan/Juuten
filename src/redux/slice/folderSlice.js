@@ -15,8 +15,8 @@ export const FolderSlice = createSlice({
     name: 'folder',
     initialState: {
         /* 測試時替換 */
-        Juuten_folderLists: Juuten_folderLists,
-        // Juuten_folderLists: await fetchData('Juuten_getFolderLists'),
+        // Juuten_folderLists: Juuten_folderLists,
+        Juuten_folderLists: await fetchData('Juuten_getFolderLists'),
         /////////////
 
         Juuten_tagLists: [],

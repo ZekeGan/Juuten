@@ -1,4 +1,6 @@
-import {convertFromRaw, EditorState} from 'draft-js'
+import {convertFromRaw, convertToRaw, EditorState} from 'draft-js'
+import {saveAs} from 'file-saver'
+import {initialConfiguration} from "./assets/global";
 
 export function getCurrentDate() {
     const date = new Date()
@@ -16,15 +18,14 @@ export async function fetchData(dataName) {
             chrome.storage.sync.get(
                 [dataName],
                 (obj) => {
-                    resolve(
-                        obj[dataName]
-                            ? JSON.parse(obj[dataName])
-                            : []
-                    )
+                    resolve(obj[dataName]
+                        ? JSON.parse(obj[dataName])
+                        : [])
                 })
         })
     } catch (error) {
         console.error(error)
+        return []
     }
 }
 
@@ -37,12 +38,13 @@ export async function fetchDataObject(dataName) {
                     resolve(
                         obj[dataName]
                             ? JSON.parse(obj[dataName])
-                            : {}
+                            : initialConfiguration
                     )
                 })
         })
     } catch (error) {
         console.error(error)
+        return initialConfiguration
     }
 }
 
@@ -51,17 +53,16 @@ export async function fetchDataObject(dataName) {
 * 1. setDataToLocal()
 * 2. collectionSlice.js 使用 fetchData 的變數
 * 3. folderSlice.js 使用 fetchData 的變數
-* 4. folder.jsx 的 goIntoFolder()
+* 6. globalSlice 的 configuration
+* 4. folderBlock.jsx 的 goIntoFolder()
 * 5. webpack.config.js 的 mode
-* 6. global 的 configuration
 * */
 
 
 export function setDataToLocal(name, data = []) {
-    // const current = [...data]
-    // chrome.storage.sync.set({
-    //     [name]: JSON.stringify(current)
-    // })
+    chrome.storage.sync.set({
+        [name]: JSON.stringify(data)
+    })
 }
 
 export function deepCopy(obj) {
@@ -75,21 +76,25 @@ export function deepCopy(obj) {
     return newObj;
 }
 
-
 export function exportToTXT(data) {
     let newOutput = ''
     Object.keys(data).forEach((folder) => {
         newOutput = newOutput.concat(`**********${folder}**********\n`)
         data[folder].forEach((item, idx) => {
-            // console.log(item)
             let comment = `
 註釋:`
-            const msg = EditorState.createWithContent(convertFromRaw(JSON.parse(item.msg))).getCurrentContent().getPlainText()
-            let txt = `創建日期: ${item.currentDate}${item.url && `
-網站: ${item.url}`}
+            const msg = EditorState
+                .createWithContent(convertFromRaw(JSON.parse(item.msg)))
+                .getCurrentContent()
+                .getPlainText()
+            let txt = `創建日期: ${item.currentDate}${item.url ? `
+網站: ${item.url}` : ''}
 內文: ${msg}`
             item.comment.forEach((comm, idx2) => {
-                const commMsg = EditorState.createWithContent(convertFromRaw(JSON.parse(comm.msg))).getCurrentContent().getPlainText()
+                const commMsg = EditorState
+                    .createWithContent(convertFromRaw(JSON.parse(comm.msg)))
+                    .getCurrentContent()
+                    .getPlainText()
                 let commTXT = `
     創建日期: ${comm.currentDate}
     內文: ${commMsg}\n`
@@ -103,11 +108,19 @@ export function exportToTXT(data) {
     return newOutput
 }
 
-
 export const isEqual = (prevProps, nextProps) => {
     console.log('prev ', prevProps)
     console.log('next ', nextProps)
     return prevProps === nextProps
+}
+
+export function downloadDocx(str, fileName) {
+    // 将字符串转换为二进制数据
+    const content = str;
+    const data = new Blob([content], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+
+    // 使用 FileSaver.js 库保存二进制数据
+    saveAs(data, `${fileName}.docx`);
 }
 
 

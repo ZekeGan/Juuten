@@ -10,15 +10,15 @@ import {useParams} from "react-router-dom";
 import {selectFolder} from "../../redux/slice/folderSlice";
 import {selectGlobal} from "../../redux/slice/globalSlice";
 
-import Storage from "../bottomBar/storage/Storage.jsx";
-import Bar from "../bottomBar/bar/Bar.jsx";
-import BottomBar from "../bottomBar/BottomBar.jsx";
-import TextMain from "./textArea/TextMain.jsx";
-import AddNewNote from "../bottomBar/addNewNote/AddNewNote.jsx";
-import SearchNote from "../bottomBar/search/SearchNote.jsx";
+import Storage from "../../component/optimizationComponent/bottomBar/storage/Storage.jsx";
+import Bar from "../../component/optimizationComponent/bottomBar/bar/Bar.jsx";
+import BottomBar from "../../component/optimizationComponent/bottomBar/BottomBar.jsx";
+import TextMain from "./TextMain.jsx";
+import AddNewNote from "../../component/optimizationComponent/bottomBar/addNewNote/AddNewNote.jsx";
+import SearchNote from "../../component/optimizationComponent/bottomBar/search/SearchNote.jsx";
 
-import Navbar from "../navbar/Navbar.jsx";
-import Mask from "../../component/pureComponent/Mask.jsx";
+import Navbar from "../../component/optimizationComponent/navbar/Navbar.jsx";
+import Mask from "../../component/optimizationComponent/pureComponent/Mask.jsx";
 
 
 const Main = styled.div`
@@ -40,28 +40,27 @@ const Main = styled.div`
 export default function App() {
     const dispatch = useDispatch()
     const {id} = useParams()
-    const obj = useSelector(selectCollection)
+    const {openBar, [id]:currData, folderData} = useSelector(selectCollection)
+    const {openAddNewNote, openEditId, Juuten_Storage} = useSelector(selectCollection)
     const {Juuten_folderLists} = useSelector(selectFolder)
     const {configuration: config} = useSelector(selectGlobal)
-    const {openAddNewNote} = useSelector(selectCollection)
-    const [saveWarning, setSaveWarning] = useState(false)
-    const [hideNav, setHideNav] = useState(false)
 
+    const [saveWarning, setSaveWarning] = useState(false)
+    const [hide, setHide] = useState(false)
 
     useEffect(() => {
         const [item] = Juuten_folderLists.filter(item => item.key === id)
-        dispatch(addAddFolderId(
-            item
-        ))
+        dispatch(addAddFolderId(item))
     }, [])
+
 
     return (
         <Main config={config}>
-
             <Navbar
-                hide={hideNav}
-                text={obj.folderData.name}
+                hide={hide}
+                name={folderData.name}
                 setSaveWarning={setSaveWarning}
+                openEditId={openEditId}
             />
 
             <Mask open={openAddNewNote}/>
@@ -70,20 +69,23 @@ export default function App() {
             {/* 顯示筆記地方 */}
             <div style={{gridRow: 1}}>
                 <TextMain
-                    obj={obj}
-                    id={id}
-                    setHideNav={setHideNav}
+                    data={currData}
+                    hide={hide}
+                    setHide={setHide}
                     saveWarning={saveWarning}
                     area={'textMain'}
                 />
             </div>
 
-            <BottomBar setHideNav={setHideNav} hideNav={hideNav}/>
+            <BottomBar
+                hide={hide}
+                storageLen={Juuten_Storage.length}
+            />
 
 
-            <AddNewNote/>
+            <AddNewNote area={'collection'}/>
             <Storage/>
-            <Bar data={{[obj.folderData.name]: obj[id]}}/>
+            <Bar data={{[folderData.name]: currData}} open={openBar}/>
             <SearchNote/>
 
         </Main>
