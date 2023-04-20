@@ -39,19 +39,13 @@ export default React.memo(
             setFlag(false)
             if (type === '+') {
                 setState((prev) => {
-                    if (prev < max) {
-                        return prev += howMany
-                    } else {
-                        return prev
-                    }
+                    if (prev < max) return prev += howMany
+                    else return prev
                 })
             } else {
                 setState((prev) => {
-                    if (min < prev) {
-                        return prev -= howMany
-                    } else {
-                        return prev
-                    }
+                    if (min < prev) return prev -= howMany
+                    else return prev
                 })
             }
         }

@@ -16,9 +16,11 @@ const Main = styled.div`
 
 const ColorBox = styled.div`    
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-around;
     align-items: center;
-    width: ${({open}) => open ? '100%' : '0px'};
+    width: 100%;
+    transform: translateX(${({open}) => open ? '0' : '100%'});
     transition: 0.3s;
     overflow: hidden;
 `
@@ -35,7 +37,6 @@ const Element = styled.div`
     margin: 0 2px;
     transition: 0.4s;
 `
-
 
 
 const DotColor = React.memo(() => {
@@ -57,15 +58,13 @@ const DotColor = React.memo(() => {
                 onClick={openColors}
             />
             <ColorBox open={open}>
-                {
-                    config.mainColor.map((item, index) => (
-                        <Dots
-                            key={item}
-                            setOpen={setOpen}
-                            item={item}
-                        />
-                    ))
-                }
+                {config.mainColor.map((item, index) => (
+                    <Dots
+                        key={item}
+                        setOpen={setOpen}
+                        item={item}
+                    />
+                ))}
             </ColorBox>
         </Main>
     );

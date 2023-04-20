@@ -1,12 +1,19 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import BottemBarTemplate from "../BottemBarTemplate.jsx";
 import {useDispatch, useSelector} from "react-redux";
-import {addAddNewNote, addOpenAddNewNote, selectCollection} from "../../../../redux/slice/collectionSlice";
+import {
+    addAddNewNote,
+    addCleanTexting,
+    addOpenAddNewNote,
+    selectCollection
+} from "../../../../redux/slice/collectionSlice";
 import styled from "styled-components";
 import DraftComponent from "../../DraftComponent.jsx";
 import {selectGlobal} from "../../../../redux/slice/globalSlice";
 import TextEditorIcon from "../../pureComponent/TextEditorIcon.jsx";
 import {toggleProps} from "../../../../assets/global";
+import useAutoSave from "../../../../hooks/useAutoSave";
+import {fetchDataString} from "../../../../utils";
 
 const Main = styled.div`
     display: flex;
@@ -51,7 +58,7 @@ const BTN = styled.div`
     }`
 
 const AddNewNote = React.memo(({area}) => {
-    const {openAddNewNote} = useSelector(selectCollection)
+    const {openAddNewNote, Juuten_EditingText} = useSelector(selectCollection)
     const {configuration: config} = useSelector(selectGlobal)
     const dispatch = useDispatch()
     const draftRef = useRef(null)
@@ -66,17 +73,19 @@ const AddNewNote = React.memo(({area}) => {
         }))
         console.log(draftRef.current.getJSONData())
         dispatch(addOpenAddNewNote())
+        dispatch(addCleanTexting())
+        draftRef.current?.cleanEditorState()
     }
 
     function handleToggleStyle(keyword, e) {
         draftRef.current?.toggleStyle(keyword, e)
     }
 
-    console.log('newNote')
-
 
     useEffect(() => {
-        if (openAddNewNote) draftRef.current?.autoFocus()
+        if (openAddNewNote) {
+            draftRef.current?.autoFocus()
+        }
     }, [openAddNewNote])
 
     return (
@@ -86,7 +95,17 @@ const AddNewNote = React.memo(({area}) => {
         >
             <Main>
                 <Textarea config={config}>
-                    <DraftComponent ref={draftRef} setInlineStyle={setInlineStyle}/>
+                    <DraftComponent
+                        ref={draftRef}
+                        setInlineStyle={setInlineStyle}
+                        item={Juuten_EditingText[0].msg}
+                        open={openAddNewNote}
+                        autoSave={{
+                            type: 'textingBox',
+                            key: 'Juuten_editingText',
+                            destination: 'Juuten_EditingText'
+                        }}
+                    />
                 </Textarea>
                 <EditToolbar config={config}>
                     <div className={'toggle_box'}>

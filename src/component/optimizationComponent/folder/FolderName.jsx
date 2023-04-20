@@ -7,20 +7,23 @@ import {selectGlobal} from "../../../redux/slice/globalSlice";
 const Page = styled.div`
     text-align: center;
     color: ${({font}) => font ? 'black' : 'white'};
-    // caret-color: ${({font,config}) => font ? config.primary : config.tertiary};
+    // caret-color: ${({font, config}) => font ? config.primary : config.tertiary};
     outline: none;
     border: none;
     margin: 10px 0;
     overflow: hidden;
     font-size: ${({config}) => config.font_size_m}px;
 `
-const FolderName = React.memo((props) => {
-    const {font} = props
+const FolderName = React.memo((
+    {
+        font,
+        children
+    }) => {
     const {configuration: config} = useSelector(selectGlobal)
     console.log('folderName')
     return (
         <Page config={config} font={font}>
-            {props.children}
+            {children}
         </Page>
     );
 })

@@ -62,6 +62,7 @@ export default function App() {
     const [reset, setReset] = useState(false)
     const hideNav = useHideBar(folderRef.current)
 
+    /* 獲得所有資料夾內的所有檔案 */
     const allFoldersData = useMemo(() => {
         return Juuten_folderLists
             .reduce((output, {key, name}) => {
@@ -91,24 +92,27 @@ export default function App() {
         }, 0)
     }, [addFolderAnimationId])
 
+    /* 點擊 Folder 工具列外隱藏工具列 */
     function removeToolbar(e) {
         e.stopPropagation()
         dispatch(addEditFolderId(''))
         return document.removeEventListener('click', removeToolbar, false)
     }
-
     useEffect(() => {
         if (!!editFolderId) {
             document.addEventListener('click', removeToolbar, false)
         }
     }, [editFolderId])
 
+
+    /* 刪除資料夾的第 2/2 步驟 */
     const doubleDelCheck = () => {
         setDelCheck(false)
         dispatch(addFolderEdit({type: 'delete', value: editFolderId}))
         dispatch(addEditFolderId())
     }
 
+    /* 資料夾拖移後啟動 */
     function dragEnd(e) {
         const {destination, source} = e
         dispatch(addRearrangeFolder({destination, source}))

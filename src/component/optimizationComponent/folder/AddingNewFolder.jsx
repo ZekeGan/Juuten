@@ -46,7 +46,10 @@ const Main = styled.div`
     overflow: hidden;`
 
 
-export default React.memo(({setRegTest}) => {
+export default React.memo((
+    {
+        setRegTest
+    }) => {
     const {configuration: config} = useSelector(selectGlobal)
     const dispatch = useDispatch()
 

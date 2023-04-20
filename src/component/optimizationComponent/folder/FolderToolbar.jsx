@@ -65,6 +65,7 @@ const IconBox = styled.div`
 const isEqual = (prevProps, nextProps) => {
     return prevProps === nextProps
 }
+
 const App = React.memo((
     {
         setDelCheck = () => {

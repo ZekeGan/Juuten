@@ -12,16 +12,14 @@ const Page = styled.div`
         height: 12px;
         margin-right: 6px;
     }   
-    a {
+    > .url {
         font-size: ${({config}) => config.font_size_s}px;
         color: ${({config}) => config.quaternary};
         text-decoration: none;
-    }
-    > .url {
-        width: 100%;
+        overflow: hidden;
+        padding: 2% 0;
     }`
-const Url = React.memo((props) => {
-    const {item} = props
+const Url = React.memo(({item}) => {
     const {configuration: config} = useSelector(selectGlobal)
 
     return (
@@ -30,9 +28,7 @@ const Url = React.memo((props) => {
             {item.favIconUrl
             && <img src={item.favIconUrl}/>}
 
-            <div className="url">
-                <a href={item.url}>{item.url}</a>
-            </div>
+            <a href={item.url} className="url">{item.url}</a>
         </Page>
     );
 })

@@ -1,7 +1,6 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {convertFromRaw, EditorState} from "draft-js";
-import {useSelector} from "react-redux";
-import {selectGlobal} from "../../redux/slice/globalSlice";
+
 
 
 const ExportToHTML = ({data, config}) => {

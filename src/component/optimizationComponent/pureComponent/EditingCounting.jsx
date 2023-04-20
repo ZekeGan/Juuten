@@ -1,6 +1,5 @@
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import {useSelector} from "react-redux";
-import {selectCollection} from "../../../redux/slice/collectionSlice";
 import styled from "styled-components";
 import {selectGlobal} from "../../../redux/slice/globalSlice";
 

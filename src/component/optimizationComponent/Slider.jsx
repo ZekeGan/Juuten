@@ -50,6 +50,7 @@ const Element = styled.div`
 const Slider = React.memo(({id, ratioValue, current}) => {
     const {configuration: config} = useSelector(selectGlobal)
     const dispatch = useDispatch()
+
     function fn(e) {
         ratioValue.forEach(item => {
             dispatch(addSetConfiguration({
@@ -59,12 +60,14 @@ const Slider = React.memo(({id, ratioValue, current}) => {
         })
 
     }
+
     return (
-        <Element config={config} >
+        <Element config={config}>
             <input type="checkbox"
                    id={id}
                    checked={current}
-                   onChange={(e) => fn(e)}/>
+                   onChange={(e) => fn(e)}
+            />
             <label htmlFor={id}/>
         </Element>
     )

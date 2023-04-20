@@ -1,3 +1,11 @@
+## Juuten v0.18.0 - 2023/04/20
+- Debug 寬度縮小主色調box跑位
+- Debug Navbar 顯示 undefined
+- 新增 編輯過程自動存檔
+- 新增 刪除 note 時的二度確認
+- 修改 UI樣式小改，Texting Toolbar UX 修改
+- 優化 使用 memo 優化大部分組件，避免過度 re-render
+
 ## Juuten v0.17.0 - 2023/04/16
 - 新增 搜尋筆記
 - 新增 設置Juuten外觀

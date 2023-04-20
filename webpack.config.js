@@ -9,8 +9,8 @@ module.exports = {
     // mode: 'production',
     entry: {
         popup: './src/popup.jsx',
-        background: './src/background.js',
-        content: './src/content.js'
+        // background: './src/background.js',
+        // content: './src/content.js'
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -72,8 +72,8 @@ module.exports = {
         new CopyPlugin({
             patterns: [
                 {from: "public"},
-                // {from: "src/background.js"},
-                // {from: "src/content.js"}
+                {from: "src/background.js"},
+                {from: "src/content.js"}
             ],
         }),
 
@@ -89,4 +89,5 @@ module.exports = {
             "net": false,
         }
     },
+
 }

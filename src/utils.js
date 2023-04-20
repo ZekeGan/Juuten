@@ -12,7 +12,7 @@ export function getCurrentDate() {
     return `${year}/${month}/${day} ${hour}:${minute < 10 ? `0${minute}` : minute}`
 }
 
-export async function fetchData(dataName) {
+export async function fetchData(dataName, defaultProp = '') {
     try {
         return new Promise((resolve) => {
             chrome.storage.sync.get(
@@ -20,33 +20,16 @@ export async function fetchData(dataName) {
                 (obj) => {
                     resolve(obj[dataName]
                         ? JSON.parse(obj[dataName])
-                        : [])
+                        : defaultProp)
                 })
         })
     } catch (error) {
         console.error(error)
-        return []
+        return defaultProp = ''
     }
 }
 
-export async function fetchDataObject(dataName) {
-    try {
-        return new Promise((resolve) => {
-            chrome.storage.sync.get(
-                [dataName],
-                (obj) => {
-                    resolve(
-                        obj[dataName]
-                            ? JSON.parse(obj[dataName])
-                            : initialConfiguration
-                    )
-                })
-        })
-    } catch (error) {
-        console.error(error)
-        return initialConfiguration
-    }
-}
+
 
 /*
 * 如果要使用 npm run dev 進行調適，需要停止的函數或變數為以下幾個
@@ -60,9 +43,9 @@ export async function fetchDataObject(dataName) {
 
 
 export function setDataToLocal(name, data = []) {
-    chrome.storage.sync.set({
-        [name]: JSON.stringify(data)
-    })
+    // chrome.storage.sync.set({
+    //     [name]: JSON.stringify(data)
+    // })
 }
 
 export function deepCopy(obj) {
@@ -124,7 +107,43 @@ export function downloadDocx(str, fileName) {
 }
 
 
+export function findData(_data, _key, fn) {
+    _data.map((item) => {
+        if (item.key === _key) {
+            fn()
+            return
+        }
+        item.comment.map(comment => {
+            if (comment.key === _key) {
+                fn()
+                return
+            }
+        })
+    })
 
+    function findData(_data, _key) {
+        if (!_data) return
+        _data.map((item) => {
+            if (item.key === _key) {
+                item.msg = action.payload.msg
+            }
+            const note = {...item}
+            return findData(note.comment, key)
+        })
+    }
+
+
+    function getData(_data, _key) {
+        if (_data === undefined) return
+        _data.map((item, idx) => {
+            if (item.key === _key) {
+                _data.splice(idx, 1)
+                return
+            }
+            return getData(item.comment, _key)
+        })
+    }
+}
 
 
 

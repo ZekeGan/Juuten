@@ -2,12 +2,15 @@ import React, {useState, forwardRef, useImperativeHandle, useEffect, useRef, mem
 import {EditorState, RichUtils, Editor, convertFromRaw, convertToRaw} from 'draft-js'
 import {useSelector} from "react-redux";
 import {selectGlobal} from "../../redux/slice/globalSlice";
+import useAutoSave from "../../hooks/useAutoSave";
 
 const DraftComponent = memo(forwardRef((
     {
         item = '',
         readOnly = false,
-        setInlineStyle
+        setInlineStyle,
+        open = false,
+        autoSave = {}
     },
     ref
 ) => {
@@ -17,6 +20,20 @@ const DraftComponent = memo(forwardRef((
         if (item) return EditorState.createWithContent(convertFromRaw(JSON.parse(item)))
         else return EditorState.createEmpty()
     })
+    const {setIsStart} = useAutoSave(
+        autoSave?.type,
+        autoSave?.key,
+        getJSONData(),
+        autoSave?.destination
+    )
+
+    useEffect(() => {
+        if (open) setIsStart(true)
+
+        else setIsStart(false)
+
+    }, [open])
+
 
     const styleMap = {
         'HIGHLIGHT': {
@@ -35,6 +52,10 @@ const DraftComponent = memo(forwardRef((
         setInlineStyle(state.getCurrentInlineStyle().toJS())
     }
 
+    function getJSONData() {
+        return JSON.stringify(convertToRaw(editorState.getCurrentContent()))
+    }
+
     useImperativeHandle(
         ref,
         () => ({
@@ -49,13 +70,17 @@ const DraftComponent = memo(forwardRef((
                 onChange(EditorState.moveFocusToEnd(editorState))
             },
             getJSONData: () => {
-                return JSON.stringify(convertToRaw(editorState.getCurrentContent()))
+                return getJSONData()
             },
             hasText: () => {
                 return editorState.getCurrentContent().hasText()
             },
             upDate: (state) => {
                 const newState = EditorState.createWithContent(convertFromRaw(JSON.parse(state)))
+                onChange(newState)
+            },
+            cleanEditorState: () => {
+                const newState = EditorState.createEmpty()
                 onChange(newState)
             }
         }),

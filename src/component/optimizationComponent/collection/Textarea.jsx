@@ -16,7 +16,8 @@ const Textarea = React.memo((
         item,
         showToolbar = true,
         open,
-        where
+        where,
+        folderId
     }) => {
     const draftRef = useRef(null)
     const [inlineStyle, setInlineStyle] = useState([])
@@ -45,6 +46,12 @@ const Textarea = React.memo((
                 readOnly={!open}
                 ref={draftRef}
                 setInlineStyle={setInlineStyle}
+                open={open}
+                autoSave={{
+                    type: 'collection',
+                    key: item.key,
+                    destination: folderId
+                }}
             />
         </>
 

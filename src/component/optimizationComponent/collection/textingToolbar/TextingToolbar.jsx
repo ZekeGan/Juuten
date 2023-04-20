@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from "styled-components";
 import Icon from '../../Svg.jsx'
 import {
-    addAddComment,
+    addAddComment, addDeleteNoteOrComment,
     addMoveToStorageOrCollection,
     addOpenEditToolbar,
 } from "../../../../redux/slice/collectionSlice";
@@ -20,6 +20,7 @@ const TextingToolbar = styled.div`
 const DateBox = styled.div`
     display: flex;
     align-items: center;
+    height: 100%;
     transition: 0.2s ease-out ${p => p.open ? '' : '200ms'};
     transform: translateY(${p => p.open ? '-25px' : '0px'});
     color: ${({config}) => config.quaternary};
@@ -30,8 +31,26 @@ const DateBox = styled.div`
         display: flex;
         align-items: center;
         > div {
-            margin-left: 20px;
+            margin-left: 30px;
         }
+    }`
+
+const DelBox = styled.div`
+    display: ${({open}) => open ? 'block' : 'none'};
+    position: absolute;
+    right: 15px;
+    top: 30px;
+    width: 80px;
+    height: 40px;
+    border-radius: 5px;
+    background-color: ${({config}) => config.secondary};
+    // border: 1px solid ${({config}) => config.quaternary};
+    text-align: center;
+    line-height: 40px;
+    font-size: ${({config}) => config.font_size_m}px;
+    cursor: pointer;
+    &:hover {
+         background-color: ${({config}) => config.tertiary};
     }`
 
 const isEqual = (prevProps, nextProps) => {
@@ -46,13 +65,30 @@ const App = React.memo((
         showToolbar,
         open,
         inlineStyle,
-        where
+        where,
     }) => {
     const dispatch = useDispatch()
     const {configuration: config} = useSelector(selectGlobal)
     const openToolbar = (payload) => {
         dispatch(addOpenEditToolbar(payload))
     }
+    const [delCheck, setDelCheck] = useState(false)
+
+    function closeDelCheck(e) {
+        e.stopPropagation()
+        console.log(delCheck)
+        setDelCheck(false)
+        return document.removeEventListener('close', closeDelCheck, false)
+
+    }
+
+    useEffect(() => {
+        if (!!delCheck) {
+            document.addEventListener('click', closeDelCheck, false)
+
+        }
+    }, [])
+
 
     console.log('toolbar')
 
@@ -67,31 +103,41 @@ const App = React.memo((
         dispatch(addMoveToStorageOrCollection(payload))
     }
 
+    const deleteNoteOrComment = () => {
+        dispatch(addDeleteNoteOrComment({area: item.type}))
+    }
+
     return (
-        <TextingToolbar>
-            <DateBox
+        <>
+            <DelBox
                 config={config}
-                open={open}
+                open={delCheck}
+                onMouseUp={deleteNoteOrComment}
             >
-                <BuiltDate date={item.currentDate}/>
-                {
-                    showToolbar
+                確認刪除
+            </DelBox>
+
+            <TextingToolbar>
+                <DateBox
+                    config={config}
+                    open={open}
+                >
+                    <BuiltDate date={item.currentDate}/>
+                    {showToolbar
                     && <div className={'icon-box'}>
-                        {
-                            item.type === 'collection'
-                            &&
-                            <div onClick={() => addComment({key: item.key})}>
-                                <Icon.Chat
-                                    size={config.icon_size_m}
-                                    title={'新增留言'}
-                                />
-                            </div>
-                        }
+                        {item.type === 'collection'
+                        &&
+                        <div onClick={() => addComment({key: item.key})}>
+                            <Icon.Chat
+                                size={config.icon_size_m}
+                                title={'新增留言'}
+                            />
+                        </div>}
                         <div onClick={() => openToolbar({key: item.key, type: item.type})}>
                             <Icon.Pen size={config.icon_size_m}/>
                         </div>
 
-                        {item.type === 'storage' && where !== 'folder'
+                        {(item.type === 'storage' && where !== 'folder')
                         && <div
                             onClick={() => moveToStorageOrCollection({
                                 key: item.key,
@@ -111,21 +157,21 @@ const App = React.memo((
                             />
                         </div>}
 
-                    </div>
-                }
+                    </div>}
 
 
-            </DateBox>
-            {
-                showToolbar
+                </DateBox>
+                {showToolbar
                 && <TextingToolbarInside
+                    delCheck={delCheck}
+                    setDelCheck={setDelCheck}
                     item={item}
                     open={open}
                     draftRef={draftRef}
                     inlineStyle={inlineStyle}
-                />
-            }
-        </TextingToolbar>
+                />}
+            </TextingToolbar>
+        </>
     );
 }, isEqual)
 

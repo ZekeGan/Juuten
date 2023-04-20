@@ -1,7 +1,6 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React from 'react';
 import styled from "styled-components";
-import {addEditFolderId, addFolderEdit, selectFolder} from "../../redux/slice/folderSlice";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {selectGlobal} from "../../redux/slice/globalSlice";
 
 const Page = styled.div`

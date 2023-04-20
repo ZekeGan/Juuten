@@ -1,4 +1,4 @@
-import React, {useId, useMemo} from 'react';
+import React, {useEffect, useId, useMemo} from 'react';
 import styled from "styled-components";
 import {
     addDeleteNoteOrComment,
@@ -13,6 +13,7 @@ import ToggleCSS from "./ToggleCSS.jsx";
 
 const EditToolbar = styled.div`
     width: 100%;
+    height: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -21,27 +22,29 @@ const EditToolbar = styled.div`
     top: 0;
     transition: 0.2s ease-out ${p => p.open ? '200ms' : ''};
     transform: translateY(${p => p.open ? '0px' : '-25px'}); 
-    color: ${({config}) => config.quaternary};
-    > .icon-box {
+    color: ${({config}) => config.quaternary};`
+
+const IconBox = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    > div {
+        margin-left: 30px;
+    }
+    .textingToolbar {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        > div {
-            margin-left: 20px;
-        }
-        .textingToolbar {
-            display: flex;
-            > .toggle-btn {
-                width: 30px;    
-                text-align: center;
-                font-family: SourceHanSansHWTC-Regular;
-                cursor: pointer;
-                margin-right: 20px;
-            }
-        }
     }`
 
-const TextingToolbarInside = ({item, open, draftRef, inlineStyle}) => {
+
+const TextingToolbarInside = (
+    {
+        item,
+        open,
+        draftRef,
+        inlineStyle,
+        setDelCheck = () => {
+        }
+    }) => {
     const {configuration: config} = useSelector(selectGlobal)
     const dispatch = useDispatch()
     /* 儲存編輯 */
@@ -52,20 +55,11 @@ const TextingToolbarInside = ({item, open, draftRef, inlineStyle}) => {
     }
 
 
-
-    /* 刪除 Note */
-    const deleteNoteOrComment = () => {
-        dispatch(addDeleteNoteOrComment({area: item.type}))
-    }
-
-
     return (
         <EditToolbar config={config} open={open}>
             <ShowEditCounting open={open}/>
-            <div className={'icon-box'}>
-                <div className={'textingToolbar'}>
-                   <ToggleCSS draftRef={draftRef} inlineStyle={inlineStyle}/>
-                </div>
+            <IconBox>
+
                 <div onClick={leaveEdit}>
                     <Icon.Save
                         size={config.icon_size_m}
@@ -73,13 +67,17 @@ const TextingToolbarInside = ({item, open, draftRef, inlineStyle}) => {
                     />
                 </div>
 
-                <div onClick={deleteNoteOrComment}>
+                <div className={'textingToolbar'}>
+                    <ToggleCSS draftRef={draftRef} inlineStyle={inlineStyle}/>
+                </div>
+
+                <div onClick={() => setDelCheck(true)} className={'icon'}>
                     <Icon.Delete
                         size={config.icon_size_m}
                         title={'刪除'}
                     />
                 </div>
-            </div>
+            </IconBox>
         </EditToolbar>
     );
 }

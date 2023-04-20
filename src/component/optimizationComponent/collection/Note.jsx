@@ -68,7 +68,7 @@ const Note = React.memo((
         area,
         where,
     }) => {
-    const {openEditId, addNewNoteAnimation, openEditParentId} = useSelector(selectCollection)
+    const {openEditId, addNewNoteAnimation, openEditParentId, folderId} = useSelector(selectCollection)
     const dispatch = useDispatch()
     const {configuration: config} = useSelector(selectGlobal)
 
@@ -137,6 +137,7 @@ const Note = React.memo((
                                 item={item}
                                 open={openEditId === item.key}
                                 where={where}
+                                folderId={folderId}
                             />
                             <Url item={item}/>
 

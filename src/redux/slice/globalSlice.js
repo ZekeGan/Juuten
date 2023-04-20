@@ -6,8 +6,8 @@ import {fetchDataObject, setDataToLocal} from "../../utils";
 export const GlobalSlice = createSlice({
     name: 'global',
     initialState: {
-        // configuration: initialConfiguration,
-        configuration: await fetchDataObject('Juuten_Configuration')
+        configuration: initialConfiguration,
+        // configuration: await fetchData('Juuten_Configuration', initialConfiguration)
 
     },
     reducers: {

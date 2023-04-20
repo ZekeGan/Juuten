@@ -15,11 +15,5 @@
   "action": {
     "default_popup": "index.html",
     "default_title": "Juuten"
-  },
-  "web_accessible_resources": [
-    {
-      "matches": ["<all_urls>"],
-      "resources": ["contentMain.js"]
-    }
-  ]
+  }
 }

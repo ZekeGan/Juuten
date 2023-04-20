@@ -270,7 +270,7 @@ const Juuten_Storage = [
         key: 'Juuten_23',
         msg: '{"blocks":[{"key":"327mv","text":"hi i am collection","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',
         type: 'storage',
-        url: 'https://google.com',
+        url: 'https://www.google.com/search?q=info.selectionText+%27%5Cn%27&sxsrf=APwXEdfs9TbvxEN1H0Zk_lvHvTMKTqtAaA%3A1681923281454&ei=0RxAZLSwG9fmwQOpr77gBA&ved=0ahUKEwj03Ou9tLb-AhVXc3AKHamXD0wQ4dUDCA8&uact=5&oq=info.selectionText+%27%5Cn%27&gs_lcp=Cgxnd3Mtd2l6LXNlcnAQAzIFCAAQogQyBQgAEKIEMgUIABCiBDIFCAAQogQ6CggAEEcQ1gQQsAM6CgghEKABEMMEEAo6BwghEKABEApKBAhBGABQhAdYmwpgxg9oAnABeACAAZIBiAG7ApIBAzIuMZgBAKABAcgBAsABAQ&sclient=gws-wiz-serp',
         favIconUrl: '',
         pageTitle: 'david love lucy',
         currentDate: '2022/10/10 12:10',

@@ -50,6 +50,7 @@ export default function App() {
 
     useEffect(() => {
         const [item] = Juuten_folderLists.filter(item => item.key === id)
+        console.log(item)
         dispatch(addAddFolderId(item))
     }, [])
 

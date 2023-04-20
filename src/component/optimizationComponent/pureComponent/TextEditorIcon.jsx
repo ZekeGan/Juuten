@@ -11,7 +11,7 @@ const Icon = styled.div`
     line-height: 30px;
     font-family: SourceHanSansHWTC-Regular;
     width: 30px;
-    margin-right: 30px;
+    margin-right: 10px;
     ${({stylePros}) => stylePros}
 `
 

@@ -72,13 +72,13 @@ export default React.memo((
 
     function goIntoFolder(e, item) {
         e.stopPropagation()
-        // navigate('/collection/N1') // *****************************************<==== delete when build
+        navigate('/collection/N1') // *****************************************<==== delete when build
         console.log('enterFolder')
-        const fn = () => navigate(`/collection/${item.key}`)
-        dispatch(addFetchData({
-            item,
-            fn,
-        }))
+        // const fn = () => navigate(`/collection/${item.key}`)
+        // dispatch(addFetchData({
+        //     item,
+        //     fn,
+        // }))
     }
 
 

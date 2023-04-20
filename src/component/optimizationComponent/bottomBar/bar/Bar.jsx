@@ -1,14 +1,14 @@
 import React, {useMemo} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {addOpenBar, selectCollection} from "../../../../redux/slice/collectionSlice.js";
+import {exportToTXT} from "../../../../utils";
+import {selectGlobal} from "../../../../redux/slice/globalSlice";
 import BottemBarTemplate from "../BottemBarTemplate.jsx";
 import Size from "../../pureComponent/Size.jsx";
 import styled from "styled-components";
 import Slider from "../../Slider.jsx";
 import DotColor from "./DotColor.jsx";
-import {addSetConfiguration, selectGlobal} from "../../../../redux/slice/globalSlice";
 import BarButton from "./BarButton.jsx";
-import {exportToTXT} from "../../../../utils";
 
 
 const Container = styled.div`
@@ -43,6 +43,11 @@ const SelectContainer = styled.div`
         }
     }`
 
+const isEqual = (prevProps, nextProps) => {
+    // console.log('prev ', prevProps)
+    // console.log('next ', nextProps)
+    return prevProps.open === nextProps.open
+}
 
 /* 刪除錦集(collection)和暫存區(storage)筆記或註記(comment) */
 const Bar = React.memo(({area = 'default', data}) => {
@@ -202,69 +207,59 @@ const Bar = React.memo(({area = 'default', data}) => {
     }), [configuration])
 
     console.log('bar')
+
     return (
         <BottemBarTemplate
             fullPage={true}
             open={openBar}
             closeCallback={() => dispatch(addOpenBar())}
         >
-            {
-                Object.keys(barList).map(category => (
-                    <Container key={`${category}-text`} config={configuration}>
-                        <div className={'container-text'}>{barList[category].text}</div>
-                        <CategoryContainer>
-                            {
-                                barList[category].list.map(select => (
-                                    select.open
-                                    && <SelectContainer key={select.text} config={configuration}>
-                                        <div className={'select-text-box'}>
-                                            <div className={'select-text'}>{select.textCN}</div>
-                                            <div className={'select-introduce'}>{select.introduce.default}</div>
-                                        </div>
-                                        {
-                                            select.element === 'color'
-                                            && <DotColor/>
-                                        }
-                                        {
-                                            select.element === 'number'
-                                            && <Size
-                                                everySize={select.numberValue.currentValue}
-                                                max={select.numberValue.max}
-                                                min={select.numberValue.min}
-                                                howMany={select.numberValue.howMany}
-                                                dispatchValue={select.dispatchValue}
-                                            />
-                                        }
-                                        {
-                                            select.element === 'ratio'
-                                            && <Slider
-                                                id={select.text}
-                                                current={select.current}
-                                                ratioValue={select.ratioValue}
-                                            />
-                                        }
+            {Object.keys(barList).map(category => (
+                <Container key={`${category}-text`} config={configuration}>
+                    <div className={'container-text'}>{barList[category].text}</div>
+                    <CategoryContainer>
+                        {barList[category].list.map(select => (
+                            select.open
+                            && <SelectContainer key={select.text} config={configuration}>
+                                <div className={'select-text-box'}>
+                                    <div className={'select-text'}>{select.textCN}</div>
+                                    <div className={'select-introduce'}>{select.introduce.default}</div>
+                                </div>
+                                {select.element === 'color'
+                                && <DotColor/>}
 
-                                        {
-                                            select.element === 'click'
-                                            && select.clickValue.map(item => (
-                                                <BarButton
-                                                    key={item.text}
-                                                    text={item.text}
-                                                    data={data}
-                                                    type={item.type}
-                                                />
-                                            ))
-                                        }
-                                    </SelectContainer>
-                                ))
-                            }
-                        </CategoryContainer>
-                    </Container>
-                ))
-            }
+                                {select.element === 'number'
+                                && <Size
+                                    everySize={select.numberValue.currentValue}
+                                    max={select.numberValue.max}
+                                    min={select.numberValue.min}
+                                    howMany={select.numberValue.howMany}
+                                    dispatchValue={select.dispatchValue}
+                                />}
+
+                                {select.element === 'ratio'
+                                && <Slider
+                                    id={select.text}
+                                    current={select.current}
+                                    ratioValue={select.ratioValue}
+                                />}
+
+                                {select.element === 'click'
+                                && select.clickValue.map(item => (
+                                    <BarButton
+                                        key={item.text}
+                                        text={item.text}
+                                        data={data}
+                                        type={item.type}
+                                    />))
+                                }
+                            </SelectContainer>
+                        ))}
+                    </CategoryContainer>
+                </Container>
+            ))}
         </BottemBarTemplate>
-
     );
-})
+}, isEqual)
 
 export default Bar;

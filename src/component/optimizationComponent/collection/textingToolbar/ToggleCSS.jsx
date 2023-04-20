@@ -1,7 +1,6 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import TextEditorIcon from "../../pureComponent/TextEditorIcon.jsx";
-import {useSelector} from "react-redux";
-import {selectCollection} from "../../../../redux/slice/collectionSlice";
+
 import {toggleProps} from "../../../../assets/global";
 
 

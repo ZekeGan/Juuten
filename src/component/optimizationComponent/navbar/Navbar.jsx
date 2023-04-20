@@ -3,7 +3,6 @@ import styled from "styled-components";
 import Icon from "../Svg.jsx";
 import {useNavigate} from "react-router-dom";
 import {useSelector} from "react-redux";
-import {selectCollection} from "../../../redux/slice/collectionSlice";
 import {selectGlobal} from "../../../redux/slice/globalSlice";
 
 
@@ -26,9 +25,23 @@ const Navbar = styled.div`
         font-size: ${({config}) => config.font_size_l}px;
     }`
 
-const isEqual = (prev, next) => prev.hide === next.hide || (prev.name === next.name && prev.hide === next.hide)
+const isEqual = (prev, next) => {
+    for (let key in prev) {
+        if (prev[key] !== next[key]) {
+            return false
+        }
+    }
+    return true
+}
 
-const app = React.memo(({hide = false, name = 'undefined', setSaveWarning, area, openEditId}) => {
+const app = React.memo((
+    {
+        hide = false,
+        name = 'undefined',
+        setSaveWarning,
+        area,
+        openEditId
+    }) => {
     const navigate = useNavigate()
     const {configuration: config} = useSelector(selectGlobal)
 
@@ -45,16 +58,13 @@ const app = React.memo(({hide = false, name = 'undefined', setSaveWarning, area,
 
     return (
         <Navbar config={config} hide={hide}>
-            {
-                area !== 'home'
-                &&
-                <div onClick={() => back()}>
-                    <Icon.House
-                        size={config.icon_size_l}
-                        styled={`color: ${config.main};`}
-                    />
-                </div>
-            }
+            {area !== 'home'
+            && <div onClick={() => back()}>
+                <Icon.House
+                    size={config.icon_size_l}
+                    styled={`color: ${config.main};`}
+                />
+            </div>}
             <div className={'where'}>{name}</div>
         </Navbar>
     );
