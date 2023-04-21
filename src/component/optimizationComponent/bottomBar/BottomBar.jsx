@@ -1,17 +1,15 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from "styled-components";
-import {
-    addOpenBar,
-    addOpenStorage,
-    selectCollection,
-    addOpenAddNewNote,
-    addOpenSearchPage
-} from "../../../redux/slice/collectionSlice";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 
 
 import Icon from "../Svg.jsx";
 import {selectGlobal} from "../../../redux/slice/globalSlice";
+import SearchNote from "./search/SearchNote.jsx";
+import Storage from "./storage/Storage.jsx";
+import AddNewNote from "./addNewNote/AddNewNote.jsx";
+import Bar from "./bar/Bar.jsx";
+import Mask from "../pureComponent/Mask.jsx";
 
 const BottomBar = styled.div`
     position: absolute;
@@ -60,76 +58,91 @@ export const isEqual = (prev, next) => {
 }
 
 
-const App = React.memo(({hide, storageLen = 0}) => {
+const App = React.memo((
+    {
+        hide,
+        storageLen = 0,
+        barArea,
+    }) => {
     const {configuration: config} = useSelector(selectGlobal)
-    const dispatch = useDispatch()
 
-    const openStorage = () => {
-        dispatch(addOpenStorage('open'))
-    }
-    const openBar = () => {
-        dispatch(addOpenBar('open'))
-    }
-    const addNewNote = () => {
-        dispatch(addOpenAddNewNote('open'))
-    }
+    const [openStorage, setOpenStorage] = useState(false)
+    const [openBar, setOpenBar] = useState(false)
+    const [openNewNote, setOpenNewNote] = useState(false)
+    const [openSearch, setOpenSearch]  = useState(false)
 
-    function searchNote() {
-        dispatch(addOpenSearchPage('open'))
-    }
 
     console.log('bottomBar')
 
 
     return (
-        <BottomBar
-            config={config}
-            hideNav={hide}
-        >
-            <div onClick={() => searchNote()}>
-                <Icon.Search
-                    title={'搜尋筆記'}
-                    size={config.icon_size_l}
-                    styled={`color: ${config.main};`}
-                />
-            </div>
+        <>
 
+            <Mask open={openNewNote}/>
 
-            {/* 加入新筆記 */}
-            <div onClick={() => addNewNote()}>
-                <Icon.Plus
-                    title={'新增筆記'}
-                    size={config.icon_size_l}
-                    styled={`color: ${config.main};`}
-                />
-            </div>
+            <BottomBar
+                config={config}
+                hideNav={hide}
+            >
+                <div onClick={() => setOpenSearch(true)}>
+                    <Icon.Search
+                        title={'搜尋筆記'}
+                        size={config.icon_size_l}
+                        styled={`color: ${config.main};`}
+                    />
+                </div>
+                {/* 加入新筆記 */}
+                <div onClick={() => setOpenNewNote(true)}>
+                    <Icon.Plus
+                        title={'新增筆記'}
+                        size={config.icon_size_l}
+                        styled={`color: ${config.main};`}
+                    />
+                </div>
+                {/* 顯示暫存區數量 */}
+                <StorageCount config={config} onClick={() => setOpenStorage(true)}>
+                    <Icon.Box
+                        title={'置物區'}
+                        size={config.icon_size_l}
+                        styled={`color: ${config.main};`}
+                    />
+                    {
+                        (!config.showStorageCount && !!storageLen)
+                        && <i>{storageLen}</i>
 
+                    }
+                </StorageCount>
+                {/* 更多工具 Icon */}
+                <div onClick={() => setOpenBar(true)}>
+                    <Icon.Bar
+                        title={'更多'}
+                        size={config.icon_size_l}
+                        styled={`color: ${config.main};`}
+                    />
+                </div>
+            </BottomBar>
 
-            {/* 顯示暫存區數量 */}
-            <StorageCount config={config} onClick={() => openStorage()}>
-                <title>置物區</title>
-                <Icon.Box
-                    title={'置物區'}
-                    size={config.icon_size_l}
-                    styled={`color: ${config.main};`}
-                />
-                {
-                    (!config.showStorageCount && !!storageLen)
-                    && <i>{storageLen}</i>
+            <SearchNote
+                open={openSearch}
+                setOpen={setOpenSearch}
+            />
+            <Storage
+                barArea={barArea}
+                open={openStorage}
+                setOpen={setOpenStorage}
+            />
+            <AddNewNote
+                barArea={barArea}
+                open={openNewNote}
+                setOpen={setOpenNewNote}
+            />
+            <Bar
+                barArea={barArea}
+                open={openBar}
+                setOpen={setOpenBar}
+            />
+        </>
 
-                }
-            </StorageCount>
-
-            {/* 更多工具 Icon */}
-            <div onClick={() => openBar('open')}>
-                <Icon.Bar
-                    title={'更多'}
-                    size={config.icon_size_l}
-                    styled={`color: ${config.main};`}
-                />
-            </div>
-
-        </BottomBar>
     );
 }, isEqual)
 

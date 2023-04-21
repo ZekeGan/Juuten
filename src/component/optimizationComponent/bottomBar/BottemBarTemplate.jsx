@@ -37,7 +37,7 @@ const Container = styled.div`
     height: 100%;
     overflow-y: scroll;
     overflow-x: hidden;
-    // margin-top: 30px;
+    margin-top: 10px;
     &::-webkit-scrollbar {
         width: 5px;
     }
@@ -49,12 +49,18 @@ const Container = styled.div`
 const isEqual = (prev, next) => {
     if (prev.open || next.open) {
         return prev === next
-    }
-    else {
+    } else {
         return true
     }
 }
-const BottemBarTemplate = React.memo(({open, closeCallback, fullPage = false, children}) => {
+const BottemBarTemplate = React.memo((
+    {
+        open,
+        closeCallback,
+        fullPage = false,
+        children,
+        useContainer = true
+    }) => {
     const {configuration} = useSelector(selectGlobal)
     const close = () => closeCallback()
     console.log('tempalte')
@@ -67,9 +73,15 @@ const BottemBarTemplate = React.memo(({open, closeCallback, fullPage = false, ch
             <CloseBar config={configuration} onClick={() => close()}>
                 <Icon.X size={configuration.icon_size_s}/>
             </CloseBar>
-            <Container config={configuration}>
+
+            {useContainer
+            && <Container config={configuration}>
                 {children}
-            </Container>
+            </Container>}
+
+            {!useContainer
+            && children}
+
         </Main>
     );
 }, isEqual)

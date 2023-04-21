@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useSelector} from "react-redux";
 import {convertFromRaw, convertToRaw, EditorState, RichUtils} from "draft-js";
 import {selectGlobal} from "../../../../redux/slice/globalSlice";
@@ -24,11 +24,21 @@ const NoteContainer = styled.div`
     ${({isBottom, config}) => isBottom ? '' : `border-bottom: 3px solid ${config.primary}`}`
 
 
-const MyComponent = ({data}) => {
+const MyComponent = React.memo((
+    {
+        data,
+        open = false
+    }) => {
     const {configuration: config} = useSelector(selectGlobal)
     const inputRef = useRef(null)
     const [foundData, setFoundData] = useState([])
+
     console.log('foundData')
+
+    useEffect(() => {
+        if (!inputRef.current || !open) return
+        setTimeout(() => inputRef.current?.focus(), 1000)
+    }, [])
 
 
     function findData() {
@@ -176,6 +186,6 @@ const MyComponent = ({data}) => {
         </>
 
     );
-};
+})
 
 export default MyComponent;

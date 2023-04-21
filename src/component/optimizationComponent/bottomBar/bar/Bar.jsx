@@ -21,7 +21,6 @@ const CategoryContainer = styled.div`
     width: 100%;
     overflow: hidden;
     border-radius: 10px;`
-
 const SelectContainer = styled.div`
     user-select: none;
     height: 80px;
@@ -50,10 +49,13 @@ const isEqual = (prevProps, nextProps) => {
 }
 
 /* 刪除錦集(collection)和暫存區(storage)筆記或註記(comment) */
-const Bar = React.memo(({area = 'default', data}) => {
+const Bar = React.memo((
+    {
+        barArea = 'default',
+        open = false,
+        setOpen = () => {},
+    }) => {
     const {configuration} = useSelector(selectGlobal)
-    const dispatch = useDispatch()
-    const {openBar} = useSelector(selectCollection)
     const barList = useMemo(() => ({
         configuration: {
             text: '版面設定',
@@ -171,7 +173,7 @@ const Bar = React.memo(({area = 'default', data}) => {
                     clickValue: [
                         {text: '匯出成 TXT', type: 'plain'}
                     ],
-                    introduce: {default: area === 'folder' ? '匯出所有資料夾的資料成 TXT' : '匯出此資料夾內的資料成 TXT'},
+                    introduce: {default: barArea === 'folder' ? '匯出所有資料夾的資料成 TXT' : '匯出此資料夾內的資料成 TXT'},
                 },
                 {
                     open: true,
@@ -181,7 +183,7 @@ const Bar = React.memo(({area = 'default', data}) => {
                     clickValue: [
                         {text: '匯出成 Docx', type: 'docx'}
                     ],
-                    introduce: {default: area === 'folder' ? '匯出所有資料夾的資料成 Docx' : '匯出此資料夾內的資料成 Docx'},
+                    introduce: {default: barArea === 'folder' ? '匯出所有資料夾的資料成 Docx' : '匯出此資料夾內的資料成 Docx'},
                 },
                 {
                     open: true,
@@ -191,7 +193,7 @@ const Bar = React.memo(({area = 'default', data}) => {
                     clickValue: [
                         {text: '匯出成 HTML', type: 'html'}
                     ],
-                    introduce: {default: area === 'folder' ? '匯出所有資料夾的資料成 HTML' : '匯出此資料夾內的資料成 HTML'},
+                    introduce: {default: barArea === 'folder' ? '匯出所有資料夾的資料成 HTML' : '匯出此資料夾內的資料成 HTML'},
                 }
             ],
         },
@@ -211,8 +213,8 @@ const Bar = React.memo(({area = 'default', data}) => {
     return (
         <BottemBarTemplate
             fullPage={true}
-            open={openBar}
-            closeCallback={() => dispatch(addOpenBar())}
+            open={open}
+            closeCallback={() => setOpen(false)}
         >
             {Object.keys(barList).map(category => (
                 <Container key={`${category}-text`} config={configuration}>
@@ -248,8 +250,8 @@ const Bar = React.memo(({area = 'default', data}) => {
                                 && select.clickValue.map(item => (
                                     <BarButton
                                         key={item.text}
+                                        area={barArea}
                                         text={item.text}
-                                        data={data}
                                         type={item.type}
                                     />))
                                 }

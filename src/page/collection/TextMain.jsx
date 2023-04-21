@@ -40,7 +40,7 @@ const DropWrapper = styled.div`
 export default (
     {
         area,
-        where,
+        barArea,
         data = [],
         setHide = () => {
         }
@@ -96,7 +96,7 @@ export default (
                                             <Note
                                                 item={item}
                                                 area={area}
-                                                where={where}
+                                                barArea={barArea}
                                                 noteProvided={provided}
                                             />
                                         </div>

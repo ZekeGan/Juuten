@@ -66,7 +66,7 @@ const Note = React.memo((
         item,
         noteProvided,
         area,
-        where,
+        barArea
     }) => {
     const {openEditId, addNewNoteAnimation, openEditParentId, folderId} = useSelector(selectCollection)
     const dispatch = useDispatch()
@@ -136,7 +136,7 @@ const Note = React.memo((
                             <Textarea
                                 item={item}
                                 open={openEditId === item.key}
-                                where={where}
+                                barArea={barArea}
                                 folderId={folderId}
                             />
                             <Url item={item}/>

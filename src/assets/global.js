@@ -23,6 +23,10 @@ export const initialConfiguration = {
 
     showStorageCount: false,
     thisIsBottom: false,
+    isShowSelectionTool: false,
+
+    toolbarTop: 0,
+    toolbarLeft: 0,
 
     color: [
         '#ffffff',

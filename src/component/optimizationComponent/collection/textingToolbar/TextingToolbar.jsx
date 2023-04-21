@@ -65,7 +65,7 @@ const App = React.memo((
         showToolbar,
         open,
         inlineStyle,
-        where,
+        barArea,
     }) => {
     const dispatch = useDispatch()
     const {configuration: config} = useSelector(selectGlobal)
@@ -79,13 +79,11 @@ const App = React.memo((
         console.log(delCheck)
         setDelCheck(false)
         return document.removeEventListener('close', closeDelCheck, false)
-
     }
 
     useEffect(() => {
         if (!!delCheck) {
             document.addEventListener('click', closeDelCheck, false)
-
         }
     }, [])
 
@@ -137,7 +135,7 @@ const App = React.memo((
                             <Icon.Pen size={config.icon_size_m}/>
                         </div>
 
-                        {(item.type === 'storage' && where !== 'folder')
+                        {(item.type === 'storage' && barArea !== 'folder')
                         && <div
                             onClick={() => moveToStorageOrCollection({
                                 key: item.key,

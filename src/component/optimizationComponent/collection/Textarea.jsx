@@ -16,7 +16,7 @@ const Textarea = React.memo((
         item,
         showToolbar = true,
         open,
-        where,
+        barArea,
         folderId
     }) => {
     const draftRef = useRef(null)
@@ -39,7 +39,7 @@ const Textarea = React.memo((
                 draftRef={draftRef}
                 showToolbar={showToolbar}
                 inlineStyle={inlineStyle}
-                where={where}
+                barArea={barArea}
             />
             <DraftComponent
                 item={item.msg}

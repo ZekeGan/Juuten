@@ -1,25 +1,29 @@
-import React, {useEffect} from 'react';
-import {useDispatch, useSelector} from "react-redux";
+import React from 'react';
+import { useSelector} from "react-redux";
 import {
-    addOpenStorage,
     selectCollection
 } from "../../../../redux/slice/collectionSlice";
 import TextMain from "../../../../page/collection/TextMain.jsx";
 import BottemBarTemplate from "../BottemBarTemplate.jsx";
 
 
-function Storage({where = 'collection'}) {
-    const {openStorage, Juuten_Storage} = useSelector(selectCollection)
-    const dispatch = useDispatch()
+function Storage(
+    {
+        barArea = 'collection',
+        open = false,
+        setOpen = () => {}
+    }) {
+    const {Juuten_Storage} = useSelector(selectCollection)
     return (
         <BottemBarTemplate
-            open={openStorage}
-            closeCallback={() => dispatch(addOpenStorage())}
+            useContainer={false}
+            open={open}
+            closeCallback={() => setOpen(false)}
             fullPage={true}
         >
             <TextMain
                 data={Juuten_Storage}
-                where={where}
+                barArea={barArea}
                 area={'storage'}
             />
         </BottemBarTemplate>

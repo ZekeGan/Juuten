@@ -1,19 +1,17 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import BottemBarTemplate from "../BottemBarTemplate.jsx";
+import React, {useEffect, useRef, useState} from 'react';
+import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
 import {
     addAddNewNote,
     addCleanTexting,
-    addOpenAddNewNote,
     selectCollection
 } from "../../../../redux/slice/collectionSlice";
-import styled from "styled-components";
-import DraftComponent from "../../DraftComponent.jsx";
-import {selectGlobal} from "../../../../redux/slice/globalSlice";
-import TextEditorIcon from "../../pureComponent/TextEditorIcon.jsx";
 import {toggleProps} from "../../../../assets/global";
-import useAutoSave from "../../../../hooks/useAutoSave";
-import {fetchDataString} from "../../../../utils";
+import {selectGlobal} from "../../../../redux/slice/globalSlice";
+import BottemBarTemplate from "../BottemBarTemplate.jsx";
+import DraftComponent from "../../DraftComponent.jsx";
+import TextEditorIcon from "../../pureComponent/TextEditorIcon.jsx";
+
 
 const Main = styled.div`
     display: flex;
@@ -57,8 +55,13 @@ const BTN = styled.div`
         transform: scale(0.95);
     }`
 
-const AddNewNote = React.memo(({area}) => {
-    const {openAddNewNote, Juuten_EditingText} = useSelector(selectCollection)
+const AddNewNote = React.memo((
+    {
+        barArea,
+        open = false,
+        setOpen = () => {}
+    }) => {
+    const {Juuten_EditingText} = useSelector(selectCollection)
     const {configuration: config} = useSelector(selectGlobal)
     const dispatch = useDispatch()
     const draftRef = useRef(null)
@@ -69,13 +72,15 @@ const AddNewNote = React.memo(({area}) => {
         if (!draftRef.current.hasText()) return
         dispatch(addAddNewNote({
             text: draftRef.current.getJSONData(),
-            area,
+            area: barArea
         }))
         console.log(draftRef.current.getJSONData())
-        dispatch(addOpenAddNewNote())
+        setOpen(false)
         dispatch(addCleanTexting())
         draftRef.current?.cleanEditorState()
     }
+
+    console.log('addNewNote')
 
     function handleToggleStyle(keyword, e) {
         draftRef.current?.toggleStyle(keyword, e)
@@ -83,15 +88,15 @@ const AddNewNote = React.memo(({area}) => {
 
 
     useEffect(() => {
-        if (openAddNewNote) {
+        if (open) {
             draftRef.current?.autoFocus()
         }
-    }, [openAddNewNote])
+    }, [open])
 
     return (
         <BottemBarTemplate
-            open={openAddNewNote}
-            closeCallback={() => dispatch(addOpenAddNewNote())}
+            open={open}
+            closeCallback={() => setOpen(false)}
         >
             <Main>
                 <Textarea config={config}>
@@ -99,7 +104,7 @@ const AddNewNote = React.memo(({area}) => {
                         ref={draftRef}
                         setInlineStyle={setInlineStyle}
                         item={Juuten_EditingText[0].msg}
-                        open={openAddNewNote}
+                        open={open}
                         autoSave={{
                             type: 'textingBox',
                             key: 'Juuten_editingText',

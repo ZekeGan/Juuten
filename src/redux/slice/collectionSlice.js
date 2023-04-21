@@ -1,5 +1,5 @@
-import {createAsyncThunk, createSlice, current} from "@reduxjs/toolkit";
-import {fetchData, fetchDataString, findData, getCurrentDate, setDataToLocal} from "../../utils";
+    import {createAsyncThunk, createSlice, current} from "@reduxjs/toolkit";
+import {fetchData, getCurrentDate, setDataToLocal} from "../../utils";
 import {Juuten_Storage, N1} from "../../assets/fakeData";
 import {convertToRaw, EditorState} from 'draft-js'
 
@@ -52,34 +52,6 @@ export const CollectionSlice = createSlice({
                 ...state,
                 folderData: action.payload,
                 folderId: action.payload.key
-            }
-        },
-
-        openAddNewNote: (state, action) => {
-            return {
-                ...state,
-                openAddNewNote: action.payload === 'open'
-            }
-        },
-
-        openStorage: (state, action) => {
-            return {
-                ...state,
-                openStorage: action.payload === 'open'
-            }
-        },
-
-        openSearchPage: (state, action) => {
-            return {
-                ...state,
-                openSearchPage: action.payload === 'open'
-            }
-        },
-
-        openBar: (state, action) => {
-            return {
-                ...state,
-                openBar: action.payload === 'open'
             }
         },
 
@@ -154,7 +126,9 @@ export const CollectionSlice = createSlice({
                 comment: [],
                 isOpenComment: false,
             }
+            console.log(newNote)
             const newData = [newNote, ...data]
+
             setDataToLocal(where, newData)
             return {
                 ...state,
@@ -410,15 +384,11 @@ export const {
     editCollectionOrStorage: addEditCollectionOrStorage,
     addAnimation: addAddAnimation,
     openEditToolbar: addOpenEditToolbar,
-    openBar: addOpenBar,
-    openStorage: addOpenStorage,
-    openSearchPage: addOpenSearchPage,
     addFolderId: addAddFolderId,
     moveToStorageOrCollection: addMoveToStorageOrCollection,
     addComment: addAddComment,
     deleteNoteOrComment: addDeleteNoteOrComment,
     addNewNote: addAddNewNote,
-    openAddNewNote: addOpenAddNewNote,
     rearrangeComment: addRearrangeComment,
     rearrangeNote: addRearrangeNote,
     openOrCloseComment: addOpenOrCloseComment,

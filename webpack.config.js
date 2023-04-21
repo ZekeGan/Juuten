@@ -2,6 +2,7 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
+const FileManagerPlugin = require("filemanager-webpack-plugin");
 
 
 module.exports = {
@@ -9,8 +10,8 @@ module.exports = {
     // mode: 'production',
     entry: {
         popup: './src/popup.jsx',
-        // background: './src/background.js',
-        // content: './src/content.js'
+        background: './src/background.js',
+        content: './src/content.js'
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -72,10 +73,23 @@ module.exports = {
         new CopyPlugin({
             patterns: [
                 {from: "public"},
-                {from: "src/background.js"},
-                {from: "src/content.js"}
+                {from: 'src/assets/content.css'}
+                // {from: "src/background.js"},
+                // {from: "src/content.js"}
             ],
         }),
+        // new FileManagerPlugin({
+        //     events: {
+        //         onEnd: {
+        //             mkdir: ['dist/content/', 'dist/background/'],
+        //             move: [
+        //                 {source: 'dist/content.js/*', destination: 'dist/content/content.js/*'},
+        //                 {source: 'dist/background.{js.map}', destination: 'dist/background/background.{js.map}'},
+        //
+        //             ]
+        //         }
+        //     }
+        // })
 
 
     ],

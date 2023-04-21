@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react';
 import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
-import {addOpenSearchPage, selectCollection} from "../../../../redux/slice/collectionSlice";
+import {selectCollection} from "../../../../redux/slice/collectionSlice";
 import {selectFolder} from "../../../../redux/slice/folderSlice";
 import BottemBarTemplate from "../BottemBarTemplate.jsx";
 import FoundData from "./FoundData.jsx";
@@ -16,11 +16,14 @@ const Container = styled.div`
 `
 
 
-const SearchNote = React.memo(() => {
-    const {Juuten_Storage, openSearchPage} = useSelector(selectCollection)
+const SearchNote = React.memo((
+    {
+        open = false,
+        setOpen = () => {}
+    }) => {
+    const {Juuten_Storage} = useSelector(selectCollection)
     const {Juuten_folderLists} = useSelector(selectFolder)
     const obj = useSelector(selectCollection)
-    const dispatch = useDispatch()
     const allFolder = useMemo(() => {
         const newStorage = Juuten_Storage.map(item => ({...item, folderName: 'Storage'}))
         return Juuten_folderLists
@@ -32,19 +35,23 @@ const SearchNote = React.memo(() => {
             .concat(newStorage)
             .filter(item => item !== undefined)
             .flat(1)
-    }, [openSearchPage])
+    }, [open])
+
 
     console.log('searchPage')
 
     return (
         <BottemBarTemplate
-            open={openSearchPage}
+            open={open}
             fullPage={true}
-            closeCallback={() => dispatch(addOpenSearchPage(''))}
+            closeCallback={() => setOpen(false)}
         >
             <Container>
-                {openSearchPage
-                && <FoundData data={allFolder}/>}
+                {open
+                && <FoundData
+                    data={allFolder}
+                    open={open}
+                />}
             </Container>
         </BottemBarTemplate>
     );

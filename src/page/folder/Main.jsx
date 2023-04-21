@@ -10,19 +10,13 @@ import {
 } from "../../redux/slice/folderSlice";
 import {selectGlobal} from "../../redux/slice/globalSlice";
 import {selectCollection} from "../../redux/slice/collectionSlice";
-
+import useHideBar from "../../hooks/useHideBar";
 import AddNewFolder from "../../component/optimizationComponent/folder/AddingNewFolder.jsx";
 import Warning from "../../component/optimizationComponent/Warning.jsx";
 import DeletingCheck from "../../component/optimizationComponent/DeletingCheck.jsx";
 import BottomBar from "../../component/optimizationComponent/bottomBar/BottomBar.jsx";
-import Storage from "../../component/optimizationComponent/bottomBar/storage/Storage.jsx";
-import Bar from "../../component/optimizationComponent/bottomBar/bar/Bar.jsx";
-import AddNewNote from "../../component/optimizationComponent/bottomBar/addNewNote/AddNewNote.jsx";
 import FolderBlock from "../../component/optimizationComponent/folder/FolderBlock.jsx";
-import SearchNote from "../../component/optimizationComponent/bottomBar/search/SearchNote.jsx";
-import Mask from "../../component/optimizationComponent/pureComponent/Mask.jsx";
 import Navbar from "../../component/optimizationComponent/navbar/Navbar.jsx";
-import useHideBar from "../../hooks/useHideBar";
 
 
 const Folders = styled.div`
@@ -52,8 +46,7 @@ const FolderSection = styled.div`
 export default function App() {
     const dispatch = useDispatch()
     const {Juuten_folderLists, editFolderId, addFolderAnimationId} = useSelector(selectFolder)
-    const collectionObj = useSelector(selectCollection)
-    const {Juuten_Storage, openAddNewNote, openBar} = useSelector(selectCollection)
+    const {Juuten_Storage} = useSelector(selectCollection)
     const {configuration: config} = useSelector(selectGlobal)
 
     const [regTest, setRegTest] = useState(false)
@@ -62,17 +55,7 @@ export default function App() {
     const [reset, setReset] = useState(false)
     const hideNav = useHideBar(folderRef.current)
 
-    /* 獲得所有資料夾內的所有檔案 */
-    const allFoldersData = useMemo(() => {
-        return Juuten_folderLists
-            .reduce((output, {key, name}) => {
-                if (!output[name] && !!collectionObj[key]) {
-                    output[name] = []
-                    output[name].push(...collectionObj[key])
-                }
-                return output
-            }, {})
-    }, [openBar])
+
 
     useEffect(() => {
         setReset(prev => !prev)
@@ -127,8 +110,6 @@ export default function App() {
                 doubleDelCheck={doubleDelCheck}
             />
 
-
-            <Mask open={openAddNewNote}/>
             <Navbar hide={hideNav} area={'home'} name={'Juuten'}/>
 
 
@@ -176,16 +157,9 @@ export default function App() {
 
 
             <BottomBar
+                barArea={'folder'}
                 hide={hideNav}
                 storageLen={Juuten_Storage.length}
-            />
-
-            <SearchNote/>
-            <Storage where={'folder'}/>
-            <AddNewNote area={'folder'}/>
-            <Bar
-                area={'folder'}
-                data={allFoldersData}
             />
 
         </Folders>

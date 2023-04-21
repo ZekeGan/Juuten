@@ -1,10 +1,64 @@
-/* 從 sync storage獲取 dataName數據 */
 'use strict';
-
-
 import {convertToRaw, EditorState} from "draft-js";
+import store from "./redux/store";
 
-const fetchMsg = async (dataName) => {
+/* 監聽從 background || popup.js 的通信 */
+chrome.runtime.onMessage.addListener((req) => {
+    if (req.type === 'fromBackground') {
+        fetchMsg('Juuten_Storage')
+            .then(res => {
+                console.log(res)
+                let newData = [addNewMsg(req), ...res]
+                chrome.storage.sync.set({
+                    ['Juuten_Storage']: JSON.stringify(newData)
+                })
+            })
+            .catch(error => {
+                console.error(error)
+            })
+    }
+    return true
+})
+
+let mouseupFlag = false
+document.addEventListener("mouseup", (event) => {
+    if (mouseupFlag) return
+    const selection = window.getSelection()
+    const {isShowSelectionTool, toolbarLeft, toolbarTop} = getGlobalConfiguration()
+
+    if (isShowSelectionTool && event.button === 0) {
+        if (!selection.isCollapsed) {
+            const tooltip = document.createElement("div")
+            tooltip.classList.add('Juuten-tool-container')
+            tooltip.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width=16 height=16 fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
+                    <path fillRule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
+                </svg>`
+            tooltip.style.top = `${event.pageY + toolbarTop}px`
+            tooltip.style.left = `${event.pageX + toolbarLeft}px`
+            document.body.appendChild(tooltip);
+            mouseupFlag = true
+            document.addEventListener(
+                "mouseup",
+                function hideTooltip(event) {
+                    mouseupFlag = false
+                    if (!tooltip.contains(event.target)) {
+                        tooltip.remove()
+                        document.removeEventListener("mouseup", hideTooltip)
+                    } else {
+                        chrome.runtime.sendMessage({key: 'Juuten_toolbar'},
+                            () => {
+                            }
+                        )
+                        tooltip.remove();
+                        return document.removeEventListener("mouseup", hideTooltip)
+                    }
+                }
+            );
+        }
+    }
+})
+
+async function fetchMsg(dataName) {
     try {
         return new Promise((resolve) => {
             chrome.storage.sync.get(
@@ -16,17 +70,16 @@ const fetchMsg = async (dataName) => {
         })
     } catch (error) {
         console.error(error)
+        return []
     }
-
 }
 
-const addNewMsg = (obj) => {
-    const { pageTitle, favIconUrl, url} = obj
+function addNewMsg(obj) {
+    const {pageTitle, favIconUrl, url} = obj
     const selection = document.getSelection().toString()
     const position = document.documentElement.scrollTop
     const currentDate = getCurrentDate()
     const key = `Juuten_${Date.now()}`
-    console.log(selection)
     return {
         key,
         msg: JSON.stringify(convertToRaw(EditorState.createWithText(selection).getCurrentContent())),
@@ -40,30 +93,7 @@ const addNewMsg = (obj) => {
     }
 }
 
-
-/* 監聽從 background || popup.js 的通信 */
-chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
-
-    if (req.type !== 'fromBackground') return
-    fetchMsg('Juuten_Storage')
-        .then(res => {
-            console.log(res)
-            let newData = [addNewMsg(req), ...res]
-
-            console.log(newData)
-
-            chrome.storage.sync.set({
-                ['Juuten_Storage']: JSON.stringify(newData)
-            })
-        })
-        .catch(error => {
-            console.error(error)
-        })
-    return true
-})
-
-
-const getCurrentDate = () => {
+function getCurrentDate() {
     const date = new Date()
     const year = date.getFullYear()
     const month = date.getMonth()
@@ -73,33 +103,12 @@ const getCurrentDate = () => {
     return `${year}/${month}/${day} ${hour}:${minute}`
 }
 
-
-document.addEventListener("mouseup", function (event) {
-    const selection = window.getSelection().toString();
-    if (selection) {
-        const tooltip = document.createElement("div");
-        tooltip.innerText = "Click to do something";
-        tooltip.style.position = 'fixed'
-        tooltip.style.top = event.pageY + "px";
-        tooltip.style.left = event.pageX + "px";
-        document.body.appendChild(tooltip);
-        document.addEventListener("click", function hideTooltip(event) {
-            if (!tooltip.contains(event.target)) {
-                document.removeEventListener("click", hideTooltip);
-                tooltip.remove();
-            }
-        });
+function getGlobalConfiguration() {
+    const config = store.getState().global.configuration
+    return {
+        isShowSelectionTool: !config.isShowSelectionTool,
+        toolbarLeft: config.toolbarLeft,
+        toolbarTop: config.toolbarTop
     }
-});
+}
 
-
-// 監聽來自 backgroundscript.js 的消息
-// chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-//     // 判斷消息是否為請求將選中的文字發送到 backgroundscript.js 的請求
-//     if (request.action === "copyText") {
-//         // 獲取選中的文字
-//         const selectedText = window.getSelection().toString();
-//         // 將選中的文字發送到 backgroundscript.js
-//         chrome.runtime.sendMessage({ action: "copyText", text: selectedText });
-//     }
-// });
