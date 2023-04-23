@@ -1,76 +1,69 @@
-'use strict';
 import {convertToRaw, EditorState} from "draft-js";
 import store from "./redux/store";
+import {getCurrentDate} from "./utils";
+import {initialConfiguration} from "./assets/global";
 
 /* 監聽從 background || popup.js 的通信 */
 chrome.runtime.onMessage.addListener((req) => {
     if (req.type === 'fromBackground') {
-        fetchMsg('Juuten_Storage')
-            .then(res => {
-                console.log(res)
-                let newData = [addNewMsg(req), ...res]
+        fetchMsg('Juuten_Storage', [])
+            .then((res) => {
                 chrome.storage.sync.set({
-                    ['Juuten_Storage']: JSON.stringify(newData)
+                    ['Juuten_Storage']: JSON.stringify([addNewMsg(req), ...res])
                 })
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error(error)
             })
     }
     return true
 })
 
-let mouseupFlag = false
-document.addEventListener("mouseup", (event) => {
-    if (mouseupFlag) return
-    const selection = window.getSelection()
-    const {isShowSelectionTool, toolbarLeft, toolbarTop} = getGlobalConfiguration()
 
-    if (isShowSelectionTool && event.button === 0) {
-        if (!selection.isCollapsed) {
-            const tooltip = document.createElement("div")
-            tooltip.classList.add('Juuten-tool-container')
-            tooltip.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width=16 height=16 fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
-                    <path fillRule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
-                </svg>`
-            tooltip.style.top = `${event.pageY + toolbarTop}px`
-            tooltip.style.left = `${event.pageX + toolbarLeft}px`
-            document.body.appendChild(tooltip);
-            mouseupFlag = true
-            document.addEventListener(
-                "mouseup",
-                function hideTooltip(event) {
-                    mouseupFlag = false
-                    if (!tooltip.contains(event.target)) {
-                        tooltip.remove()
-                        document.removeEventListener("mouseup", hideTooltip)
-                    } else {
-                        chrome.runtime.sendMessage({key: 'Juuten_toolbar'},
-                            () => {
+console.log('contentscript active')
+let selectionText = ''
+fetchMsg('Juuten_Configuration', initialConfiguration)
+    .then(res => {
+        document.addEventListener(
+            "mouseup",
+            (event,) => {
+                const {isShowSelectionTool, toolbarY, toolbarX} = res
+                if (!isShowSelectionTool && event.button === 0) {
+                    console.log('enter')
+                    const selection = window.getSelection()
+                    if (!selection.isCollapsed && selection.toString() !== selectionText) {
+                        selectionText = selection.toString()
+                        const tooltip = document.createElement("div")
+                        tooltip.classList.add('Juuten-tool-container')
+                        tooltip.innerHTML = `<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35.72 47.13"><defs><style>.cls-1{fill:#fff;}</style></defs><path class="cls-1" d="M294.76,426.19H283.4v27.36H267.45v10a9.8,9.8,0,0,0,9.79,9.79h17.51a8.44,8.44,0,0,0,8.42-8.43V434.6A8.42,8.42,0,0,0,294.76,426.19ZM283.4,469.5h-6.16a6,6,0,0,1-6-6v-6.16H283.4Zm16-4.61a4.61,4.61,0,0,1-4.6,4.61h-7.53V430h7.54a4.6,4.6,0,0,1,4.59,4.59Z" transform="translate(-267.45 -426.19)"/></svg>`
+                        tooltip.style.top = `${(event.pageY - 15) - toolbarY}px`
+                        tooltip.style.left = `${(event.pageX - 15) + toolbarX}px`
+                        document.body.appendChild(tooltip)
+                        document.addEventListener(
+                            "mouseup",
+                            function hideTooltip(event) {
+                                if (tooltip.contains(event.target)) chrome.runtime.sendMessage({key: 'Juuten_toolbar'})
+                                tooltip.remove()
+                                document.removeEventListener("mouseup", hideTooltip)
                             }
                         )
-                        tooltip.remove();
-                        return document.removeEventListener("mouseup", hideTooltip)
                     }
                 }
-            );
-        }
-    }
-})
+            }, false)
+    })
 
-async function fetchMsg(dataName) {
+
+async function fetchMsg(dataName, initailData) {
     try {
         return new Promise((resolve) => {
             chrome.storage.sync.get(
                 [dataName],
-                (obj) => {
-                    resolve(obj[dataName] ? JSON.parse(obj[dataName]) : [])
-                }
+                (obj) => resolve(obj[dataName] ? JSON.parse(obj[dataName]) : initailData)
             )
         })
     } catch (error) {
         console.error(error)
-        return []
+        throw []
     }
 }
 
@@ -93,22 +86,4 @@ function addNewMsg(obj) {
     }
 }
 
-function getCurrentDate() {
-    const date = new Date()
-    const year = date.getFullYear()
-    const month = date.getMonth()
-    const day = date.getDate()
-    const hour = date.getHours()
-    const minute = date.getMinutes()
-    return `${year}/${month}/${day} ${hour}:${minute}`
-}
-
-function getGlobalConfiguration() {
-    const config = store.getState().global.configuration
-    return {
-        isShowSelectionTool: !config.isShowSelectionTool,
-        toolbarLeft: config.toolbarLeft,
-        toolbarTop: config.toolbarTop
-    }
-}
 

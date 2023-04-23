@@ -3,8 +3,9 @@ import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 import {
+    addDeleteFolder,
     addEditFolderAnimationId,
-    addEditFolderId, addFolderEdit,
+    addEditFolderId,
     addRearrangeFolder,
     selectFolder,
 } from "../../redux/slice/folderSlice";
@@ -56,7 +57,6 @@ export default function App() {
     const hideNav = useHideBar(folderRef.current)
 
 
-
     useEffect(() => {
         setReset(prev => !prev)
     }, [folderRef])
@@ -81,6 +81,7 @@ export default function App() {
         dispatch(addEditFolderId(''))
         return document.removeEventListener('click', removeToolbar, false)
     }
+
     useEffect(() => {
         if (!!editFolderId) {
             document.addEventListener('click', removeToolbar, false)
@@ -91,7 +92,8 @@ export default function App() {
     /* 刪除資料夾的第 2/2 步驟 */
     const doubleDelCheck = () => {
         setDelCheck(false)
-        dispatch(addFolderEdit({type: 'delete', value: editFolderId}))
+        console.log('delete')
+        dispatch(addDeleteFolder(editFolderId))
         dispatch(addEditFolderId())
     }
 
@@ -110,7 +112,10 @@ export default function App() {
                 doubleDelCheck={doubleDelCheck}
             />
 
-            <Navbar hide={hideNav} area={'home'} name={'Juuten'}/>
+            <Navbar
+                hide={hideNav} area={'home'}
+                name={''}
+            />
 
 
             <DragDropContext onDragEnd={(e) => dragEnd(e)}>

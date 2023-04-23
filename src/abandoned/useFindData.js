@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {convertFromRaw, convertToRaw, EditorState, RichUtils} from "draft-js";
 import {useSelector} from "react-redux";
 import {selectFolder} from "../redux/slice/folderSlice";

@@ -1,6 +1,5 @@
 import React, {useMemo} from 'react';
-import {useDispatch, useSelector} from "react-redux";
-import {addOpenBar, selectCollection} from "../../../../redux/slice/collectionSlice.js";
+import {useSelector} from "react-redux";
 import {exportToTXT} from "../../../../utils";
 import {selectGlobal} from "../../../../redux/slice/globalSlice";
 import BottemBarTemplate from "../BottemBarTemplate.jsx";
@@ -43,17 +42,15 @@ const SelectContainer = styled.div`
     }`
 
 const isEqual = (prevProps, nextProps) => {
-    // console.log('prev ', prevProps)
-    // console.log('next ', nextProps)
     return prevProps.open === nextProps.open
 }
 
-/* 刪除錦集(collection)和暫存區(storage)筆記或註記(comment) */
 const Bar = React.memo((
     {
         barArea = 'default',
         open = false,
-        setOpen = () => {},
+        setOpen = () => {
+        },
     }) => {
     const {configuration} = useSelector(selectGlobal)
     const barList = useMemo(() => ({
@@ -147,24 +144,51 @@ const Bar = React.memo((
                 },
             ]
         },
+        mouseTool: {
+            text: '快捷鍵',
+            list: [
+                {
+                    open: true,
+                    text: 'selectingTool',
+                    textCN: '取消快捷鍵',
+                    element: 'ratio',
+                    ratioValue: [{key: 'isShowSelectionTool'}],
+                    current: configuration.isShowSelectionTool,
+                    introduce: {default: '是否顯示選取時的快捷鍵'}
+                },
+                {
+                    open: true,
+                    text: 'selectingToolX',
+                    textCN: 'X軸',
+                    element: 'number',
+                    numberValue: {
+                        currentValue: configuration['toolbarX'],
+                        max: 999,
+                        min: -999,
+                        howMany: 5
+                    },
+                    dispatchValue: [{key: 'toolbarX', value: 0}],
+                    introduce: {default: '越接近0，X軸越接近快捷鍵中間'}
+                },
+                {
+                    open: true,
+                    text: 'selectingToolY',
+                    textCN: 'Y軸',
+                    element: 'number',
+                    numberValue: {
+                        currentValue: configuration['toolbarY'],
+                        max: 999,
+                        min: -999,
+                        howMany: 5
+                    },
+                    dispatchValue: [{key: 'toolbarY', value: 0}],
+                    introduce: {default: '越接近0，Y軸越接近快捷鍵中間'}
+                }
+            ]
+        },
         importAndOutport: {
             text: '匯出',
             list: [
-                {
-                    open: false,
-                    text: 'importFromText',
-                    textCN: '從文字匯入',
-                    element: 'click',
-                    clickValue: [
-                        {
-                            text: '',
-                        }
-                    ],
-                    introduce: {
-                        folder: '匯出所有資料夾的資料',
-                        collection: '匯出此資料夾內的資料',
-                    },
-                },
                 {
                     open: true,
                     text: 'exportToTXT',
@@ -204,6 +228,7 @@ const Bar = React.memo((
                 text: 'bugFix',
                 textCN: 'Bug錯誤回報',
                 introduce: {default: ''},
+                element: 'navigate'
             },],
         }
     }), [configuration])

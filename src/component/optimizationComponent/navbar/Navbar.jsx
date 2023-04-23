@@ -20,8 +20,10 @@ const Navbar = styled.div`
     ${(p) => p.hide ? 'transform: translateY(-48px);' : ''}
     transition: 0.2s ease-out;
     .where {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         width: 80%;
-        text-align: center;
         font-size: ${({config}) => config.font_size_l}px;
     }`
 
@@ -65,7 +67,11 @@ const app = React.memo((
                     styled={`color: ${config.main};`}
                 />
             </div>}
-            <div className={'where'}>{name}</div>
+            <div className={'where'}>
+                {!!name
+                    ? name
+                    : <Icon.MonochromeJuutenIcon color={config.main} size={26}/>}
+            </div>
         </Navbar>
     );
 }, isEqual)

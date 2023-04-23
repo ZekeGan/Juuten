@@ -51,7 +51,6 @@ export default (
 
     const textMainRef = useRef(null)
     const hideNav = useHideBar(textMainRef.current)
-
     useEffect(() => {
         setHide(hideNav)
     }, [hideNav])
@@ -68,8 +67,9 @@ export default (
 
     /* 新增筆記後的動畫 */
     useMemo(() => {
+        if (!addNewNoteAnimation) return
         setTimeout(() => {
-            dispatch(addAddAnimation('note'))
+            dispatch(addAddAnimation())
         }, 0)
     }, [addNewNoteAnimation])
 

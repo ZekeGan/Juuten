@@ -2,16 +2,17 @@ export const initialConfiguration = {
     max_width: 700,
     max_height: 600,
 
-    icon_size_s: 12,
-    icon_size_m: 15,
-    icon_size_l: 18,
-    font_size_s: 10,
+    icon_size_s: 14,
+    icon_size_m: 17,
+    icon_size_l: 20,
+    icon_size_xl: 24,
 
-    font_size_m: 12,
-    font_size_l: 15,
-    font_size_xl: 20,
+    font_size_s: 11,
+    font_size_m: 13,
+    font_size_l: 17,
+    font_size_xl: 22,
 
-    main: '#f7c92e',
+    main: '#edc335',
     fontColor: '#545454',
     WandB: '#ffffff',
     primary: '#F0F2F5',
@@ -23,10 +24,10 @@ export const initialConfiguration = {
 
     showStorageCount: false,
     thisIsBottom: false,
-    isShowSelectionTool: false,
 
-    toolbarTop: 0,
-    toolbarLeft: 0,
+    isShowSelectionTool: false,
+    toolbarX: -30,
+    toolbarY: 30,
 
     color: [
         '#ffffff',
@@ -44,10 +45,9 @@ export const initialConfiguration = {
         '#5882f8'
     ],
     mainColor: [
-        '#f7c92e',
+        '#edc335',
         '#f24726',
         '#cee741',
-        '#fac710',
         '#da0063',
         '#8fd14f',
         '#2d9bf0',

@@ -1,6 +1,16 @@
-import {convertFromRaw, convertToRaw, EditorState} from 'draft-js'
+import {convertFromRaw, EditorState} from 'draft-js'
 import {saveAs} from 'file-saver'
-import {initialConfiguration} from "./assets/global";
+
+/*
+* 如果要使用 npm run dev 進行調適，需要停止的函數或變數為以下幾個
+* 1. setDataToLocal()
+* 2. collectionSlice.js 使用 fetchData 的變數
+* 3. folderSlice.js 使用 fetchData 的變數
+* 6. globalSlice 的 configuration
+* 4. folderBlock.jsx 的 goIntoFolder()
+* 5. webpack.config.js 的 mode
+* 6. webpack.config.js 的 optimization 取消
+* */
 
 export function getCurrentDate() {
     const date = new Date()
@@ -18,45 +28,28 @@ export async function fetchData(dataName, defaultProp = '') {
             chrome.storage.sync.get(
                 [dataName],
                 (obj) => {
-                    resolve(obj[dataName]
-                        ? JSON.parse(obj[dataName])
-                        : defaultProp)
+                    resolve(obj[dataName] ? JSON.parse(obj[dataName]) : defaultProp)
                 })
         })
     } catch (error) {
         console.error(error)
-        return defaultProp = ''
+        throw defaultProp
     }
 }
 
-
-
-/*
-* 如果要使用 npm run dev 進行調適，需要停止的函數或變數為以下幾個
-* 1. setDataToLocal()
-* 2. collectionSlice.js 使用 fetchData 的變數
-* 3. folderSlice.js 使用 fetchData 的變數
-* 6. globalSlice 的 configuration
-* 4. folderBlock.jsx 的 goIntoFolder()
-* 5. webpack.config.js 的 mode
-* */
-
+export const changeFontColor = (colorValue) => {
+    let cut = colorValue.replace('#', '')
+    return 0.213 * parseInt(cut[0] + cut[1], 16)
+        + 0.715 * parseInt(cut[2] + cut[3], 16)
+        + 0.072 * parseInt(cut[4] + cut[5], 16)
+        > 255 / 2;
+}
 
 export function setDataToLocal(name, data = []) {
-    // chrome.storage.sync.set({
-    //     [name]: JSON.stringify(data)
-    // })
-}
-
-export function deepCopy(obj) {
-    if (typeof obj !== 'object' || obj === null) {
-        return obj;
-    }
-    const newObj = Array.isArray(obj) ? [] : {};
-    Object.keys(obj).forEach(key => {
-        newObj[key] = deepCopy(obj[key]);
-    });
-    return newObj;
+    console.log(JSON.stringify(data))
+    chrome.storage.sync.set({
+        [name]: JSON.stringify(data)
+    })
 }
 
 export function exportToTXT(data) {
@@ -91,60 +84,12 @@ export function exportToTXT(data) {
     return newOutput
 }
 
-export const isEqual = (prevProps, nextProps) => {
-    console.log('prev ', prevProps)
-    console.log('next ', nextProps)
-    return prevProps === nextProps
-}
-
 export function downloadDocx(str, fileName) {
-    // 将字符串转换为二进制数据
-    const content = str;
-    const data = new Blob([content], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
-
-    // 使用 FileSaver.js 库保存二进制数据
+    const data = new Blob([str], {
+        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    });
     saveAs(data, `${fileName}.docx`);
 }
-
-
-export function findData(_data, _key, fn) {
-    _data.map((item) => {
-        if (item.key === _key) {
-            fn()
-            return
-        }
-        item.comment.map(comment => {
-            if (comment.key === _key) {
-                fn()
-                return
-            }
-        })
-    })
-
-    function findData(_data, _key) {
-        if (!_data) return
-        _data.map((item) => {
-            if (item.key === _key) {
-                item.msg = action.payload.msg
-            }
-            const note = {...item}
-            return findData(note.comment, key)
-        })
-    }
-
-
-    function getData(_data, _key) {
-        if (_data === undefined) return
-        _data.map((item, idx) => {
-            if (item.key === _key) {
-                _data.splice(idx, 1)
-                return
-            }
-            return getData(item.comment, _key)
-        })
-    }
-}
-
 
 
 

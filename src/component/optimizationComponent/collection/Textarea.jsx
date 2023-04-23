@@ -13,6 +13,7 @@ const isEqual = (prevProps, nextProps) => {
 
 const Textarea = React.memo((
     {
+        area,
         item,
         showToolbar = true,
         open,
@@ -22,13 +23,12 @@ const Textarea = React.memo((
     const draftRef = useRef(null)
     const [inlineStyle, setInlineStyle] = useState([])
 
-
     useEffect(() => {
         if (!item && !draftRef.current) return
         draftRef.current?.upDate(item.msg)
     }, [item.msg])
 
-    console.log('text')
+    console.log('text ' + area)
 
     return (
         <>
@@ -42,13 +42,14 @@ const Textarea = React.memo((
                 barArea={barArea}
             />
             <DraftComponent
+
                 item={item.msg}
                 readOnly={!open}
                 ref={draftRef}
                 setInlineStyle={setInlineStyle}
                 open={open}
                 autoSave={{
-                    type: 'collection',
+                    type: area,
                     key: item.key,
                     destination: folderId
                 }}

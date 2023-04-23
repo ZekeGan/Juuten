@@ -37,124 +37,86 @@ const MyComponent = React.memo((
 
     useEffect(() => {
         if (!inputRef.current || !open) return
-        setTimeout(() => inputRef.current?.focus(), 1000)
+        setTimeout(() => inputRef.current?.focus(), 500)
     }, [])
 
 
     function findData() {
-        const target = inputRef.current?.value
+        const target = inputRef.current?.value.toUpperCase()
+        if (!target) {
+            setFoundData([])
+            return
+        }
         const newData = data
             .map(item => {
+                // 先篩選符合條件的註解，並加上 highlight 的樣式
                 const comment = item.comment
                     .filter(item2 => isMsgHas(item2.msg, target))
-                    .map(item => {
-                        return {
-                            ...item,
-                            msg: highlightMsg(item.msg, target)
-                        }
-                    })
+                    .map(comm => ({...comm, msg: highlightMsg(comm.msg, target)}))
+
+                // 如果主要文字也符合搜尋條件，也要加上 highlight 的樣式
                 const _data = {
                     ...item,
+                    comment: comment,
                     msg: isMsgHas(item.msg, target)
                         ? highlightMsg(item.msg, target)
-                        : (comment.length
-                            ? highlightMsg(item.msg, target)
-                            : ''),
-                    comment: comment
+                        : (comment.length ? highlightMsg(item.msg, target) : '')
                 }
+                // 排除沒有搜尋結果的資料
                 return (!!_data.msg || !!_data.comment.length) ? _data : null
             })
             .filter(item => item !== null)
+            // 將結果依照資料夾分類
             .reduce((outputObject, {folderName, ...rest}) => {
                 if (!outputObject[folderName]) outputObject[folderName] = []
                 outputObject[folderName].push({...rest})
                 return outputObject
             }, {})
-        if (!target) setFoundData([])
-        else setFoundData(newData)
+        // 更新搜尋結果
+        setFoundData(newData)
     }
 
     function isMsgHas(msg, target) {
-        return EditorState
-            .createWithContent(convertFromRaw(JSON.parse(msg)))
-            .getCurrentContent()
-            .getPlainText()
-            .toUpperCase()
-            .includes(target.toUpperCase())
+        /**
+         * 檢查 `msg` 是否包含 `target` 字符串
+         * @param {string} msg - 要檢查的消息
+         * @param {string} target - 要搜索的目標字符串
+         * @returns {boolean} - 如果 `msg` 包含 `target` 字符串，返回 `true`；否則，返回 `false`
+         */
+        const contentState = convertFromRaw(JSON.parse(msg))
+        const plainText = contentState.getPlainText().toUpperCase()
+        return plainText.includes(target)
     }
 
     function highlightMsg(msg, target) {
+        /**
+         * 將給定的消息中的目標文本高亮
+         * @param {string} msg - 原始訊息
+         * @param {string} target - 要高亮的目標文本
+         * @returns {string} JSON格式的高亮消息
+         */
 
-        target = target.toUpperCase()
-        if (target === '') return msg
         let editorState = EditorState.createWithContent(convertFromRaw(JSON.parse(msg)))
-        const plainText = editorState.getCurrentContent().getPlainText().toUpperCase()
-        // const regex = new RegExp(target, 'gi')
-        const positions = []
-        let detect = 0
-        let index = plainText.indexOf(target)
-        while (index !== -1) {
-            if (index - detect !== 1) positions.push(index)
-            index = plainText.indexOf(target, index + 1)
-            detect = index
-        }
-        if (positions.length <= 0) return msg
+        const blocks = editorState.getCurrentContent().getBlockMap()
 
-        positions.forEach((i, idx) => {
-            let start = {
-                value: positions[idx],
-                flag: true
-            }
-            let end = {
-                value: positions[idx] + target.length,
-                flag: true
-            }
+        blocks.forEach(block => {
+            const text = block.getText().toUpperCase()
+            const regex = new RegExp(target, 'g')
+            let matchArr = regex.exec(text)
 
-            const blocks = editorState.getCurrentContent().getBlockMap()
-            let anchorKey, focusKey, anchorOffset, focusOffset
-            if (blocks.count() > 1) {
-                blocks.forEach(block => {
-                    const len = block.getLength()
-                    if (!anchorKey && (!start.flag || start.value <= len)) {
-                        anchorKey = block.getKey()
-                        anchorOffset = start.value
-                    }
-                    if (start.value >= len && start.flag) {
-                        start.value -= len
-                    } else {
-                        start.flag = false
-                    }
-                    if (!focusKey && (!end.flag || end.value <= len)) {
-                        focusKey = block.getKey()
-                        focusOffset = end.value
-                    }
-                    if (end.value >= len && end.flag) {
-                        end.value -= len
-                    } else {
-                        end.flag = false
-                    }
+            while (matchArr !== null) {
+                const selection = editorState.getSelection().merge({
+                    anchorOffset: matchArr.index,
+                    focusOffset: matchArr.index + target.length,
                 })
-            } else {
-                blocks.forEach(block => {
-                    anchorOffset = start.value
-                    focusOffset = end.value
-                    anchorKey = block.getKey()
-                    focusKey = block.getKey()
-                })
+                editorState = RichUtils.toggleInlineStyle(
+                    EditorState.forceSelection(editorState, selection),
+                    'HIGHLIGHT'
+                )
+                matchArr = regex.exec(text)
             }
-            const selection = editorState.getSelection().merge({
-                anchorKey,
-                focusKey,
-                anchorOffset,
-                focusOffset,
-            })
-            const selectedState = EditorState.forceSelection(editorState, selection)
-            editorState = RichUtils.toggleInlineStyle(selectedState, 'HIGHLIGHT')
         })
-
-
         return JSON.stringify(convertToRaw(editorState.getCurrentContent()))
-        // return msg
     }
 
     return (
@@ -170,22 +132,21 @@ const MyComponent = React.memo((
                                 key={item2.key}
                                 isBottom={!foundData[item][idx2 + 1]}
                             >
-                                <DraftComponent
-                                    item={item2.msg}
-                                />
+                                <DraftComponent item={item2.msg}/>
                                 <Url item={item2}/>
+
                                 {item2.comment.length > 0
                                 && item2.comment.map(item3 => (
                                     <Comment key={item3.key} item={item3} showToolbar={false}/>
                                 ))}
+
                             </NoteContainer>
                         ))}
                     </div>
                 </TextContainer>
             ))}
         </>
-
-    );
+    )
 })
 
 export default MyComponent;

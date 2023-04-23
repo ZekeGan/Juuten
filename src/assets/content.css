@@ -1,8 +1,22 @@
 .Juuten-tool-container {
     position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 30px;
     height: 30px;
-    background-color: pink;
+    background-color: rgba(0, 0, 0, 0.7);
     z-index: 999;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.2s ease-in;
+}
 
+.Juuten-tool-container-innerText {
+    font-weight: bold;
+    font-family: SourceHanSansHWTC-Regular, serif;
+}
+
+.Juuten-tool-container:hover {
+    background-color: rgba(0, 0, 0, 0.85);
 }

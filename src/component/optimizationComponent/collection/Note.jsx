@@ -91,9 +91,12 @@ const Note = React.memo((
     }
 
     function openOrCloseComment(payload) {
-        console.log('inXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+        console.log(area)
         if (!!openEditId) dispatch(addOpenEditToolbar(''))
-        dispatch(addOpenOrCloseComment(item.key))
+        dispatch(addOpenOrCloseComment({
+            area,
+            key: item.key
+        }))
     }
 
     function dragEnd(e) {
@@ -134,6 +137,7 @@ const Note = React.memo((
                             </NoteDragHandle>}
 
                             <Textarea
+                                area={area}
                                 item={item}
                                 open={openEditId === item.key}
                                 barArea={barArea}
@@ -155,6 +159,7 @@ const Note = React.memo((
                                             {...commentProvided.draggableProps}
                                         >
                                             <Comment
+                                                area={area}
                                                 item={commentItem}
                                                 open={openEditId === item.key}
                                                 provided={commentProvided}

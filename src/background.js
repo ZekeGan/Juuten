@@ -1,7 +1,3 @@
-/*
-* 安裝在右鍵設置快捷
-* 只有選取事件才啟動
-* */
 chrome.runtime.onInstalled.addListener((
     () => {
         chrome.contextMenus.create({
@@ -22,11 +18,11 @@ chrome.contextMenus.onClicked.addListener(
 )
 
 chrome.runtime.onMessage.addListener(
-    (req) => {
-        if (req.key === 'Juuten_toolbar') {
+    (msg) => {
+        if (msg.key === 'Juuten_toolbar') {
             getCurrentTab()
-                .then((res) => {
-                    getTabAndSend(res)
+                .then((tab) => {
+                    getTabAndSend(tab)
                 })
         }
     }

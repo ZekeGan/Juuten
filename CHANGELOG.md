@@ -1,3 +1,9 @@
+## Juuten v0.19.0 -2023/4/23
+- 新增 select小工具
+- 新增 icon
+- 優化 all reducer to pure reducer
+- 優化 search function
+
 ## Juuten v0.18.0 - 2023/04/20
 - Debug 寬度縮小主色調box跑位
 - Debug Navbar 顯示 undefined

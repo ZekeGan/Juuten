@@ -9,7 +9,7 @@ import Textarea from "./Textarea.jsx";
 const Comment = styled.div`
     position: relative;
     width: 100%;
-    transform: translateY(${({animation}) => animation ? '-100px' : '0'});
+    transform: translateY(${({animation}) => animation ? '-150px' : '0'});
     transition: 0.2s ease-out;
     overflow: auto;
     padding: 10px 10px 10px 25px;
@@ -31,6 +31,7 @@ const isEqual = (prevProps, nextProps) => {
 }
 const App = React.memo((
     {
+        area,
         item,
         open,
         provided,
@@ -41,6 +42,7 @@ const App = React.memo((
     const {configuration: config} = useSelector(selectGlobal)
 
     useMemo(() => {
+        if (!addNewCommentAnimation) return
         setTimeout(() => {
             dispatch(dispatch(addAddAnimation('comment')))
         }, 0)
@@ -55,7 +57,12 @@ const App = React.memo((
                 open={open}
                 {...provided?.dragHandleProps}
             />
-            <Textarea item={item} showToolbar={showToolbar} open={openEditId === item.key}/>
+            <Textarea
+                area={area}
+                item={item}
+                showToolbar={showToolbar}
+                open={openEditId === item.key}
+            />
         </Comment>
     )
 }, isEqual)

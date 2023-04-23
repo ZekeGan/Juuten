@@ -9,7 +9,65 @@ const Icon = styled.div`
 `
 
 
+const JuutenIcon = memo((props) => {
+    const {
+        styled,
+        title,
+        size = 16
+    } = props
+    return (
+        <Icon styled={styled}>
+            <svg width={size} height={size} viewBox="0 0 72.96 96.25">
+                <defs>
+                    <linearGradient
+                        id="a"
+                        data-name="未命名漸層 28"
+                        x1="238.43"
+                        y1="426.13"
+                        x2="311.4"
+                        y2="426.13"
+                        gradientUnits="userSpaceOnUse"
+                    >
+                        <stop offset="0" stop-color="#f0d23f"/>
+                        <stop offset="0.21" stop-color="#efce3e"/>
+                        <stop offset="0.42" stop-color="#edc13a"/>
+                        <stop offset="0.64" stop-color="#eaad34"/>
+                        <stop offset="0.86" stop-color="#e5902c"/>
+                        <stop offset="0.88" stop-color="#e58d2b"/>
+                    </linearGradient>
+                </defs>
+                <path
+                    d="M294.22,378H271v55.87H238.43v20.39a20,20,0,0,0,20,20h35.76a17.23,17.23,0,0,0,17.21-17.2V395.18A17.2,17.2,0,0,0,294.22,378ZM271,466.45H258.43a12.21,12.21,0,0,1-12.2-12.19V441.67H271Zm32.58-9.4a9.42,9.42,0,0,1-9.41,9.4H278.82V385.8h15.4a9.39,9.39,0,0,1,9.38,9.38Z"
+                    transform="translate(-238.43 -378)"
+                    style={{fill: 'url(#a)'}}
+                />
+            </svg>
 
+        </Icon>
+    )
+})
+const MonochromeJuutenIcon = memo((props) => {
+    const {
+        styled,
+        title,
+        size = 16,
+        color = '#000000',
+    } = props
+    return (
+        <svg
+            color={'red'}
+            width={size}
+            height={size}
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 72.96 96.25">
+            <path
+                style={{fill: color}}
+                d="M294.22,378H271v55.87H238.43v20.39a20,20,0,0,0,20,20h35.76a17.23,17.23,0,0,0,17.21-17.2V395.18A17.2,17.2,0,0,0,294.22,378ZM271,466.45H258.43a12.21,12.21,0,0,1-12.2-12.19V441.67H271Zm32.58-9.4a9.42,9.42,0,0,1-9.41,9.4H278.82V385.8h15.4a9.39,9.39,0,0,1,9.38,9.38Z"
+                transform="translate(-245 -378)"
+            />
+        </svg>
+    )
+})
 const Ellipsis = memo((props) => {
     const {
         styled,
@@ -715,9 +773,9 @@ const Note = (props) => {
 }
 
 
-
-
 export default {
+    JuutenIcon,
+    MonochromeJuutenIcon,
     Ellipsis,
     Plus,
     Box,

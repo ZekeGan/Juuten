@@ -2,8 +2,7 @@ import React, {useRef, useState} from 'react';
 import styled from "styled-components";
 import Icon from "../Svg.jsx";
 import {
-    addFolderEdit,
-    selectFolder
+    addChangeFolderColor, addChangeFolderName,
 } from "../../../redux/slice/folderSlice";
 import {useDispatch, useSelector} from "react-redux";
 import {selectGlobal} from "../../../redux/slice/globalSlice";
@@ -82,21 +81,13 @@ const App = React.memo((
     }
 
     const changeFolderColor = (e, color) => {
-        console.log('pass')
-        dispatch(addFolderEdit({
-            type: 'color',
-            value: color
-        }))
+        dispatch(addChangeFolderColor(color))
     }
 
     console.log('folderToolbar')
 
     const saveFolderNewName = () => {
-        dispatch(addFolderEdit({
-            type: 'name',
-            value: detectFolderName
-        }))
-        inputRef.current.value = ''
+        dispatch(addChangeFolderName(inputRef.current.value))
     }
 
     function stopPropagation(e) {

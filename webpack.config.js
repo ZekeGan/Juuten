@@ -28,6 +28,9 @@ module.exports = {
         hot: true,
         historyApiFallback: true
     },
+    // optimization: { // inactive this when build
+    //     runtimeChunk: 'single'
+    // },
     experiments: {
         topLevelAwait: true
     },
@@ -73,9 +76,8 @@ module.exports = {
         new CopyPlugin({
             patterns: [
                 {from: "public"},
-                {from: 'src/assets/content.css'}
-                // {from: "src/background.js"},
-                // {from: "src/content.js"}
+                {from: 'src/assets/content.css'},
+                {from: 'src/assets/icon', to: 'icon'}
             ],
         }),
         // new FileManagerPlugin({

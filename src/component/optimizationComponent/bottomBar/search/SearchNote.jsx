@@ -5,6 +5,7 @@ import {selectCollection} from "../../../../redux/slice/collectionSlice";
 import {selectFolder} from "../../../../redux/slice/folderSlice";
 import BottemBarTemplate from "../BottemBarTemplate.jsx";
 import FoundData from "./FoundData.jsx";
+import store from "../../../../redux/store";
 
 const Container = styled.div`
     width: 100%;
@@ -21,16 +22,17 @@ const SearchNote = React.memo((
         open = false,
         setOpen = () => {}
     }) => {
-    const {Juuten_Storage} = useSelector(selectCollection)
-    const {Juuten_folderLists} = useSelector(selectFolder)
-    const obj = useSelector(selectCollection)
+
     const allFolder = useMemo(() => {
-        const newStorage = Juuten_Storage.map(item => ({...item, folderName: 'Storage'}))
-        return Juuten_folderLists
+        const collectionData = store.getState().collection
+        const folderData = store.getState().folder
+        const newStorage = collectionData['Juuten_Storage'].map(item => ({...item, folderName: 'Storage'}))
+        return folderData.Juuten_folderLists
             .map(item => {
-                let _obj = obj[item.key]
-                if (!!_obj) return _obj.map(item2 => ({...item2, folderName: item.name}))
-                else return _obj
+                const _obj = collectionData[item.key]
+                return !!_obj
+                    ? _obj.map(item2 => ({...item2, folderName: item.name}))
+                    : _obj
             })
             .concat(newStorage)
             .filter(item => item !== undefined)

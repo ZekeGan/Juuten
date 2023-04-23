@@ -3,11 +3,10 @@ import styled from "styled-components";
 import {useSelector} from "react-redux";
 import {selectGlobal} from "../../../../redux/slice/globalSlice";
 import {downloadDocx, exportToTXT} from "../../../../utils";
-import {selectCollection} from "../../../../redux/slice/collectionSlice";
 import {getCurrentDate} from "../../../../utils";
 import {renderToString} from "react-dom/server";
 import ExportToHTML from "../../ExportToHTML.jsx";
-import {selectFolder} from "../../../../redux/slice/folderSlice";
+import store from "../../../../redux/store";
 
 
 const Btn = styled.div`
@@ -34,31 +33,33 @@ const MyComponent = React.memo((
         area
     }) => {
     const {configuration: config} = useSelector(selectGlobal)
-    const collectionObj = useSelector(selectCollection)
-    const {Juuten_folderLists} = useSelector(selectFolder)
+
 
 
     console.log('barBtn')
 
+
+
     function getData() {
-        if (area === 'folder') {
-            let data = Juuten_folderLists
-                .reduce((output, {key, name}) => {
-                    if (!output[name] && !!collectionObj[key]) {
-                        output[name] = []
-                        output[name].push(...collectionObj[key])
-                    }
-                    return output
-                }, {})
-            data['Storage'] = collectionObj.Juuten_Storage
-            return data
-        } else {
-            return {[collectionObj.folderData.name]: collectionObj[collectionObj.folderData.key]}
+        const {Juuten_folderLists} = store.getState().folder
+        const collectionObj = store.getState().collection
+        if (area !== 'folder') return {[collectionObj.folderData.name]: collectionObj[collectionObj.folderData.key]}
+        const data = Juuten_folderLists
+            .reduce((output, {key, name}) => {
+                if (!output[name] && !!collectionObj[key]) {
+                    output[name] = []
+                    output[name].push(...collectionObj[key])
+                }
+                return output
+            }, {})
+        return {
+            ...data,
+            Storage: collectionObj.Juuten_Storage,
         }
     }
 
     function exportData() {
-        const data = getData()
+        const data = getData(area)
         if (!data) return
         let newData
 

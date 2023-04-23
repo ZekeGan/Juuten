@@ -1,13 +1,13 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {initialConfiguration} from "../../assets/global";
-import {fetchDataObject, setDataToLocal} from "../../utils";
+import {fetchData, setDataToLocal} from "../../utils";
 
 
 export const GlobalSlice = createSlice({
     name: 'global',
     initialState: {
-        configuration: initialConfiguration,
-        // configuration: await fetchData('Juuten_Configuration', initialConfiguration)
+        // configuration: initialConfiguration,
+        configuration: await fetchData('Juuten_Configuration', initialConfiguration)
 
     },
     reducers: {

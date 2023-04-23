@@ -1,4 +1,4 @@
-    import {createAsyncThunk, createSlice, current} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {fetchData, getCurrentDate, setDataToLocal} from "../../utils";
 import {Juuten_Storage, N1} from "../../assets/fakeData";
 import {convertToRaw, EditorState} from 'draft-js'
@@ -6,24 +6,18 @@ import {convertToRaw, EditorState} from 'draft-js'
 const thunkData = createAsyncThunk(
     'folder/fetchFolderData',
     async ({item, fn}) => {
-        console.log(item)
-        console.log(fn)
         const value = await fetchData(item.key)
-        return {
-            item,
-            value,
-            fn,
-        }
+        return {item, value, fn}
     })
 export const CollectionSlice = createSlice({
     name: 'collection',
     initialState: {
 
         /* 測試時替換 */
-        Juuten_Storage: Juuten_Storage,
-        Juuten_EditingText: [{msg: '', key: 'Juuten_editingText'}],
-        // Juuten_EditingText: await fetchDataString('Juuten_EditingText', [{msg: ''}]),
-        // Juuten_Storage: await fetchData('Juuten_Storage', []),
+        // Juuten_Storage: Juuten_Storage,
+        // Juuten_EditingText: [{msg: '', key: 'Juuten_editingText'}],
+        Juuten_EditingText: await fetchData('Juuten_EditingText', [{msg: '', key: 'Juuten_editingText'}]),
+        Juuten_Storage: await fetchData('Juuten_Storage', []),
         ///////////
 
         openAddNewNote: false,
@@ -41,8 +35,11 @@ export const CollectionSlice = createSlice({
         addNewCommentAnimation: '',
         storageAddAnimation: '',
         useTool: false,
+
+
         N1: N1,
         sus: N1,
+        '089aa4eg89sw0': []
 
 
     },
@@ -64,121 +61,81 @@ export const CollectionSlice = createSlice({
         },
 
         addAnimation: (state, action) => {
-            switch (action.payload) {
-                case 'note':
-                    state.addNewNoteAnimation = ''
-                    break
-                case 'comment':
-                    state.addNewCommentAnimation = ''
-                    break
-                default:
-                    console.warn('addAnimation reducer error')
+            return {
+                ...state,
+                addNewNoteAnimation: '',
+                addNewCommentAnimation: ''
             }
         },
         /* storage collection 位置切換 */
         moveToStorageOrCollection: (state, action) => {
-            const {folderId, Juuten_Storage: storage} = state
-            const collection = [...state[folderId]]
+            // 423 優化
+            const {folderId} = state
+            const {toWhere, key} = action.payload
 
+            const type = toWhere === 'toStorage' ? 'storage' : 'collection'
+            const removeKey = toWhere === 'toStorage' ? folderId : 'Juuten_Storage'
+            const removeGroup = toWhere === 'toStorage' ? state[folderId] : state['Juuten_Storage']
+            const addKey = toWhere === 'toStorage' ? 'Juuten_Storage' : folderId
+            const addGroup = toWhere === 'toStorage' ? state['Juuten_Storage'] : state[folderId]
 
-            switch (action.payload.toWhere) {
-                case 'toStorage':
-                    collection.map((item, index) => {
-                        if (item.key === action.payload.key) {
-                            item.type = 'storage'
-                            storage.unshift(item)
-                            collection.splice(index, 1)
-                        }
-                    })
-                    break
-                case 'toCollection':
-                    storage.map((item, idx) => {
-                        if (item.key === action.payload.key) {
-                            item.type = 'collection'
-                            collection.unshift(item)
-                            storage.splice(idx, 1)
-                        }
-                    })
-                    break
-                default:
-                    console.warn('moveToStorageOrCollection reducer error')
+            const newItem = removeGroup.find(item => item.key === key)
+            const newRemove = removeGroup.filter(item => item.key !== key)
+            const newAdd = [{...newItem, type}, ...addGroup]
+
+            setDataToLocal(removeKey, newRemove)
+            setDataToLocal(addKey, newAdd)
+
+            return {
+                ...state,
+                [addKey]: newAdd,
+                [removeKey]: newRemove
             }
-
-
-            state['Juuten_Storage'] = storage
-            state[folderId] = collection
-            setDataToLocal('Juuten_Storage', storage)
-            setDataToLocal(folderId, collection)
         },
         /* 新增筆記 */
         addNewNote: (state, action) => {
             const {area, text} = action.payload
-            const {folderId} = state
-            const where = area === 'collection' ? folderId : 'Juuten_Storage'
-            const data = [...state[where]]
+            const where = area === 'collection' ? state.folderId : 'Juuten_Storage'
 
-            const _key = `Juuten_${Date.now()}`
-            let newNote = {
-                key: _key,
+            const newNote = {
+                key: `Juuten_${Date.now()}`,
                 type: area === 'collection' ? 'collection' : 'storage',
                 msg: text,
                 currentDate: getCurrentDate(),
                 comment: [],
                 isOpenComment: false,
             }
-            console.log(newNote)
-            const newData = [newNote, ...data]
 
-            setDataToLocal(where, newData)
+            setDataToLocal(where, [newNote, ...state[where]])
             return {
                 ...state,
-                [where]: newData,
+                [where]: [newNote, ...state[where]],
                 addNewNoteAnimation: newNote,
             }
         },
+
         autoSave: (state, action) => {
             const {type, destination, msg, key} = action.payload
             const typeMap = {
                 textingBox: state.Juuten_EditingText, // [{msg: ''}]
-                collection: state[state.folderId],
+                textMain: state[state.folderId],
                 storage: state['Juuten_Storage']
             }
-
-            console.log(action.payload)
             const data = typeMap[type]
             const newData = data.map(item => {
-                if (item.key === key) {
-                    if ('comment' in item) {
-                        return {
+                return item.key === key
+                    ? {...item, msg}
+                    : !('comment' in item)
+                        ? item
+                        : {
                             ...item,
-                            msg,
+                            comment: item.comment.map(comm =>
+                                comm.key !== key
+                                    ? comm
+                                    : {...comm, msg,})
                         }
-                    } else {
-                        console.log('no comment')
-                        return {
-                            ...item,
-                            msg,
-                        }
-                    }
-                } else {
-                    if ('comment' in item) {
-                        return {
-                            ...item,
-                            comment: item.comment.map(comm => {
-                                if (comm.key !== key) return comm
-                                return {
-                                    ...comm,
-                                    msg,
-                                }
-                            })
-                        }
-                    } else {
-                        return item
-                    }
 
-                }
             })
-            // console.log(JSON.stringify(newData))
             setDataToLocal(destination, newData)
         },
 
@@ -189,11 +146,10 @@ export const CollectionSlice = createSlice({
                 Juuten_editingText: [{msg: '', key: 'Juuten_editingText'}]
             }
         },
-
         /* 新增註記(comment) */
         addComment: (state, action) => {
+            // 423 優化
             const {folderId, openEditId, ...rest} = state
-            const data = rest[folderId]
 
             const _key = `Juuten_${Date.now()}`
             const newComment = {
@@ -203,15 +159,14 @@ export const CollectionSlice = createSlice({
                 msg: JSON.stringify(convertToRaw(EditorState.createEmpty().getCurrentContent()))
             }
 
-            const newCollectionData = data.map((item, index) => {
-                if (item.key === action.payload.key) {
-                    return {
+            const newCollectionData = rest[folderId].map((item, index) => {
+                return item.key !== action.payload.key
+                    ? item
+                    : {
                         ...item,
                         isOpenComment: true,
                         comment: [newComment, ...item.comment]
                     }
-                }
-                return item
             })
 
             setDataToLocal(folderId, newCollectionData)
@@ -224,7 +179,6 @@ export const CollectionSlice = createSlice({
                 openEditParentId: action.payload.key
             }
         },
-
         /* 修改錦集(collection)、註記(comment)和暫存區(storage)的文字 */
         editCollectionOrStorage: (state, action) => {
             /* 420 修改VVVVVVVVVV */
@@ -233,36 +187,21 @@ export const CollectionSlice = createSlice({
                 collection: state.folderId,
                 comment: state.folderId
             }
-            const {area} = action.payload
-            const folderId = areaMap[area]
+            const folderId = areaMap[action.payload.area]
             const {openEditId} = state
-            const data = [...state[folderId]]
-
-            const newData = data.map(item => {
-                if (item.key !== openEditId) {
-                    return {
+            const newData = state[folderId].map(item => {
+                return item.key === openEditId
+                    ? {...item, msg: action.payload.msg}
+                    : {
                         ...item,
-                        comment: item.comment.map(comm => {
-                            if (comm.key !== openEditId) return comm
-                            return {
-                                ...comm,
-                                msg: action.payload.msg
-                            }
+                        comment: item.comment.map(comm => comm.key !== openEditId ? comm : {
+                            ...comm,
+                            msg: action.payload.msg
                         })
                     }
-                }
-                return {
-                    ...item,
-                    msg: action.payload.msg
-                }
             })
-
             setDataToLocal(folderId, newData)
-
-            return {
-                ...state,
-                [folderId]: newData
-            }
+            return {...state, [folderId]: newData}
         },
         /* 刪除錦集(collection)和暫存區(storage)筆記或註記(comment) */
         deleteNoteOrComment: (state, action) => {
@@ -295,58 +234,60 @@ export const CollectionSlice = createSlice({
             }
 
         },
-
-
         /* dnd 更換位置 */
         rearrangeComment: (state, action) => {
+            // 423 優化
             const {destination, source, area} = action.payload
-            const {openEditId, folderId} = state
-            const whatArea = area === 'textMain'
-                ? folderId
-                : 'Juuten_Storage'
-            const data = state[whatArea]
-            data.map((item, idx) => {
-                if (item.key === openEditId) {
-                    const [remove] = item.comment.splice(source.index, 1)
-                    item.comment.splice(destination.index, 0, remove)
+            if (source.index === destination.index) return state
+
+            const whatArea = area === 'textMain' ? state.folderId : 'Juuten_Storage'
+            const newData = state[whatArea].map(item => {
+                if (item.key === state.openEditId) {
+                    const newComm = item.comment.slice();
+                    const [removed] = newComm.splice(source.index, 1);
+                    newComm.splice(destination.index, 0, removed);
+                    return {...item, comment: newComm}
                 }
+                return item
             })
-            setDataToLocal(whatArea, data)
+
+            setDataToLocal(whatArea, newData)
+            return {...state, [whatArea]: newData}
         },
+
         rearrangeNote: (state, action) => {
+            // 423 優化
             const {destination, source, area} = action.payload
-            const {folderId} = state
-            const whatArea = area === 'textMain'
-                ? folderId
-                : 'Juuten_Storage'
+            if (source.index === destination.index) return state
+
+            const whatArea = area === 'textMain' ? state.folderId : 'Juuten_Storage'
             const data = state[whatArea]
 
-            const [remove] = data.splice(source.index, 1)
-            data.splice(destination.index, 0, remove)
+            const newData = data.slice();
+            const [removed] = newData.splice(source.index, 1);
+            newData.splice(destination.index, 0, removed);
 
-            setDataToLocal(whatArea, data)
+            setDataToLocal(whatArea, newData)
+            return {
+                ...state,
+                [whatArea]: newData
+            }
         },
 
         openOrCloseComment: (state, action) => {
-            const {folderId} = state
-            const data = state[folderId]
+            // 423 優化
+            const folderId = state.folderId
+            const value = action.payload.area === 'textMain' ? folderId : 'Juuten_Storage'
 
-            console.log(action.payload + '---------------------------------')
-            const newData = data.map(item => {
-                if (item.key === action.payload) {
-                    return {
-                        ...item,
-                        isOpenComment: !item.isOpenComment
-                    }
-                } else {
-                    return item
-                }
-
-            })
+            const newData = state[value].map(item =>
+                item.key !== action.payload.key
+                    ? item
+                    : {...item, isOpenComment: !item.isOpenComment}
+            )
 
             return {
                 ...state,
-                [folderId]: newData
+                [value]: newData
             }
         },
     },
@@ -355,16 +296,19 @@ export const CollectionSlice = createSlice({
             console.log('pending')
         },
         [thunkData.fulfilled]: (state, action) => {
-            const {item, value, fn} = action.payload
+            const {
+                item,
+                value,
+                fn = () => {
+                }
+            } = action.payload
             console.log('fulfilled')
-            const currentData = {
+            fn()
+            return {
                 ...state,
                 folderData: item,
                 [item.key]: value
             }
-            console.log(currentData)
-            fn()
-            return currentData
         },
         [thunkData.rejected]: () => {
             console.warn('reject')
