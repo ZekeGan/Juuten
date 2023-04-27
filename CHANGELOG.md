@@ -1,4 +1,9 @@
-## Juuten v0.19.0 -2023/4/23
+## Juuten v0.20.0 - 2023/4/27
+- 新增 Bug回報頁面
+- DEBUG 修復10多項的BUG
+- 優化 使用者體驗
+
+## Juuten v0.19.0 - 2023/4/23
 - 新增 select小工具
 - 新增 icon
 - 優化 all reducer to pure reducer

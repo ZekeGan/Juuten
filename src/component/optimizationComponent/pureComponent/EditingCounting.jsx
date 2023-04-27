@@ -5,6 +5,7 @@ import {selectGlobal} from "../../../redux/slice/globalSlice";
 
 
 const Counting = styled.div`
+    user-select: none;
     color: ${ ({config}) => config. quaternary};
     font-size: ${({config}) => config.font_size_m}px;`
 
@@ -12,8 +13,6 @@ const Counting = styled.div`
 const EditingCounting = React.memo(({open}) => {
     const [editCount, setEditCount] = useState(0)
     const {configuration: config} = useSelector(selectGlobal)
-
-    console.log('counting')
 
     useLayoutEffect(() => {
         if (!open) return
@@ -25,7 +24,6 @@ const EditingCounting = React.memo(({open}) => {
         }, 1000)
         return () => clearInterval(count)
     }, [open])
-
 
     return(
         <Counting config={config}>

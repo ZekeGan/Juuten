@@ -16,7 +16,7 @@ const BottomBar = styled.div`
     left: 0;
     bottom: 0;
     z-index: 2;
-    transform: translateY(${({hideNav}) =>　hideNav ? '48px' : '0'});
+    transform: translateY(${({hideNav}) => hideNav ? '48px' : '0'});
     transition: 0.2s ease-in;
     width: ${({config}) => config.max_width}px;
     height: 48px;
@@ -69,38 +69,43 @@ const App = React.memo((
     const [openStorage, setOpenStorage] = useState(false)
     const [openBar, setOpenBar] = useState(false)
     const [openNewNote, setOpenNewNote] = useState(false)
-    const [openSearch, setOpenSearch]  = useState(false)
+    const [openSearch, setOpenSearch] = useState(false)
 
 
     console.log('bottomBar')
 
+    function clickToClose() {
+        setOpenNewNote(false)
+    }
 
     return (
         <>
-
-            <Mask open={openNewNote}/>
+            <Mask
+                open={openNewNote}
+                onClick={clickToClose}
+            />
 
             <BottomBar
                 config={config}
                 hideNav={hide}
             >
-                <div onClick={() => setOpenSearch(true)}>
+                <div onClick={() => setOpenSearch(true)} >
                     <Icon.Search
                         title={'搜尋筆記'}
                         size={config.icon_size_l}
                         styled={`color: ${config.main};`}
                     />
                 </div>
-                {/* 加入新筆記 */}
-                <div onClick={() => setOpenNewNote(true)}>
+
+                <div onClick={() => setOpenNewNote(true)} >
                     <Icon.Plus
                         title={'新增筆記'}
                         size={config.icon_size_l}
                         styled={`color: ${config.main};`}
                     />
                 </div>
-                {/* 顯示暫存區數量 */}
-                <StorageCount config={config} onClick={() => setOpenStorage(true)}>
+
+                <StorageCount config={config} onClick={() => setOpenStorage(true)} >
                     <Icon.Box
                         title={'置物區'}
                         size={config.icon_size_l}
@@ -112,8 +117,8 @@ const App = React.memo((
 
                     }
                 </StorageCount>
-                {/* 更多工具 Icon */}
-                <div onClick={() => setOpenBar(true)}>
+
+                <div onClick={() => setOpenBar(true)} >
                     <Icon.Bar
                         title={'更多'}
                         size={config.icon_size_l}
@@ -126,21 +131,25 @@ const App = React.memo((
                 open={openSearch}
                 setOpen={setOpenSearch}
             />
+
             <Storage
                 barArea={barArea}
                 open={openStorage}
                 setOpen={setOpenStorage}
             />
+
             <AddNewNote
                 barArea={barArea}
                 open={openNewNote}
                 setOpen={setOpenNewNote}
             />
+
             <Bar
                 barArea={barArea}
                 open={openBar}
                 setOpen={setOpenBar}
             />
+
         </>
 
     );

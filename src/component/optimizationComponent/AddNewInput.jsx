@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import styled from "styled-components";
 import {useSelector} from "react-redux";
 import {selectGlobal} from "../../redux/slice/globalSlice";
@@ -27,7 +27,7 @@ const Input = React.memo((
         }
     }) => {
     const {configuration: config} = useSelector(selectGlobal)
-    console.log('Addinput')
+
     return (
         <NewFolderInput
             config={config}

@@ -9,7 +9,7 @@ const Main = styled.div`
     width: ${({config}) => config.max_width}px;
     height: ${(p) => p.fullPage ? p.config.max_height : '400'}px;
     position: absolute;
-    z-index: 3;
+    z-index: 99;
     bottom: ${(p) => p.fullPage ? `-${p.config.max_height}` : '-400'}px;
     background-color: ${({config}) => config.primary}; 
     transform: translateY(${p => p.open ? p.fullPage ? `-${p.config.max_height}px` : '-400px' : '0'});
@@ -70,8 +70,11 @@ const BottemBarTemplate = React.memo((
             open={open}
             fullPage={fullPage}
         >
-            <CloseBar config={configuration} onClick={() => close()}>
-                <Icon.X size={configuration.icon_size_s}/>
+            <CloseBar
+                config={configuration}
+                onClick={() => close()}
+            >
+                <Icon.X size={configuration.icon_size_s} />
             </CloseBar>
 
             {useContainer

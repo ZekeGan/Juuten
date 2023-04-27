@@ -21,7 +21,7 @@ const Container = styled.div`
     justify-content: center;
     align-items: center;
     transition: 0.2s ease-out;
-    transform: ${({newFolder}) => newFolder}
+    transform: translateY(${({newFolder}) => newFolder ? '50%' : '-50%'});
     > div {
         display: flex;
         justify-content: center;
@@ -46,64 +46,41 @@ const Main = styled.div`
     overflow: hidden;`
 
 
-export default React.memo((
-    {
-        setRegTest
-    }) => {
+export default React.memo(({checkName}) => {
     const {configuration: config} = useSelector(selectGlobal)
     const dispatch = useDispatch()
-
     const inputRef = useRef(null)
     const [newFolder, setNewFolder] = useState(false)
-    const regular = /[:\\\/*?'"<>|]/
 
-    const addNewFolder = () => {
+
+    function addNewFolder(bool) {
         dispatch(addEditFolderId())
-        setNewFolder(true)
+        setNewFolder(bool)
+        if (bool) {
+            inputRef.current.focus({preventScroll: true})
+        }
+        inputRef.current.value = ''
     }
 
     console.log('addnewfolder')
 
-    const createdNewFolderOrNot = (e, type) => {
-        if (type === 'stop' || !inputRef.current.value) {
-            setNewFolder(false)
-            return
-        }
+    const createdNewFolderOrNot = () => {
+        if (checkName(inputRef.current.value)) return
 
-        const value = inputRef.current.value
-
-        if (regular.test(value)) {
-            setRegTest(regular.test(value))
-            setTimeout(() => void setRegTest(false), 3000)
-            return
-        }
         setNewFolder(false)
-        inputRef.current.value = ''
         dispatch(addFolderAdd({
-            name: value,
+            name: inputRef.current.value,
             folderColor: config.secondary
         }))
+        inputRef.current.value = ''
     }
-
-
-    useEffect(() => {
-        if (!!inputRef && newFolder) {
-            setTimeout(() => inputRef.current.focus(), 500)
-        }
-    }, [newFolder])
-
-    function onClick(e) {
-        e.stopPropagation()
-    }
-
-    console.log('newFolder')
 
     return (
-        <Main config={config} onClick={(e) => onClick(e)}>
+        <Main config={config} onClick={(e) => e.stopPropagation()}>
             <Container
                 config={config}
-                newFolder={newFolder ? 'translateY(50%);' : 'translateY(-50%);'}
-                onClick={addNewFolder}
+                newFolder={newFolder}
+                onClick={() => addNewFolder(true)}
             >
                 <Icon.Plus
                     size={config.icon_size_xl}
@@ -113,9 +90,9 @@ export default React.memo((
 
             <Container
                 config={config}
-                newFolder={newFolder ? 'translateY(-50%);' : 'translateY(50%);'}
+                newFolder={!newFolder}
             >
-                <div onClick={(e) => createdNewFolderOrNot(e, 'stop')}>
+                <div onClick={() => addNewFolder(false)}>
                     <Icon.X
                         size={config.icon_size_xl}
                         styled={`color: ${config.main}`}
@@ -123,10 +100,10 @@ export default React.memo((
                 </div>
 
                 <div className={'inputBox'}>
-                    <AddNewInput mRef={inputRef}/>
+                    <AddNewInput mRef={inputRef} />
                 </div>
 
-                <div onClick={(e) => createdNewFolderOrNot(e)}>
+                <div onClick={createdNewFolderOrNot}>
                     <Icon.Save
                         size={config.icon_size_xl}
                         styled={`color: ${config.main}`}

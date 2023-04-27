@@ -19,7 +19,7 @@ function Storage(
             useContainer={false}
             open={open}
             closeCallback={() => setOpen(false)}
-            fullPage={true}
+            fullPage
         >
             <TextMain
                 data={Juuten_Storage}

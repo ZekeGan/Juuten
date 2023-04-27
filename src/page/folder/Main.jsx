@@ -18,30 +18,35 @@ import DeletingCheck from "../../component/optimizationComponent/DeletingCheck.j
 import BottomBar from "../../component/optimizationComponent/bottomBar/BottomBar.jsx";
 import FolderBlock from "../../component/optimizationComponent/folder/FolderBlock.jsx";
 import Navbar from "../../component/optimizationComponent/navbar/Navbar.jsx";
+import useRemoveBar from "../../hooks/useRemoveBar";
 
 
 const Folders = styled.div`
     position: relative;
     width: ${({config}) => config.max_width}px;
     height: ${({config}) => config.max_height}px;
-    overflow: hidden;
-    user-select: none;`
+    overflow: hidden;;`
+
 const FolderSection = styled.div`
-    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
     height: ${({config}) => config.max_height}px;
     padding: 48px 0 48px 0;
-    overflow: scroll;
+    overflow-y: scroll;
+    overflow-x: hidden;
     &::-webkit-scrollbar {
-        width: 10px;
+        width: 5px;
     }
     &::-webkit-scrollbar-thumb {
         background-color: ${({config}) => config.tertiary};
-        border-radius: 5px;
+        border-radius: 2.5px;
     }`
+
+const DraggableBox = styled.div`
+    display: grid;
+    grid-template-rows: 10px 70px 10px;
+`
 
 
 export default function App() {
@@ -49,17 +54,14 @@ export default function App() {
     const {Juuten_folderLists, editFolderId, addFolderAnimationId} = useSelector(selectFolder)
     const {Juuten_Storage} = useSelector(selectCollection)
     const {configuration: config} = useSelector(selectGlobal)
-
-    const [regTest, setRegTest] = useState(false)
-    const [delCheck, setDelCheck] = useState(false)
     const folderRef = useRef(null)
-    const [reset, setReset] = useState(false)
     const hideNav = useHideBar(folderRef.current)
+    const [delCheck, setDelCheck] = useState(false)
+    const [sameName, setSameName] = useState(false)
+    const [illigalName, setIlligalName] = useState(false)
 
-
-    useEffect(() => {
-        setReset(prev => !prev)
-    }, [folderRef])
+    /* 點擊 Folder 工具列外隱藏工具列 */
+    useRemoveBar(editFolderId, () => dispatch(addEditFolderId('')))
 
 
     /* ##新增資料夾後的動畫
@@ -74,19 +76,6 @@ export default function App() {
             dispatch(addEditFolderAnimationId())
         }, 0)
     }, [addFolderAnimationId])
-
-    /* 點擊 Folder 工具列外隱藏工具列 */
-    function removeToolbar(e) {
-        e.stopPropagation()
-        dispatch(addEditFolderId(''))
-        return document.removeEventListener('click', removeToolbar, false)
-    }
-
-    useEffect(() => {
-        if (!!editFolderId) {
-            document.addEventListener('click', removeToolbar, false)
-        }
-    }, [editFolderId])
 
 
     /* 刪除資料夾的第 2/2 步驟 */
@@ -103,9 +92,27 @@ export default function App() {
         dispatch(addRearrangeFolder({destination, source}))
     }
 
+    /* 檢查名稱是否合法 */
+    function checkLigalName(value) {
+        const regex = /['"]/
+        if (regex.test(value)) {
+            setIlligalName(true)
+            const timer = setTimeout(() => setIlligalName(false), 3000)
+            return () => clearTimeout(timer)
+        }
+        if (Juuten_folderLists.find(folder => folder.name === value)) {
+            setSameName(true)
+            const timer = setTimeout(() => setSameName(false), 3000)
+            return () => clearTimeout(timer)
+        }
+        return false
+    }
+
     return (
         <Folders config={config}>
-            <Warning warning={regTest}>資料夾名稱不能含有 \ / : * ? ' " &lt; &gt; |</Warning>
+            <Warning warning={illigalName}>資料夾名稱不能含有 ' "</Warning>
+            <Warning warning={sameName}>資料夾名稱重複</Warning>
+
             <DeletingCheck
                 delCheck={delCheck}
                 setDelCheck={setDelCheck}
@@ -113,25 +120,23 @@ export default function App() {
             />
 
             <Navbar
-                hide={hideNav} area={'home'}
+                hide={hideNav}
+                area={'home'}
                 name={''}
             />
 
 
             <DragDropContext onDragEnd={(e) => dragEnd(e)}>
-                <Droppable droppableId={`folder_drog_key`}>
-                    {(provided) => (
-                        <div
-                            ref={provided.innerRef}
-                            {...provided.droppableProps}
-                        >
-                            <FolderSection config={config} ref={folderRef}>
+                <FolderSection config={config} ref={folderRef}>
+                    <Droppable droppableId={`folder_drog_key`}>
+                        {(provided) => (
+                            <div
+                                ref={provided.innerRef}
+                                {...provided.droppableProps}
+                            >
                                 {/* 新增資料夾 */}
-                                <div>
-                                    <AddNewFolder
-                                        setRegTest={setRegTest}
-                                    />
-                                </div>
+                                <AddNewFolder checkName={checkLigalName} />
+
                                 {Juuten_folderLists.map((item, idx) =>
                                     (<Draggable
                                         key={`folder_drag_key_${item.key}`}
@@ -139,7 +144,7 @@ export default function App() {
                                         index={idx}
                                     >
                                         {(provided) =>
-                                            (<div
+                                            (<DraggableBox
                                                 ref={provided.innerRef}
                                                 {...provided.draggableProps}
                                             >
@@ -147,17 +152,18 @@ export default function App() {
                                                     item={item}
                                                     setDelCheck={setDelCheck}
                                                     openToolbar={item.key === editFolderId}
+                                                    checkName={checkLigalName}
                                                     provided={provided}
                                                 />
-                                            </div>)
+                                            </DraggableBox>)
                                         }
                                     </Draggable>)
                                 )}
                                 {provided.placeholder}
-                            </FolderSection>
-                        </div>
-                    )}
-                </Droppable>
+                            </div>
+                        )}
+                    </Droppable>
+                </FolderSection>
             </DragDropContext>
 
 

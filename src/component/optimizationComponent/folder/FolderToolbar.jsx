@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import styled from "styled-components";
 import Icon from "../Svg.jsx";
 import {
@@ -13,9 +13,8 @@ const FolderToolbar = styled.div`
     display: flex;
     position: absolute;
     left: 50%;
-    top: -100px;
+    top: -150%;
     z-index: 10;
-    // width: 420px;
     background-color: white;
     transform: translateX(-50%);
     border-radius: 5px;
@@ -61,22 +60,28 @@ const IconBox = styled.div`
         padding-left: 8%;
     }`
 
-const isEqual = (prevProps, nextProps) => {
-    return prevProps === nextProps
+const isEqual = (prev, next) => {
+    if (!prev.open && !next.open) return true
+    return prev === next
 }
 
 const App = React.memo((
     {
-        setDelCheck = () => {
-        },
+        open,
+        setDelCheck = () => {},
         item = {},
+        checkName,
     }) => {
     const {configuration: config} = useSelector(selectGlobal)
     const dispatch = useDispatch()
     const inputRef = useRef(null)
     const [detectFolderName, setDetectFolderName] = useState('')
+    useEffect(() => {
+        if(!open) return
+        inputRef.current?.focus({preventScroll: true})
+    },[])
 
-    const deleteFolder = () => {
+    const deleteFolder = (e) => {
         setDelCheck(true)
     }
 
@@ -86,19 +91,22 @@ const App = React.memo((
 
     console.log('folderToolbar')
 
-    const saveFolderNewName = () => {
+    const saveFolderNewName = (e) => {
+        if (checkName(inputRef.current.value)) return
+
         dispatch(addChangeFolderName(inputRef.current.value))
     }
 
-    function stopPropagation(e) {
+    function stop(e) {
+        e.preventDefault()
         e.stopPropagation()
     }
 
 
     return (
         <FolderToolbar
-            onClick={(e) => stopPropagation(e)}
-            onDoubleClick={(e) => stopPropagation(e)}
+            onMouseUp={stop}
+            onDoubleClick={stop}
         >
             <Folder config={config}>
                 <div className='changeFolderName'>
@@ -108,7 +116,10 @@ const App = React.memo((
                     />
 
                     {detectFolderName !== ''
-                    && <div onClick={saveFolderNewName} className={'icon'}>
+                    && <div
+                        onClick={saveFolderNewName}
+                        className={'icon'}
+                    >
                         <Icon.Save
                             size={config.font_size_l}
                             styled={`color: ${config.main}`}

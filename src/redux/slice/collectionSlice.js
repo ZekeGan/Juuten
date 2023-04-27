@@ -6,7 +6,7 @@ import {convertToRaw, EditorState} from 'draft-js'
 const thunkData = createAsyncThunk(
     'folder/fetchFolderData',
     async ({item, fn}) => {
-        const value = await fetchData(item.key)
+        const value = await fetchData(item.key, [])
         return {item, value, fn}
     })
 export const CollectionSlice = createSlice({
@@ -115,28 +115,36 @@ export const CollectionSlice = createSlice({
         },
 
         autoSave: (state, action) => {
-            const {type, destination, msg, key} = action.payload
+            const {type, msg, key} = action.payload
             const typeMap = {
-                textingBox: state.Juuten_EditingText, // [{msg: ''}]
-                textMain: state[state.folderId],
-                storage: state['Juuten_Storage']
+                textingBox: {
+                    key: 'Juuten_EditingText',
+                    data: state.Juuten_EditingText,
+                }, // [{msg: ''}]
+                textMain: {
+                    key: state.folderId,
+                    data: state[state.folderId],
+                },
+                storage: {
+                    key: 'Juuten_Storage',
+                    data: state['Juuten_Storage'],
+                }
             }
-            const data = typeMap[type]
+            const data = typeMap[type].data
             const newData = data.map(item => {
                 return item.key === key
                     ? {...item, msg}
-                    : !('comment' in item)
-                        ? item
-                        : {
+                    : 'comment' in item
+                        ? {
                             ...item,
-                            comment: item.comment.map(comm =>
-                                comm.key !== key
-                                    ? comm
-                                    : {...comm, msg,})
+                            comment: item.comment.map(comm => comm.key === key
+                                    ? {...comm, msg}
+                                    : comm)
                         }
+                        : item
 
             })
-            setDataToLocal(destination, newData)
+            setDataToLocal(typeMap[type].key, newData)
         },
 
         cleanTexting: (state, action) => {
@@ -201,7 +209,10 @@ export const CollectionSlice = createSlice({
                     }
             })
             setDataToLocal(folderId, newData)
-            return {...state, [folderId]: newData}
+            return {
+                ...state,
+                [folderId]: newData
+            }
         },
         /* 刪除錦集(collection)和暫存區(storage)筆記或註記(comment) */
         deleteNoteOrComment: (state, action) => {
@@ -228,11 +239,11 @@ export const CollectionSlice = createSlice({
                 .filter(item => item !== undefined)
 
             setDataToLocal(folderId, newData)
+
             return {
                 ...state,
                 [folderId]: newData
             }
-
         },
         /* dnd 更換位置 */
         rearrangeComment: (state, action) => {
@@ -252,7 +263,11 @@ export const CollectionSlice = createSlice({
             })
 
             setDataToLocal(whatArea, newData)
-            return {...state, [whatArea]: newData}
+
+            return {
+                ...state,
+                [whatArea]: newData
+            }
         },
 
         rearrangeNote: (state, action) => {
@@ -268,6 +283,7 @@ export const CollectionSlice = createSlice({
             newData.splice(destination.index, 0, removed);
 
             setDataToLocal(whatArea, newData)
+
             return {
                 ...state,
                 [whatArea]: newData
@@ -284,6 +300,8 @@ export const CollectionSlice = createSlice({
                     ? item
                     : {...item, isOpenComment: !item.isOpenComment}
             )
+
+            setDataToLocal(value, newData)
 
             return {
                 ...state,
@@ -313,17 +331,14 @@ export const CollectionSlice = createSlice({
         [thunkData.rejected]: () => {
             console.warn('reject')
         },
-
-
     },
 })
 
 
 export default CollectionSlice.reducer
+
 export const selectCollection = (state) => state.collection
 export const addFetchData = (payload) => thunkData(payload)
-
-
 export const {
     editCollectionOrStorage: addEditCollectionOrStorage,
     addAnimation: addAddAnimation,

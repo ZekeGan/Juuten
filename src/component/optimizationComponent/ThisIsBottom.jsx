@@ -11,9 +11,7 @@ const Bottom = styled.div`
 `
 const ThisIsBottom = React.memo((props) => {
     const {configuration: config} = useSelector(selectGlobal)
-    return (
-        <Bottom config={config}>已經到最底</Bottom>
-    );
+    return <Bottom config={config}>已經到最底</Bottom>
 })
 
 export default ThisIsBottom;

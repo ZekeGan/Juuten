@@ -1,13 +1,9 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
-
+import React, {useEffect, useRef, useState} from 'react';
 import DraftComponent from "../DraftComponent.jsx";
 import TextingToolbar from "./textingToolbar/TextingToolbar.jsx";
 
 
 const isEqual = (prevProps, nextProps) => {
-    // if (!nextProps.item || !prevProps.item) return true
-    // console.log('prev ', prevProps)
-    // console.log('next ', nextProps)
     return prevProps.item.msg === nextProps.item.msg && prevProps.open === nextProps.open
 }
 
@@ -18,17 +14,20 @@ const Textarea = React.memo((
         showToolbar = true,
         open,
         barArea,
-        folderId
     }) => {
     const draftRef = useRef(null)
     const [inlineStyle, setInlineStyle] = useState([])
 
+
     useEffect(() => {
         if (!item && !draftRef.current) return
-        draftRef.current?.upDate(item.msg)
-    }, [item.msg])
+        if (open) {
+            console.log('editing open')
+            draftRef.current?.autoFocus()
+        }
+    },[open])
 
-    console.log('text ' + area)
+    console.log('text ' + area )
 
     return (
         <>
@@ -42,7 +41,6 @@ const Textarea = React.memo((
                 barArea={barArea}
             />
             <DraftComponent
-
                 item={item.msg}
                 readOnly={!open}
                 ref={draftRef}
@@ -51,7 +49,6 @@ const Textarea = React.memo((
                 autoSave={{
                     type: area,
                     key: item.key,
-                    destination: folderId
                 }}
             />
         </>

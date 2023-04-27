@@ -7,6 +7,7 @@ import {getCurrentDate} from "../../../../utils";
 import {renderToString} from "react-dom/server";
 import ExportToHTML from "../../ExportToHTML.jsx";
 import store from "../../../../redux/store";
+import useGetData from "../../../../hooks/useGetData";
 
 
 const Btn = styled.div`
@@ -14,8 +15,10 @@ const Btn = styled.div`
     height: 60%;
     display: flex;
     justify-content: center;
+    text-align: center;
     align-items: center;
     cursor: pointer;
+    font-size: ${({config}) => config.font_size_m}px;
     color: ${({config}) => config.main};
     border: 1px solid ${({config}) => config.main};
     border-radius: 5px;
@@ -30,41 +33,45 @@ const MyComponent = React.memo((
     {
         text,
         type,
-        area
+        area,
+        open = false
     }) => {
     const {configuration: config} = useSelector(selectGlobal)
-
-
+    const allData = useGetData(open, true)
 
     console.log('barBtn')
 
-
-
     function getData() {
-        const {Juuten_folderLists} = store.getState().folder
-        const collectionObj = store.getState().collection
-        if (area !== 'folder') return {[collectionObj.folderData.name]: collectionObj[collectionObj.folderData.key]}
-        const data = Juuten_folderLists
-            .reduce((output, {key, name}) => {
-                if (!output[name] && !!collectionObj[key]) {
-                    output[name] = []
-                    output[name].push(...collectionObj[key])
-                }
+        const {folderData} = store.getState().collection
+        if (area !== 'folder') {
+            return {
+                [folderData.name]: allData.filter(item => item.folderName === folderData.name)
+            }
+        } else {
+            return allData.reduce((output, {folderName, ...res}) => {
+                if (!(folderName in output)) output[folderName] = []
+                output[folderName].push(res)
                 return output
             }, {})
-        return {
-            ...data,
-            Storage: collectionObj.Juuten_Storage,
         }
     }
 
     function exportData() {
-        const data = getData(area)
-        if (!data) return
-        let newData
+        const data = getData()
+        if (!Object.keys(data).length) return
 
-        if (type === 'plain' || type === 'docx') newData = exportToTXT(data)
-        if (type === 'html') newData = renderToString(<ExportToHTML data={data} config={config}/>)
+        let newData
+        switch (type) {
+            case 'plain':
+            case 'docx':
+                newData = exportToTXT(data)
+                break
+            case 'html':
+                newData = renderToString(<ExportToHTML data={data} config={config}/>)
+                break
+            default:
+                throw new Error(`Unsupported export type: ${type}`)
+        }
 
         if (type === 'docx') {
             downloadDocx(newData, `Juuten_Note_${getCurrentDate()}`)
@@ -79,6 +86,7 @@ const MyComponent = React.memo((
             window.URL.revokeObjectURL(link.href);
         }
     }
+
 
 
     return (

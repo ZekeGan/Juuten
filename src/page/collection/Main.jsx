@@ -9,12 +9,9 @@ import {selectGlobal} from "../../redux/slice/globalSlice";
 import TextMain from "./TextMain.jsx";
 import BottomBar from "../../component/optimizationComponent/bottomBar/BottomBar.jsx";
 import Navbar from "../../component/optimizationComponent/navbar/Navbar.jsx";
-import SelectingIcon from "../../component/SelectingIcon.jsx";
 
 
 const Main = styled.div`
-    display: grid;
-    grid-template-rows: ${({config}) => config.max_height - 48}px 48px auto;
     width: ${({config}) => config.max_width}px;
     height: ${({config}) => config.max_height}px;
     position: relative;
@@ -55,23 +52,19 @@ export default function App() {
             />
 
             {/* 顯示筆記地方 */}
-            <div style={{gridRow: 1}}>
-                <TextMain
-                    data={currData}
-                    hide={hide}
-                    setHide={setHide}
-                    saveWarning={saveWarning}
-                    area={'textMain'}
-                />
-            </div>
+            <TextMain
+                data={currData}
+                hide={hide}
+                setHide={setHide}
+                saveWarning={saveWarning}
+                area={'textMain'}
+            />
 
             <BottomBar
                 barArea={'collection'}
                 hide={hide}
                 storageLen={Juuten_Storage.length}
             />
-
-            <SelectingIcon/>
 
         </Main>
     );

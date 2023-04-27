@@ -450,18 +450,14 @@ const Ellipsis_Rotate90 = (props) => {
         </Icon>
     )
 }
-const Left = (props) => {
+const Left = memo((props) => {
     const {
         styled,
-        onClick,
         title,
         size
     } = props
     return (
-        <Icon
-            styled={styled}
-            onClick={onClick}
-        >
+        <Icon styled={styled}>
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -479,18 +475,15 @@ const Left = (props) => {
             </svg>
         </Icon>
     )
-}
-const Right = (props) => {
+})
+const Right = memo((props) => {
     const {
         styled,
-        onClick,
         title,
         size,
     } = props
     return (
-        <Icon
-            styled={styled}
-            onClick={onClick}>
+        <Icon styled={styled}>
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -508,7 +501,7 @@ const Right = (props) => {
             </svg>
         </Icon>
     )
-}
+})
 const Down = (props) => {
     const {
         styled,
@@ -790,10 +783,10 @@ export default {
     House,
     Search,
     Dash,
-    BarDown
+    BarDown,
     // Ellipsis_Rotate90,
-    // Left,
-    // Right,
+    Left,
+    Right,
     // Down,
     // Up,
     // Italic,

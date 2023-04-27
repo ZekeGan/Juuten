@@ -2,20 +2,21 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch} from "react-redux";
 import {addAutoSave} from "../redux/slice/collectionSlice";
 
-const useAutoSave = (type, key, msg, destination) => {
+const useAutoSave = (type, key, msg) => {
     const dispatch = useDispatch()
     const [isStart, setIsStart] = useState(false)
     const [countToSave, setCountToSave] = useState(false)
 
     function save() {
-        dispatch(addAutoSave({type, msg, key, destination,}))
+        console.log('save')
+        dispatch(addAutoSave({type, msg, key}))
     }
 
     useEffect(() => {
         if (isStart) {
             const timer = setInterval(() => {
                 setCountToSave(prev => !prev)
-            }, 1000);
+            }, 10000);
             return () => clearInterval(timer);
         }
     }, [isStart])
@@ -25,7 +26,7 @@ const useAutoSave = (type, key, msg, destination) => {
     }, [isStart, countToSave]);
 
 
-    return {setIsStart,};
+    return {setIsStart};
 };
 
 export default useAutoSave;

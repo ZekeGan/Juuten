@@ -6,8 +6,10 @@ import {selectGlobal} from "../../../redux/slice/globalSlice";
 
 const Page = styled.div`
     text-align: center;
+    width: 84%;
     color: ${({font}) => font ? 'black' : 'white'};
     // caret-color: ${({font, config}) => font ? config.primary : config.tertiary};
+    user-select: none;
     outline: none;
     border: none;
     margin: 10px 0;
@@ -22,7 +24,10 @@ const FolderName = React.memo((
     const {configuration: config} = useSelector(selectGlobal)
     console.log('folderName')
     return (
-        <Page config={config} font={font}>
+        <Page
+            config={config}
+            font={font}
+        >
             {children}
         </Page>
     );

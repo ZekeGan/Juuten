@@ -21,6 +21,7 @@ export const initialConfiguration = {
     tertiary: '#cfd9de',
     quaternary: '#8A8A8A',
     warning: '#9d201a',
+    pass: '#67b279',
 
     showStorageCount: false,
     thisIsBottom: false,

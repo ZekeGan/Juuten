@@ -7,12 +7,15 @@
     src: url(./font/SourceHanSansHWTC-Regular.otf) format('opentype');
 }
 
+#root {
+}
+
 * {
     margin: 0;
     padding: 0;
     font-size: 15px;
     box-sizing: border-box;
-    font-family: Nunito-VariableFont_wght, SourceHanSansHWTC-Regular, serif  ;
+    font-family: Nunito-VariableFont_wght, SourceHanSansHWTC-Regular, serif;
 }
 
 body {

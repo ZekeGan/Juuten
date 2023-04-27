@@ -25,7 +25,7 @@ export function getCurrentDate() {
 export async function fetchData(dataName, defaultProp = '') {
     try {
         return new Promise((resolve) => {
-            chrome.storage.sync.get(
+            chrome.storage.local.get(
                 [dataName],
                 (obj) => {
                     resolve(obj[dataName] ? JSON.parse(obj[dataName]) : defaultProp)
@@ -46,8 +46,7 @@ export const changeFontColor = (colorValue) => {
 }
 
 export function setDataToLocal(name, data = []) {
-    console.log(JSON.stringify(data))
-    chrome.storage.sync.set({
+    chrome.storage.local.set({
         [name]: JSON.stringify(data)
     })
 }
@@ -58,24 +57,23 @@ export function exportToTXT(data) {
         newOutput = newOutput.concat(`**********${folder}**********\n`)
         data[folder].forEach((item, idx) => {
             let comment = `
-註釋:`
+    ----------`
             const msg = EditorState
                 .createWithContent(convertFromRaw(JSON.parse(item.msg)))
                 .getCurrentContent()
                 .getPlainText()
-            let txt = `創建日期: ${item.currentDate}${item.url ? `
-網站: ${item.url}` : ''}
-內文: ${msg}`
+            let txt = `+ ${item.currentDate}${item.url ? `
++ ${item.url}` : ''}
++ ${msg}`
             item.comment.forEach((comm, idx2) => {
                 const commMsg = EditorState
                     .createWithContent(convertFromRaw(JSON.parse(comm.msg)))
                     .getCurrentContent()
                     .getPlainText()
                 let commTXT = `
-    創建日期: ${comm.currentDate}
-    內文: ${commMsg}\n`
+    + ${comm.currentDate}
+    + ${commMsg}\n`
                 comment = comment.concat(commTXT)
-                if (item.comment.length !== idx2 + 1) comment = comment.concat('         ------------------')
             })
             newOutput = newOutput.concat(txt, comment, '\n\n')
         })

@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useState} from 'react';
 import {useSelector} from "react-redux";
 import {exportToTXT} from "../../../../utils";
 import {selectGlobal} from "../../../../redux/slice/globalSlice";
@@ -8,11 +8,14 @@ import styled from "styled-components";
 import Slider from "../../Slider.jsx";
 import DotColor from "./DotColor.jsx";
 import BarButton from "./BarButton.jsx";
+import Icon from '../../Svg.jsx'
+import BarPage from "../../pureComponent/BarPage.jsx";
 
 
 const Container = styled.div`
     width: 100%;
-    padding: 30px 2.5% 10px; 
+    padding: 30px 2.5% 0; 
+    margin-bottom: 5%;
     .container-text {
         margin-bottom: 3%;
     }`
@@ -21,7 +24,6 @@ const CategoryContainer = styled.div`
     overflow: hidden;
     border-radius: 10px;`
 const SelectContainer = styled.div`
-    user-select: none;
     height: 80px;
     width: 100%;
     background-color: white;
@@ -30,13 +32,13 @@ const SelectContainer = styled.div`
     justify-content: space-between;
     align-items: center;
     padding: 0 5%;
+    ${({styled}) => styled}
     .select-text-box {
-        width: 30%;
         .select-text {
             font-size: ${({config}) => config.font_size_l}px;
         }
         .select-introduce {
-            font-size: ${({config}) => config.font_size_m}px;
+            font-size: ${({config}) => config.font_size_s}px;
             color: ${({config}) => config.quaternary};
         }
     }`
@@ -53,6 +55,7 @@ const Bar = React.memo((
         },
     }) => {
     const {configuration} = useSelector(selectGlobal)
+    const [openContact, setOpenContact] = useState(false)
     const barList = useMemo(() => ({
         configuration: {
             text: '版面設定',
@@ -69,10 +72,10 @@ const Bar = React.memo((
                     text: 'fontSize',
                     textCN: '調整文字尺寸',
                     element: 'number',
-                    introduce: {default: '文字大小下限為9，上限為20'},
+                    introduce: {default: '文字大小下限為9，上限為16'},
                     numberValue: {
                         currentValue: configuration['font_size_s'],
-                        max: 20,
+                        max: 16,
                         min: 9,
                         howMany: 0.5
                     },
@@ -110,10 +113,10 @@ const Bar = React.memo((
                     numberValue: {
                         currentValue: configuration['max_width'],
                         max: 800,
-                        min: 400,
+                        min: 500,
                         howMany: 50
                     },
-                    introduce: {default: '螢幕寬度下限為400，上限為800'},
+                    introduce: {default: '螢幕寬度下限為500，上限為800'},
                     dispatchValue: [{key: 'max_width', value: 0}]
                 },
                 {
@@ -168,7 +171,7 @@ const Bar = React.memo((
                         howMany: 5
                     },
                     dispatchValue: [{key: 'toolbarX', value: 0}],
-                    introduce: {default: '越接近0，X軸越接近快捷鍵中間'}
+                    introduce: {default: ''}
                 },
                 {
                     open: true,
@@ -182,7 +185,7 @@ const Bar = React.memo((
                         howMany: 5
                     },
                     dispatchValue: [{key: 'toolbarY', value: 0}],
-                    introduce: {default: '越接近0，Y軸越接近快捷鍵中間'}
+                    introduce: {default: ''}
                 }
             ]
         },
@@ -235,57 +238,79 @@ const Bar = React.memo((
 
     console.log('bar')
 
+
     return (
-        <BottemBarTemplate
-            fullPage={true}
-            open={open}
-            closeCallback={() => setOpen(false)}
-        >
-            {Object.keys(barList).map(category => (
-                <Container key={`${category}-text`} config={configuration}>
-                    <div className={'container-text'}>{barList[category].text}</div>
-                    <CategoryContainer>
-                        {barList[category].list.map(select => (
-                            select.open
-                            && <SelectContainer key={select.text} config={configuration}>
-                                <div className={'select-text-box'}>
-                                    <div className={'select-text'}>{select.textCN}</div>
-                                    <div className={'select-introduce'}>{select.introduce.default}</div>
-                                </div>
-                                {select.element === 'color'
-                                && <DotColor/>}
+        <>
+            <BottemBarTemplate
+                fullPage
+                open={open}
+                closeCallback={() => setOpen(false)}
+            >
+                {Object.keys(barList).map(category => (
+                    <Container
+                        key={`${category}-text`}
+                        config={configuration}
+                    >
+                        <div className={'container-text'}>{barList[category].text}</div>
+                        <CategoryContainer>
+                            {barList[category].list.map(select => (
+                                select.open
+                                && <SelectContainer
+                                    styled={select.element === 'navigate' ? 'cursor: pointer;' : ''}
+                                    onClick={select.element === 'navigate' ? () => setOpenContact(true) : () => {}}
+                                    key={select.text}
+                                    config={configuration}
+                                >
+                                    <div className={'select-text-box'}>
+                                        <div className={'select-text'}>{select.textCN}</div>
+                                        <div className={'select-introduce'}>{select.introduce.default}</div>
+                                    </div>
+                                    {select.element === 'color'
+                                    && <DotColor/>}
 
-                                {select.element === 'number'
-                                && <Size
-                                    everySize={select.numberValue.currentValue}
-                                    max={select.numberValue.max}
-                                    min={select.numberValue.min}
-                                    howMany={select.numberValue.howMany}
-                                    dispatchValue={select.dispatchValue}
-                                />}
+                                    {select.element === 'number'
+                                    && <Size
+                                        everySize={select.numberValue.currentValue}
+                                        max={select.numberValue.max}
+                                        min={select.numberValue.min}
+                                        howMany={select.numberValue.howMany}
+                                        dispatchValue={select.dispatchValue}
+                                    />}
 
-                                {select.element === 'ratio'
-                                && <Slider
-                                    id={select.text}
-                                    current={select.current}
-                                    ratioValue={select.ratioValue}
-                                />}
+                                    {select.element === 'ratio'
+                                    && <Slider
+                                        id={select.text}
+                                        current={select.current}
+                                        ratioValue={select.ratioValue}
+                                    />}
 
-                                {select.element === 'click'
-                                && select.clickValue.map(item => (
-                                    <BarButton
-                                        key={item.text}
-                                        area={barArea}
-                                        text={item.text}
-                                        type={item.type}
-                                    />))
-                                }
-                            </SelectContainer>
-                        ))}
-                    </CategoryContainer>
-                </Container>
-            ))}
-        </BottemBarTemplate>
+                                    {select.element === 'click'
+                                    && select.clickValue.map(item =>
+                                        (<BarButton
+                                            key={item.text}
+                                            area={barArea}
+                                            text={item.text}
+                                            type={item.type}
+                                            open={open}
+                                        />))
+                                    }
+
+                                    {select.element === 'navigate'
+                                    && <Icon.Right size={configuration.font_size_l} />}
+
+                                </SelectContainer>
+                            ))}
+                        </CategoryContainer>
+                    </Container>
+                ))}
+            </BottemBarTemplate>
+
+            <BarPage
+                open={openContact}
+                close={() => setOpenContact(false)}
+            />
+        </>
+
     );
 }, isEqual)
 

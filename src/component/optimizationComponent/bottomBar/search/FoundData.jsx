@@ -37,7 +37,7 @@ const MyComponent = React.memo((
 
     useEffect(() => {
         if (!inputRef.current || !open) return
-        setTimeout(() => inputRef.current?.focus(), 500)
+        inputRef.current?.focus({preventScroll: true})
     }, [])
 
 
@@ -98,19 +98,24 @@ const MyComponent = React.memo((
 
         let editorState = EditorState.createWithContent(convertFromRaw(JSON.parse(msg)))
         const blocks = editorState.getCurrentContent().getBlockMap()
+        const regex = new RegExp(target, 'g')
+        console.log(editorState.getCurrentContent().getPlainText())
 
         blocks.forEach(block => {
             const text = block.getText().toUpperCase()
-            const regex = new RegExp(target, 'g')
             let matchArr = regex.exec(text)
 
             while (matchArr !== null) {
-                const selection = editorState.getSelection().merge({
-                    anchorOffset: matchArr.index,
-                    focusOffset: matchArr.index + target.length,
-                })
+                console.log(matchArr)
                 editorState = RichUtils.toggleInlineStyle(
-                    EditorState.forceSelection(editorState, selection),
+                    EditorState.forceSelection(
+                        editorState,
+                        editorState.getSelection().merge({
+                            anchorKey: block.getKey(),
+                            focusKey: block.getKey(),
+                            anchorOffset: matchArr.index,
+                            focusOffset: matchArr.index + target.length,
+                        })),
                     'HIGHLIGHT'
                 )
                 matchArr = regex.exec(text)
@@ -121,7 +126,10 @@ const MyComponent = React.memo((
 
     return (
         <>
-            <JInput mRef={inputRef} callback={findData}/>
+            <JInput
+                mRef={inputRef}
+                callback={findData}
+            />
             {Object.keys(foundData).map(item => (
                 <TextContainer key={item}>
                     <div className={'folder-name'}>{item}</div>

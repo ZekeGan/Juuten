@@ -35,7 +35,7 @@ const App = React.memo((
         item,
         open,
         provided,
-        showToolbar = true
+        showToolbar = true,
     }) => {
     const dispatch = useDispatch()
     const {addNewCommentAnimation, openEditId} = useSelector(selectCollection)

@@ -17,17 +17,17 @@ import useHideBar from "../../hooks/useHideBar";
 /* main */
 const TextMain = styled.div`
     position: relative;
-    z-index: 1;
     width: ${({config}) => config.max_width}px;
     height: ${({area, config}) => area ? '100%' : `${config.max_height}px`};
-    padding: ${({area}) => area ? '30px 10px 0 10px' : '50px 10px 0 10px'} ;
-    overflow: scroll; 
+    padding: ${({area}) => area ? '30px 10px 30px 10px' : '50px 10px 30px 10px'} ;
+    overflow-y: scroll; 
+    overflow-x: hidden;
     &::-webkit-scrollbar {
         width: 5px;
     }
 
     &::-webkit-scrollbar-thumb {
-        background-color: ${({config}) => config.secondary};
+        background-color: ${({config}) => config.tertiary};
         border-radius: 2.5px;
     }`
 
@@ -75,7 +75,11 @@ export default (
 
     return (
         <DragDropContext onDragEnd={(e) => dragEnd(e)}>
-            <TextMain config={config} area={area === 'storage'} ref={textMainRef}>
+            <TextMain
+                config={config}
+                area={area === 'storage'}
+                ref={textMainRef}
+            >
                 <Droppable droppableId={`${area}_note_dropId_solo`}>
                     {(provided, snapshot) => (
                         <DropWrapper
@@ -113,6 +117,5 @@ export default (
                 </Droppable>
             </TextMain>
         </DragDropContext>
-
     );
 }

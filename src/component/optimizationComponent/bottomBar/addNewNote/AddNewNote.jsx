@@ -121,11 +121,15 @@ const AddNewNote = React.memo((
                                 style={inlineStyle.includes(item.keyword) ? item.style : ''}
                                 keyword={item.keyword}
                                 fn={(e) => handleToggleStyle(item.keyword, e)}
-                                curr={true}
+                                curr
                             />
                         ))}
                     </div>
-                    <BTN config={config} onClick={() => addNewNote()}>新增</BTN>
+                    <BTN
+                        config={config}
+                        onClick={() => addNewNote()}>新增
+                    </BTN>
+
                 </EditToolbar>
             </Main>
         </BottemBarTemplate>

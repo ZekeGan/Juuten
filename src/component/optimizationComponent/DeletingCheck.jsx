@@ -20,6 +20,7 @@ const Page = styled.div`
     border-radius: 10px;
     transition: 0.2s ease-out;
     font-size: ${({config}) => config.font_size_m};
+    user-select: none;
     > span {
         display: block;
         width: 100%;
@@ -49,13 +50,33 @@ const isEqual = (prevProps, nextProps) => {
 const DeletingCheck = React.memo(({delCheck, setDelCheck, doubleDelCheck}) => {
     const {configuration: config} = useSelector(selectGlobal)
 
+    function stop(e) {
+        console.log('stop')
+        e.stopPropagation()
+        e.preventDefault()
+    }
+
     return (
-        <Page config={config} delCheck={delCheck}>
+        <Page
+            config={config}
+            delCheck={delCheck}
+            onMouseUp={stop}
+        >
             <span>請注意： 如果刪除資料夾，資料夾內資料將會永久消失</span>
-            <button className='JuutenDel-yes' onClick={doubleDelCheck}>確認</button>
-            <button className='JuutenDel-no' onClick={() => setDelCheck(false)}>取消</button>
+            <button
+                className='JuutenDel-yes'
+                onClick={doubleDelCheck}
+            >
+                確認
+            </button>
+            <button
+                className='JuutenDel-no'
+                onClick={() => setDelCheck(false)}
+            >
+                取消
+            </button>
         </Page>
     );
-},isEqual)
+}, isEqual)
 
 export default DeletingCheck;

@@ -3,6 +3,7 @@ import {EditorState, RichUtils, Editor, convertFromRaw, convertToRaw} from 'draf
 import {useSelector} from "react-redux";
 import {selectGlobal} from "../../redux/slice/globalSlice";
 import useAutoSave from "../../hooks/useAutoSave";
+import {changeFontColor} from "../../utils";
 
 const DraftComponent = memo(forwardRef((
     {
@@ -24,20 +25,18 @@ const DraftComponent = memo(forwardRef((
         autoSave?.type,
         autoSave?.key,
         getJSONData(),
-        autoSave?.destination
     )
 
     useEffect(() => {
         if (open) setIsStart(true)
-
         else setIsStart(false)
-
     }, [open])
 
 
     const styleMap = {
         'HIGHLIGHT': {
             'backgroundColor': config.main,
+            'color': changeFontColor(config.main) ? '#545454' : '#ffffff',
         },
         'FONT_SIZE': {
             fontSize: config.font_size_l

@@ -17,7 +17,7 @@ const Juuten_folderLists = [
     },
     {
         key: '445954118',
-        name: '19980720_我的出生',
+        name: '19980720_我的出生aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
         folderColor: '#1f1e33',
         font: false,
         createDate: '',
@@ -39,7 +39,7 @@ const Juuten_folderLists = [
     },
     {
         key: 'N1',
-        name: '關於如何使用Typescript達到效能最佳化',
+        name: '關於如何使用Typescript達到效能最佳化 aaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
         folderColor: '#1f1e33',
         font: false,
         tags: []

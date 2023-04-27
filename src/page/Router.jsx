@@ -10,13 +10,13 @@ import Collection from './collection/Main.jsx'
 
 export default function App() {
 
-    useEffect(() => {
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Tab') {
-                event.preventDefault();
-            }
-        });
-    }, [])
+    // useEffect(() => {
+    //     document.addEventListener('keydown', function(event) {
+    //         if (event.key === 'Tab') {
+    //             event.preventDefault();
+    //         }
+    //     });
+    // }, [])
 
     return (
         <Router>

@@ -10,37 +10,34 @@ import {selectGlobal} from "../../../redux/slice/globalSlice";
 import {addFetchData} from "../../../redux/slice/collectionSlice";
 
 
+const Main = styled.div`
+    grid-row: 2/3;
+    width: ${({config}) => config.max_width * 0.9}px;
+    height: 70px;
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 10px;   
+    background-color: ${p => p.folderColor};
+    transition: 0.2s ease-out;
+    box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
+    cursor: pointer;`
+
 const IconContainer = styled.div`
-    position: absolute;
-    right: 0;
+    cursor: pointer;
     height: 100%;
-    width: 5%;
+    width: 8%;
     display: flex;
     justify-content: center;
     align-items: center;`
 
 const DragHandle = styled.div`
-    position: absolute;
-    left: 0;
-    width: 5%;
     height: 100%;
+    width: 8%;
     display: flex;
     justify-content: center;
     align-items: center;`
-
-const Main = styled.div`
-    position: relative;
-    width: ${({config}) => config.max_width * 0.9}px;
-    height: 70px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    margin: 10px 0 10px 0;
-    border-radius: 10px;   
-    background-color: ${p => p.folderColor};
-    transition: 0.2s ease-out;
-    box-shadow: 2px 2px 2px rgba(0,0,0,0.2);`
 
 const isEqual = (prev, next) => {
     let flag = true
@@ -57,7 +54,8 @@ export default React.memo((
         item,
         provided,
         setDelCheck,
-        openToolbar
+        openToolbar,
+        checkName,
     }) => {
     const {configuration: config} = useSelector(selectGlobal)
     const navigate = useNavigate()
@@ -90,33 +88,28 @@ export default React.memo((
         >
             {openToolbar
             && <Toolbar
+                checkName={checkName}
+                open={openToolbar}
                 item={item}
                 setDelCheck={setDelCheck}
             />}
 
             <DragHandle {...provided.dragHandleProps}>
                 <Icon.Grip
-                    styled={`color: ${item.font ? 'black' : 'white'};`}
+                    styled={`color: ${item.font ? 'black' : 'white'}; cursor: grab;`}
                     size={config.icon_size_l}
                 />
             </DragHandle>
 
-
             <FolderName font={item.font}>{item.name}</FolderName>
 
-
-            <IconContainer>
-                <div onClick={(e) => editFolder(e, item)}>
-                    <Icon.Ellipsis
-                        styled={`color: ${item.font ? 'black' : 'white'};`}
-                        size={config.icon_size_l}
-                    />
-                </div>
+            <IconContainer onClick={(e) => editFolder(e, item)}>
+                <Icon.Ellipsis
+                    styled={`color: ${item.font ? 'black' : 'white'};`}
+                    size={config.icon_size_l}
+                />
             </IconContainer>
 
-
         </Main>
-
-
     );
 }, isEqual)

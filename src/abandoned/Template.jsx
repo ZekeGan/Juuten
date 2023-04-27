@@ -26,8 +26,8 @@ const Main = styled.div`
 const Template = (
     {
         folderColor = 'white',
-        dClick,
-        onClick,
+        dClick = () => {},
+        onClick = () => {},
         overflow = false,
         children,
     }) => {
@@ -38,8 +38,8 @@ const Template = (
         <Main
             overflow={overflow}
             config={config}
-            onClick={() => onClick}
-            onDoubleClick={() => dClick}
+            onClick={onClick}
+            onDoubleClick={dClick}
             folderColor={folderColor}
         >
             {children}

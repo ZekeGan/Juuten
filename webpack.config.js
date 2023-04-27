@@ -1,8 +1,6 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
-const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
-const FileManagerPlugin = require("filemanager-webpack-plugin");
 
 
 module.exports = {
@@ -10,14 +8,14 @@ module.exports = {
     // mode: 'production',
     entry: {
         popup: './src/popup.jsx',
-        background: './src/background.js',
-        content: './src/content.js'
+        content: './src/content.js',
+        background: '/src/background.js',
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: "[name].js"
+        filename: "src/[name].js",
     },
-    devtool: 'nosources-source-map',
+    devtool: 'source-map',
     devServer: {
         static: {
             directory: path.resolve(__dirname, 'dist')
@@ -26,13 +24,13 @@ module.exports = {
         compress: true,
         open: true,
         hot: true,
-        historyApiFallback: true
+        historyApiFallback: true,
     },
     // optimization: { // inactive this when build
-    //     runtimeChunk: 'single'
+    //     runtimeChunk: 'single',
     // },
     experiments: {
-        topLevelAwait: true
+        topLevelAwait: true,
     },
     module: {
         rules: [
@@ -41,24 +39,23 @@ module.exports = {
                 exclude: /node_modules/,
                 use: {
                     loader: 'babel-loader',
-                    options: {
-                        presets: ['@babel/preset-env', '@babel/preset-react',],
-                    }
+                    options: {presets: ['@babel/preset-env', '@babel/preset-react',],},
                 },
             },
             {
-                test: /\.(woff|woff2|ttf|eot|otf)$/,
-                exclude: /node_modules/,
+                test: /\.(woff|woff2|ttf|eot|otf)$/i,
                 type: 'asset/resource',
-                dependency: {not: ['url']},
-                generator: {
-                    filename: 'resources/[hash:10][ext][query]'
-                }
+                generator: {filename: 'src/asset/font/[name][ext][query]'},
             },
             {
                 test: /\.css$/i,
                 exclude: /node_modules/,
-                use: ['style-loader', 'css-loader']
+                use: ['style-loader', 'css-loader'],
+            },
+            {
+                test: /\.(png|jpe?g|gif)$/i,
+                type: 'asset/resource',
+                generator: {filename: 'src/asset/image/[name][ext][query]'},
             },
         ]
     },
@@ -68,32 +65,17 @@ module.exports = {
         maxAssetSize: 512000
     },
     plugins: [
-        new NodePolyfillPlugin(),
         new HtmlWebpackPlugin({
             template: './src/popup.html',
-            filename: 'index.html'
+            filename: 'index.html',
         }),
         new CopyPlugin({
             patterns: [
-                {from: "public"},
-                {from: 'src/assets/content.css'},
-                {from: 'src/assets/icon', to: 'icon'}
+                {from: "public/manifest.json"},
+                {from: "public/icon", to: "src/asset/icon"},
+                {from: "src/assets/content.css", to:'src'}
             ],
         }),
-        // new FileManagerPlugin({
-        //     events: {
-        //         onEnd: {
-        //             mkdir: ['dist/content/', 'dist/background/'],
-        //             move: [
-        //                 {source: 'dist/content.js/*', destination: 'dist/content/content.js/*'},
-        //                 {source: 'dist/background.{js.map}', destination: 'dist/background/background.{js.map}'},
-        //
-        //             ]
-        //         }
-        //     }
-        // })
-
-
     ],
     resolve: {
         fallback: {

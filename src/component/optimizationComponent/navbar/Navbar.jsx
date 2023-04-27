@@ -23,7 +23,11 @@ const Navbar = styled.div`
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 80%;
+        text-align: center;
+        width: 78%;
+        height: 100%;
+        overflow: hidden;
+        margin: 0 2%;
         font-size: ${({config}) => config.font_size_l}px;
     }`
 
@@ -60,6 +64,7 @@ const app = React.memo((
 
     return (
         <Navbar config={config} hide={hide}>
+
             {area !== 'home'
             && <div onClick={() => back()}>
                 <Icon.House
@@ -67,11 +72,16 @@ const app = React.memo((
                     styled={`color: ${config.main};`}
                 />
             </div>}
+
             <div className={'where'}>
                 {!!name
                     ? name
-                    : <Icon.MonochromeJuutenIcon color={config.main} size={26}/>}
+                    : <Icon.MonochromeJuutenIcon
+                        color={config.main}
+                        size={26}
+                    />}
             </div>
+
         </Navbar>
     );
 }, isEqual)

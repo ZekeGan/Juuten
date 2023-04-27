@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import styled from "styled-components";
 import Icon from '../../Svg.jsx'
 import {
@@ -10,6 +10,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {selectGlobal} from "../../../../redux/slice/globalSlice";
 import BuiltDate from "../../pureComponent/BuiltDate.jsx";
 import TextingToolbarInside from "./TextingToolbarInside.jsx";
+import useRemoveBar from "../../../../hooks/useRemoveBar";
 
 const TextingToolbar = styled.div`
     position: relative;
@@ -36,18 +37,18 @@ const DateBox = styled.div`
     }`
 
 const DelBox = styled.div`
-    display: ${({open}) => open ? 'block' : 'none'};
+    display: ${({open}) => open ? 'flex' : 'none'};
+    justify-content: center;
+    align-items: center;
     position: absolute;
     right: 15px;
     top: 30px;
     width: 80px;
-    height: 40px;
+    height: 35px;
     border-radius: 5px;
     background-color: ${({config}) => config.secondary};
     // border: 1px solid ${({config}) => config.quaternary};
-    text-align: center;
-    line-height: 40px;
-    font-size: ${({config}) => config.font_size_m}px;
+    font-size: ${({config}) => config.font_size_s}px;
     cursor: pointer;
     &:hover {
          background-color: ${({config}) => config.tertiary};
@@ -69,39 +70,27 @@ const App = React.memo((
     }) => {
     const dispatch = useDispatch()
     const {configuration: config} = useSelector(selectGlobal)
-    const openToolbar = (payload) => {
-        dispatch(addOpenEditToolbar(payload))
-    }
     const [delCheck, setDelCheck] = useState(false)
-
-    function closeDelCheck(e) {
-        e.stopPropagation()
-        console.log(delCheck)
-        setDelCheck(false)
-        return document.removeEventListener('close', closeDelCheck, false)
-    }
-
-    useEffect(() => {
-        if (!!delCheck) {
-            document.addEventListener('click', closeDelCheck, false)
-        }
-    }, [])
-
+    useRemoveBar(delCheck, () => setDelCheck(false))
 
     console.log('toolbar')
 
-    /* 新增註記(comment) */
-    const addComment = (payload) => {
-        dispatch(addAddComment(payload))
+    function openToolbar() {
+        dispatch(addOpenEditToolbar({key: item.key, type: item.type}))
     }
 
+    /* 新增註記(comment) */
+    function addComment() {
+        dispatch(addAddComment({key: item.key}))
+    }
 
     /* 移至storage OR collection */
-    const moveToStorageOrCollection = (payload) => {
+    function moveToStorageOrCollection(payload) {
         dispatch(addMoveToStorageOrCollection(payload))
     }
 
-    const deleteNoteOrComment = () => {
+    function deleteNoteOrComment(e) {
+        e.stopPropagation()
         dispatch(addDeleteNoteOrComment({area: item.type}))
     }
 
@@ -110,7 +99,7 @@ const App = React.memo((
             <DelBox
                 config={config}
                 open={delCheck}
-                onMouseUp={deleteNoteOrComment}
+                onClick={deleteNoteOrComment}
             >
                 確認刪除
             </DelBox>
@@ -125,13 +114,13 @@ const App = React.memo((
                     && <div className={'icon-box'}>
                         {item.type === 'collection'
                         &&
-                        <div onClick={() => addComment({key: item.key})}>
+                        <div onClick={addComment}>
                             <Icon.Chat
                                 size={config.icon_size_m}
                                 title={'新增留言'}
                             />
                         </div>}
-                        <div onClick={() => openToolbar({key: item.key, type: item.type})}>
+                        <div onClick={openToolbar}>
                             <Icon.Pen size={config.icon_size_m}/>
                         </div>
 
@@ -148,7 +137,11 @@ const App = React.memo((
                         </div>}
 
                         {item.type === 'collection'
-                        && <div onClick={() => moveToStorageOrCollection({key: item.key, toWhere: 'toStorage'})}>
+                        && <div
+                            onClick={() => moveToStorageOrCollection({
+                                key: item.key,
+                                toWhere: 'toStorage'
+                            })}>
                             <Icon.BarDown
                                 size={config.icon_size_m}
                                 title={'放入暫存區'}

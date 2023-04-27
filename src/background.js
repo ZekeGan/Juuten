@@ -22,16 +22,17 @@ chrome.runtime.onMessage.addListener(
         if (msg.key === 'Juuten_toolbar') {
             getCurrentTab()
                 .then((tab) => {
-                    getTabAndSend(tab)
+                    getTabAndSend(tab, msg.msg)
                 })
         }
     }
 )
 
-function getTabAndSend(tab) {
+function getTabAndSend(tab, msg = '') {
     chrome.tabs.sendMessage(
         tab.id,
         {
+            msg,
             type: 'fromBackground',
             pageTitle: tab.title,
             favIconUrl: tab.favIconUrl,
