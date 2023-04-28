@@ -1,9 +1,9 @@
-import React, {useState, forwardRef, useImperativeHandle, useEffect, useRef, memo} from 'react';
-import {EditorState, RichUtils, Editor, convertFromRaw, convertToRaw} from 'draft-js'
-import {useSelector} from "react-redux";
-import {selectGlobal} from "../../redux/slice/globalSlice";
+import React, { useState, forwardRef, useImperativeHandle, useEffect, useRef, memo } from 'react';
+import { EditorState, RichUtils, Editor, convertFromRaw, convertToRaw, Modifier, getDefaultKeyBinding } from 'draft-js'
+import { useSelector } from "react-redux";
+import { selectGlobal } from "../../redux/slice/globalSlice";
 import useAutoSave from "../../hooks/useAutoSave";
-import {changeFontColor} from "../../utils";
+import { changeFontColor } from "../../utils";
 
 const DraftComponent = memo(forwardRef((
     {
@@ -16,12 +16,12 @@ const DraftComponent = memo(forwardRef((
     ref
 ) => {
     const mainRef = useRef(null)
-    const {configuration: config} = useSelector(selectGlobal)
+    const { configuration: config } = useSelector(selectGlobal)
     const [editorState, setEditorState] = useState(() => {
         if (item) return EditorState.createWithContent(convertFromRaw(JSON.parse(item)))
         else return EditorState.createEmpty()
     })
-    const {setIsStart} = useAutoSave(
+    const { setIsStart } = useAutoSave(
         autoSave?.type,
         autoSave?.key,
         getJSONData(),
@@ -31,7 +31,6 @@ const DraftComponent = memo(forwardRef((
         if (open) setIsStart(true)
         else setIsStart(false)
     }, [open])
-
 
     const styleMap = {
         'HIGHLIGHT': {
@@ -44,8 +43,25 @@ const DraftComponent = memo(forwardRef((
     }
 
     function onChange(state) {
+        nowInlineStyle(state)
         setEditorState(state)
     }
+
+    function keyBindingFn(e) {
+        if (e.keyCode === 9 ) { // tab
+            e.preventDefault()
+            const newContent = Modifier.insertText(
+                editorState.getCurrentContent(),
+                editorState.getSelection(),
+                '    ',
+                editorState.getCurrentInlineStyle()
+            )
+            const newEditorState = EditorState.push(editorState,newContent,'insert-characters')
+            onChange(newEditorState)
+        }
+        return getDefaultKeyBinding(e)
+    }
+
 
     function nowInlineStyle(state) {
         setInlineStyle(state.getCurrentInlineStyle().toJS())
@@ -62,7 +78,6 @@ const DraftComponent = memo(forwardRef((
             toggleStyle: (style, e) => {
                 e.preventDefault()
                 const newState = RichUtils.toggleInlineStyle(editorState, style)
-                nowInlineStyle(newState)
                 onChange(newState)
             },
             autoFocus: () => {
@@ -93,6 +108,7 @@ const DraftComponent = memo(forwardRef((
             onChange={onChange}
             readOnly={readOnly}
             ref={mainRef}
+            keyBindingFn={keyBindingFn}
         />
     );
 }))

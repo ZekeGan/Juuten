@@ -18,7 +18,6 @@ const Textarea = React.memo((
     const draftRef = useRef(null)
     const [inlineStyle, setInlineStyle] = useState([])
 
-
     useEffect(() => {
         if (!item && !draftRef.current) return
         if (open) {
@@ -27,7 +26,9 @@ const Textarea = React.memo((
         }
     },[open])
 
-    console.log('text ' + area )
+    console.log(inlineStyle)
+
+    console.log('text ' + item.key )
 
     return (
         <>

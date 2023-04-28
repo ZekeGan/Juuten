@@ -4,6 +4,7 @@ import Icon from "../Svg.jsx";
 import {useNavigate} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {selectGlobal} from "../../../redux/slice/globalSlice";
+import {setDataToLocal} from "../../../utils";
 
 
 const Navbar = styled.div`
@@ -52,19 +53,22 @@ const app = React.memo((
     const {configuration: config} = useSelector(selectGlobal)
 
     function back() {
-        if (openEditId) {
+        if (!!openEditId) {
             setSaveWarning(true)
             setTimeout(() => setSaveWarning(false), 3000)
         } else {
             navigate('/home')
+            setDataToLocal('Juuten_Navigate_History', {})
         }
     }
 
     console.log('navbar name: ' + name)
 
     return (
-        <Navbar config={config} hide={hide}>
-
+        <Navbar
+            config={config}
+            hide={hide}
+        >
             {area !== 'home'
             && <div onClick={() => back()}>
                 <Icon.House

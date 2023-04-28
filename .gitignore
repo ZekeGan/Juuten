@@ -2,6 +2,5 @@ node_module/
 dist/
 .idea/
 *.iml
-yarn.lock
 # Project exclude paths
 /node_modules/

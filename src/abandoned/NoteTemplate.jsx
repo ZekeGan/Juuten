@@ -39,49 +39,48 @@ const isEqual = (prevProps, nextProps) => {
 }
 
 
-const NoteTemplate =
-    React.memo(
-        ({
-             children,
-             add = false,
-             provided
-         }) => {
-            const [handleShow, setHandleShow] = useState(false)
-            const [isClick, setIsClick] = useState(false)
-            const {configuration: config} = useSelector(selectGlobal)
+const NoteTemplate = React.memo((
+        {
+            children,
+            add = false,
+            provided
+        }) => {
+        const [handleShow, setHandleShow] = useState(false)
+        const [isClick, setIsClick] = useState(false)
+        const {configuration: config} = useSelector(selectGlobal)
 
-            console.log('noteTemplate')
+        console.log('noteTemplate')
 
-            function mouseUpFn() {
-                setHandleShow(false)
-                setIsClick(false)
-                return document.removeEventListener('mouseup', mouseUpFn, false)
+        function mouseUpFn() {
+            setHandleShow(false)
+            setIsClick(false)
+            return document.removeEventListener('mouseup', mouseUpFn, false)
+        }
+
+        useEffect(() => {
+            if (isClick) {
+                document.addEventListener('mouseup', mouseUpFn, false)
             }
+        }, [isClick])
 
-            useEffect(() => {
-                if (isClick) {
-                    document.addEventListener('mouseup', mouseUpFn, false)
+        return (
+            <Page config={config} add={add}>
+                {
+                    !!Object.keys(provided).length
+                    && <NoteDragHandle
+                        config={config}
+                        show={handleShow}
+                        onMouseEnter={() => setHandleShow(true)}
+                        onMouseDown={() => setIsClick(true)}
+                        onMouseLeave={() => !isClick && setHandleShow(false)}
+                        {...provided?.dragHandleProps}
+                    >
+                        <div className={'handle'}/>
+                    </NoteDragHandle>
                 }
-            }, [isClick])
-
-            return (
-                <Page config={config} add={add}>
-                    {
-                        !!Object.keys(provided).length
-                        && <NoteDragHandle
-                            config={config}
-                            show={handleShow}
-                            onMouseEnter={() => setHandleShow(true)}
-                            onMouseDown={() => setIsClick(true)}
-                            onMouseLeave={() => !isClick && setHandleShow(false)}
-                            {...provided?.dragHandleProps}
-                        >
-                            <div className={'handle'}/>
-                        </NoteDragHandle>
-                    }
-                    {children}
-                </Page>
-            );
-        }, isEqual)
+                {children}
+            </Page>
+        );
+    }, isEqual)
 
 export default NoteTemplate;

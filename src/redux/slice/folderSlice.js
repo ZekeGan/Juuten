@@ -7,14 +7,18 @@ export const FolderSlice = createSlice({
     name: 'folder',
     initialState: {
         /* 測試時替換 */
+        // Juuten_Navigate_History: {},
         // Juuten_folderLists: Juuten_folderLists,
         Juuten_folderLists: await fetchData('Juuten_folderLists', []),
+        Juuten_Navigate_History: await fetchData('Juuten_Navigate_History', {}),
         /////////////
 
         editFolderId: '',
         addFolderAnimationId: '',
     },
     reducers: {
+
+
         // 修改資料夾顏色
         changeFolderColor: (state, action) => {
             const {Juuten_folderLists: data, editFolderId} = state

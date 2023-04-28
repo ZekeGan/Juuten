@@ -35,7 +35,7 @@ export const CollectionSlice = createSlice({
         addNewCommentAnimation: '',
         storageAddAnimation: '',
         useTool: false,
-
+        isHistoryLoad: false,
 
         N1: N1,
         sus: N1,
@@ -44,14 +44,6 @@ export const CollectionSlice = createSlice({
 
     },
     reducers: {
-        addFolderId: (state, action) => {
-            return {
-                ...state,
-                folderData: action.payload,
-                folderId: action.payload.key
-            }
-        },
-
         openEditToolbar: (state, action) => {
             return {
                 ...state,
@@ -308,23 +300,24 @@ export const CollectionSlice = createSlice({
                 [value]: newData
             }
         },
+
+        changeIsHistory: (state, action) => {
+            return {
+                ...state,
+                isHistoryLoad: true
+            }
+        },
     },
     extraReducers: {
-        [thunkData.pending]: () => {
-            console.log('pending')
-        },
         [thunkData.fulfilled]: (state, action) => {
-            const {
-                item,
-                value,
-                fn = () => {
-                }
-            } = action.payload
-            console.log('fulfilled')
+            const {item, value, fn = () => {}} = action.payload
+            setDataToLocal('Juuten_Navigate_History', item)
             fn()
             return {
                 ...state,
                 folderData: item,
+                folderId: item.key,
+                isHistoryLoad: true,
                 [item.key]: value
             }
         },
@@ -343,7 +336,6 @@ export const {
     editCollectionOrStorage: addEditCollectionOrStorage,
     addAnimation: addAddAnimation,
     openEditToolbar: addOpenEditToolbar,
-    addFolderId: addAddFolderId,
     moveToStorageOrCollection: addMoveToStorageOrCollection,
     addComment: addAddComment,
     deleteNoteOrComment: addDeleteNoteOrComment,
@@ -353,4 +345,6 @@ export const {
     openOrCloseComment: addOpenOrCloseComment,
     autoSave: addAutoSave,
     cleanTexting: addCleanTexting,
+    changeIsHistory: addChangeIsHistory,
+
 } = CollectionSlice.actions

@@ -18,7 +18,6 @@ chrome.runtime.onMessage.addListener((req) => {
     return true
 })
 
-
 console.log('contentscript active')
 let selectionText = ''
 fetchMsg('Juuten_Configuration', initialConfiguration)
@@ -89,5 +88,3 @@ function addNewMsg(obj) {
         isOpenComment: false,
     }
 }
-
-

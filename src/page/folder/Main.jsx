@@ -19,6 +19,7 @@ import BottomBar from "../../component/optimizationComponent/bottomBar/BottomBar
 import FolderBlock from "../../component/optimizationComponent/folder/FolderBlock.jsx";
 import Navbar from "../../component/optimizationComponent/navbar/Navbar.jsx";
 import useRemoveBar from "../../hooks/useRemoveBar";
+import useCheckHistory from "../../hooks/useCheckHistory";
 
 
 const Folders = styled.div`
@@ -51,8 +52,12 @@ const DraggableBox = styled.div`
 
 export default function App() {
     const dispatch = useDispatch()
-    const {Juuten_folderLists, editFolderId, addFolderAnimationId} = useSelector(selectFolder)
-    const {Juuten_Storage} = useSelector(selectCollection)
+    const {
+        Juuten_folderLists,
+        editFolderId,
+        addFolderAnimationId,
+    } = useSelector(selectFolder)
+    const {Juuten_Storage, isHistoryLoad} = useSelector(selectCollection)
     const {configuration: config} = useSelector(selectGlobal)
     const folderRef = useRef(null)
     const hideNav = useHideBar(folderRef.current)
@@ -62,15 +67,10 @@ export default function App() {
 
     /* 點擊 Folder 工具列外隱藏工具列 */
     useRemoveBar(editFolderId, () => dispatch(addEditFolderId('')))
+    useCheckHistory()
 
+    console.log(Juuten_folderLists)
 
-    /* ##新增資料夾後的動畫
-    *    概念:
-    *       1. 新增後把新增的 index值 賦予給 addFolderAnimationId
-    *       2. map 比對所有資料和紀錄的 id 值，設為 true
-    *       3. 當 useMemo 感受到變動 非同步再次設為 false
-    *       4. 狀態改變 動畫啟動
-    *  */
     useMemo(() => {
         setTimeout(() => {
             dispatch(addEditFolderAnimationId())
@@ -108,8 +108,8 @@ export default function App() {
         return false
     }
 
-    return (
-        <Folders config={config}>
+    return isHistoryLoad
+        && <Folders config={config}>
             <Warning warning={illigalName}>資料夾名稱不能含有 ' "</Warning>
             <Warning warning={sameName}>資料夾名稱重複</Warning>
 
@@ -135,7 +135,7 @@ export default function App() {
                                 {...provided.droppableProps}
                             >
                                 {/* 新增資料夾 */}
-                                <AddNewFolder checkName={checkLigalName} />
+                                <AddNewFolder checkName={checkLigalName}/>
 
                                 {Juuten_folderLists.map((item, idx) =>
                                     (<Draggable
@@ -174,7 +174,5 @@ export default function App() {
             />
 
         </Folders>
-    );
-}
 
-// var color = 0.213 * rgbArr[0] + 0.715 * rgbArr[1] + 0.072 * rgbArr[2] > 255 / 2;
+}

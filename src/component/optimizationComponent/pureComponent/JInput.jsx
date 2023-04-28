@@ -22,7 +22,10 @@ const isEqual = (prevProps, nextProps) => {
 const JInput = React.memo(({ mRef, callback}) => {
     console.log('jinput')
     return (
-        <NormalInput ref={mRef} onChange={callback}/>
+        <NormalInput
+            ref={mRef}
+            onChange={callback}
+        />
     )
 }, isEqual)
 

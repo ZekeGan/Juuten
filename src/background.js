@@ -17,6 +17,8 @@ chrome.contextMenus.onClicked.addListener(
     }
 )
 
+
+
 chrome.runtime.onMessage.addListener(
     (msg) => {
         if (msg.key === 'Juuten_toolbar') {
@@ -40,6 +42,7 @@ function getTabAndSend(tab, msg = '') {
         }
     )
 }
+
 
 async function getCurrentTab() {
     let queryOptions = {active: true, lastFocusedWindow: true};

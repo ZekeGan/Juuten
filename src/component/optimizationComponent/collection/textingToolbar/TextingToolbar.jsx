@@ -2,7 +2,8 @@ import React, {useState} from 'react';
 import styled from "styled-components";
 import Icon from '../../Svg.jsx'
 import {
-    addAddComment, addDeleteNoteOrComment,
+    addAddComment,
+    addDeleteNoteOrComment,
     addMoveToStorageOrCollection,
     addOpenEditToolbar,
 } from "../../../../redux/slice/collectionSlice";
@@ -92,6 +93,7 @@ const App = React.memo((
     function deleteNoteOrComment(e) {
         e.stopPropagation()
         dispatch(addDeleteNoteOrComment({area: item.type}))
+        dispatch(addOpenEditToolbar(''))
     }
 
     return (

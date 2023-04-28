@@ -12,6 +12,7 @@ import Url from "../Url.jsx";
 import Comment from "./Comment.jsx";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 import {selectGlobal} from "../../../redux/slice/globalSlice";
+import useRemoveBar from "../../../hooks/useRemoveBar";
 
 
 const Page = styled.div`
@@ -68,29 +69,20 @@ const Note = React.memo((
         area,
         barArea
     }) => {
-    const {openEditId, addNewNoteAnimation} = useSelector(selectCollection)
     const dispatch = useDispatch()
     const {configuration: config} = useSelector(selectGlobal)
-
+    const {openEditId, addNewNoteAnimation} = useSelector(selectCollection)
     const [handleShow, setHandleShow] = useState(false)
     const [isClick, setIsClick] = useState(false)
 
-    console.log('note')
-
-    useEffect(() => {
-        if (isClick) {
-            document.addEventListener('mouseup', mouseUpFn, false)
-        }
-    }, [isClick])
-
-
-    function mouseUpFn() {
+    useRemoveBar(isClick, () => {
         setHandleShow(false)
         setIsClick(false)
-        return document.removeEventListener('mouseup', mouseUpFn, false)
-    }
+    })
 
-    function openOrCloseComment(payload) {
+    console.log('note')
+
+    function openOrCloseComment() {
         console.log(area)
         if (!!openEditId) dispatch(addOpenEditToolbar(''))
         dispatch(addOpenOrCloseComment({
@@ -108,7 +100,6 @@ const Note = React.memo((
             source,
         }))
     }
-
 
     return (
         <DragDropContext onDragEnd={(e) => dragEnd(e)}>
@@ -134,7 +125,7 @@ const Note = React.memo((
                                 onMouseLeave={() => !isClick && setHandleShow(false)}
                                 {...noteProvided?.dragHandleProps}
                             >
-                                <div className={'handle'} />
+                                <div className={'handle'}/>
                             </NoteDragHandle>}
 
                             <Textarea
@@ -143,7 +134,7 @@ const Note = React.memo((
                                 open={openEditId === item.key}
                                 barArea={barArea}
                             />
-                            <Url item={item} />
+                            <Url item={item}/>
 
                             {(item.comment.length > 0 && item.isOpenComment)
                             && item.comment.map((commentItem, idx) => (
@@ -176,16 +167,13 @@ const Note = React.memo((
                                 config={config}
                                 onClick={(e) => openOrCloseComment(e)}
                             >
-                                {item.isOpenComment ? '關閉' : `展開 ${item.comment.length} 則註解`}
+                                {item.isOpenComment ? '關閉' : `展開 ${item.comment.length} 則註記`}
                             </ShowOrHideComments>}
-
                         </div>
                     )}
                 </Droppable>
             </Page>
         </DragDropContext>
-
-
     );
 }, isEqual)
 

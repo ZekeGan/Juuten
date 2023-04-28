@@ -45,12 +45,16 @@ const TextingToolbarInside = (
         setDelCheck = () => {
         }
     }) => {
-    const {configuration: config} = useSelector(selectGlobal)
     const dispatch = useDispatch()
+    const {configuration: config} = useSelector(selectGlobal)
+
     /* 儲存編輯 */
     const leaveEdit = () => {
         const newMsg = draftRef.current.getJSONData()
-        dispatch(addEditCollectionOrStorage({msg: newMsg, area: item.type}))
+        dispatch(addEditCollectionOrStorage({
+            msg: newMsg,
+            area: item.type
+        }))
         dispatch(addOpenEditToolbar(''))
     }
 
@@ -71,7 +75,10 @@ const TextingToolbarInside = (
                     <ToggleCSS draftRef={draftRef} inlineStyle={inlineStyle}/>
                 </div>
 
-                <div onClick={() => setDelCheck(true)} className={'icon'}>
+                <div
+                    onClick={() => setDelCheck(true)}
+                    className={'icon'}
+                >
                     <Icon.Delete
                         size={config.icon_size_m}
                         title={'刪除'}

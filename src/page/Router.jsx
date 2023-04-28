@@ -1,8 +1,8 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {
     HashRouter as Router,
     Routes,
-    Route
+    Route, useNavigate
 } from "react-router-dom";
 import Home from './folder/Main.jsx'
 import Collection from './collection/Main.jsx'
@@ -10,13 +10,6 @@ import Collection from './collection/Main.jsx'
 
 export default function App() {
 
-    // useEffect(() => {
-    //     document.addEventListener('keydown', function(event) {
-    //         if (event.key === 'Tab') {
-    //             event.preventDefault();
-    //         }
-    //     });
-    // }, [])
 
     return (
         <Router>
