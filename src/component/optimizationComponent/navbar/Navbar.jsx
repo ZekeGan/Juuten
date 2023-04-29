@@ -39,7 +39,7 @@ const app = React.memo((
         name = 'null',
         setSaveWarning = () => { },
         area,
-        openEditId
+        openEditId,
     }) => {
     const navigate = useNavigate()
     const { configuration: config } = useSelector(selectGlobal)
@@ -48,6 +48,7 @@ const app = React.memo((
         if (!!openEditId) {
             setSaveWarning(true)
             setTimeout(() => setSaveWarning(false), 3000)
+            return
         } else {
             navigate('/home')
             setDataToLocal('Juuten_Navigate_History', {})
@@ -81,7 +82,12 @@ const app = React.memo((
         </Navbar>
     );
 },
-    (prev, next) => prev.hide === next.hide && prev.name === next.name
+    (prev, next) => {
+        if (!!next.openEditId) return false
+        return prev.hide === next.hide
+            && prev.name === next.name
+            && prev.openEditId === next.openEditId
+    }
 )
 
 export default app;

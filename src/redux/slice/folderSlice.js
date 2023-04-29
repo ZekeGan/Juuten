@@ -1,18 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { changeFontColor, getCurrentDate, setDataToLocal, fetchData } from "../../utils";
-import { Juuten_folderLists } from "../../assets/fakeData";
+import { folder as initailFolder } from "../../assets/mock";
 
 
 export const FolderSlice = createSlice({
     name: 'folder',
     initialState: {
-        /* 測試時替換 */
-        // Juuten_Navigate_History: {},
-        // Juuten_folderLists: Juuten_folderLists,
-        Juuten_folderLists: await fetchData('Juuten_folderLists', []),
+        Juuten_folderLists: await fetchData('Juuten_folderLists', initailFolder),
         Juuten_Navigate_History: await fetchData('Juuten_Navigate_History', {}),
-        /////////////
-
+        ////////////////////////////////////////////////////////////
         editFolderId: '',
         addFolderAnimationId: '',
     },

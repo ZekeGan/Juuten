@@ -4,7 +4,6 @@ const useHideBar = (ref, fn) => {
     const [hideNav, setHideNav] = useState(false)
     const [prevScroll, setPrevScroll] = useState(0)
 
-    console.log(ref);
 
     useEffect(() => {
         if (!ref) return
@@ -17,7 +16,6 @@ const useHideBar = (ref, fn) => {
 
     function handleScroll() {
         const currentScrollPos = ref.scrollTop
-        console.log('scroll');
         if (prevScroll < currentScrollPos && ref.scrollTop !== 0) {
             setHideNav(true)
         } else {

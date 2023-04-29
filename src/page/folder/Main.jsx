@@ -61,15 +61,16 @@ export default function App() {
     const { configuration: config } = useSelector(selectGlobal)
     const folderRef = useRef(null)
     const hideNav = useHideBar(folderRef.current)
+
     const [delCheck, setDelCheck] = useState(false)
     const [sameName, setSameName] = useState(false)
     const [illigalName, setIlligalName] = useState(false)
+    const [newFolder, setNewFolder] = useState(false)
+
 
     /* 點擊 Folder 工具列外隱藏工具列 */
     useRemoveBar(editFolderId, () => dispatch(addEditFolderId('')))
     useCheckHistory()
-
-    console.log(Juuten_folderLists)
 
     useMemo(() => {
         setTimeout(() => {
@@ -138,7 +139,10 @@ export default function App() {
                                 {...provided.droppableProps}
                             >
                                 {/* 新增資料夾 */}
-                                <AddNewFolder checkName={checkLigalName} />
+                                <AddNewFolder 
+                                checkName={checkLigalName} 
+                                newFolder={newFolder} 
+                                setNewFolder={setNewFolder} />
 
                                 {Juuten_folderLists.map((item, idx) =>
                                 (<Draggable

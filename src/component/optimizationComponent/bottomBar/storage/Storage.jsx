@@ -7,13 +7,17 @@ import TextMain from "../../../../page/collection/TextMain.jsx";
 import BottemBarTemplate from "../BottemBarTemplate.jsx";
 
 
-function Storage(
+export default React.memo((
     {
-        barArea = 'collection',
+        barArea,
         open = false,
         setOpen = () => { }
-    }) {
+    }) => {
     const { Juuten_Storage } = useSelector(selectCollection)
+
+    console.log(Juuten_Storage);
+
+    console.log('storage');
     return (
         <BottemBarTemplate
             useContainer={false}
@@ -28,6 +32,7 @@ function Storage(
             />
         </BottemBarTemplate>
     );
-}
+},
+    (p, n) => p.open === n.open
+)
 
-export default Storage;

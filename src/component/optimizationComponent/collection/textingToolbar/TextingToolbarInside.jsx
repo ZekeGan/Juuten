@@ -48,9 +48,8 @@ const TextingToolbarInside = (
 
     /* 儲存編輯 */
     const leaveEdit = () => {
-        const newMsg = draftRef.current.getJSONData()
         dispatch(addEditCollectionOrStorage({
-            msg: newMsg,
+            msg: draftRef.current.getJSONData(),
             area: item.type
         }))
         dispatch(addOpenEditToolbar(''))

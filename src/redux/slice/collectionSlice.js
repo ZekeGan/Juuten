@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { fetchData, getCurrentDate, setDataToLocal } from "../../utils";
-import { Juuten_Storage, N1 } from "../../assets/fakeData";
 import { convertToRaw, EditorState } from 'draft-js'
+import { storage as initialStorage, note as intrduceData } from "../../assets/mock";
 
 const thunkData = createAsyncThunk(
     'folder/fetchFolderData',
@@ -12,14 +12,9 @@ const thunkData = createAsyncThunk(
 export const CollectionSlice = createSlice({
     name: 'collection',
     initialState: {
-
-        /* 測試時替換 */
-        // Juuten_Storage: Juuten_Storage,
-        // Juuten_EditingText: [{msg: '', key: 'Juuten_editingText'}],
         Juuten_EditingText: await fetchData('Juuten_EditingText', [{ msg: '', key: 'Juuten_editingText' }]),
-        Juuten_Storage: await fetchData('Juuten_Storage', []),
-        ///////////
-
+        Juuten_Storage: await fetchData('Juuten_Storage', initialStorage),
+        ////////////////////////////////////////////////////////////////
         openAddNewNote: false,
         openStorage: false,
         openSearchPage: false,
@@ -37,12 +32,9 @@ export const CollectionSlice = createSlice({
         useTool: false,
         isHistoryLoad: false,
 
-        N1: N1,
-        sus: N1,
-        '089aa4eg89sw0': []
-
-
+        Juuten_introduceData: intrduceData
     },
+
     reducers: {
         openEditToolbar: (state, action) => {
             return {
@@ -311,6 +303,15 @@ export const CollectionSlice = createSlice({
     extraReducers: {
         [thunkData.fulfilled]: (state, action) => {
             const { item, value, fn = () => { } } = action.payload
+            if (item.key === 'Juuten_introduceData') {
+                fn()
+                return {
+                    ...state,
+                    folderData: item,
+                    folderId: item.key,
+                    isHistoryLoad: true,
+                }
+            }
             setDataToLocal('Juuten_Navigate_History', item)
             fn()
             return {

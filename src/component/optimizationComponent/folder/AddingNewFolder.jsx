@@ -50,16 +50,17 @@ const Main = styled.div`
 
 export default React.memo((
     {
-        checkName
+        newFolder,
+        setNewFolder = () => { },
+        checkName = () => { },
     }) => {
     const { configuration: config } = useSelector(selectGlobal)
     const dispatch = useDispatch()
     const inputRef = useRef(null)
-    const [newFolder, setNewFolder] = useState(false)
+
 
 
     function addNewFolder(bool) {
-        dispatch(addEditFolderId())
         setNewFolder(bool)
         if (bool) {
             inputRef.current.focus({ preventScroll: true })
@@ -69,7 +70,7 @@ export default React.memo((
 
     console.log('addnewfolder')
 
-    const createdNewFolderOrNot = () => {
+    function createdNewFolderOrNot() {
         if (checkName(inputRef.current.value)) return
 
         setNewFolder(false)
@@ -81,7 +82,10 @@ export default React.memo((
     }
 
     return (
-        <Main config={config} onClick={(e) => e.stopPropagation()}>
+        <Main
+            config={config}
+            onClick={(e) => e.stopPropagation()}
+        >
             <Container
                 config={config}
                 newFolder={newFolder}
@@ -120,5 +124,5 @@ export default React.memo((
         </Main>
     );
 },
-    () => true
+    (p, n) => p.newFolder === n.newFolder
 )

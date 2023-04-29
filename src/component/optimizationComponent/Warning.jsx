@@ -10,7 +10,7 @@ const Page = styled.div`
     transform: translateX(-50%) translateY(${({ warning }) => warning ? '20px' : '-20px'});
     width: ${({ config }) => config.max_width}px;
     height: 20px;  
-    width: 85%;
+    width: 75%;
     text-align: center; 
     background-color: ${({ config }) => config.warning};
     color: white;
