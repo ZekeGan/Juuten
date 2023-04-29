@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from "styled-components";
-import {useSelector} from "react-redux";
-import {selectGlobal} from "../../redux/slice/globalSlice";
+import { useSelector } from "react-redux";
+import { selectGlobal } from "../../redux/slice/globalSlice";
 
 const Page = styled.div`
     position: fixed;
@@ -10,16 +10,16 @@ const Page = styled.div`
     justify-content: space-around;
     position: absolute;
     left: 50%;
-    transform: translateX(-50%) translateY(${({delCheck}) => delCheck ? '10%' : '-110%'});
+    transform: translateX(-50%) translateY(${({ delCheck }) => delCheck ? '10%' : '-110%'});
     width: 400px;
     height: 100px;  
     text-align: center; 
-    background-color: ${({config}) => config.warning};
+    background-color: ${({ config }) => config.warning};
     color: white;
     z-index: 60;
     border-radius: 10px;
     transition: 0.2s ease-out;
-    font-size: ${({config}) => config.font_size_m};
+    font-size: ${({ config }) => config.font_size_m};
     user-select: none;
     > span {
         display: block;
@@ -39,16 +39,17 @@ const Page = styled.div`
         color: white;
     }
     > .JuutenDel-no {
-        background-color: ${({config}) => config.primary};
+        background-color: ${({ config }) => config.primary};
     }
 `
 
-const isEqual = (prevProps, nextProps) => {
-    return prevProps.delCheck === nextProps.delCheck
-}
-
-const DeletingCheck = React.memo(({delCheck, setDelCheck, doubleDelCheck}) => {
-    const {configuration: config} = useSelector(selectGlobal)
+const DeletingCheck = React.memo((
+    {
+        delCheck,
+        setDelCheck,
+        doubleDelCheck,
+    }) => {
+    const { configuration: config } = useSelector(selectGlobal)
 
     function stop(e) {
         console.log('stop')
@@ -77,6 +78,8 @@ const DeletingCheck = React.memo(({delCheck, setDelCheck, doubleDelCheck}) => {
             </button>
         </Page>
     );
-}, isEqual)
+},
+    (prevProps, nextProps) => prevProps.delCheck === nextProps.delCheck
+)
 
 export default DeletingCheck;

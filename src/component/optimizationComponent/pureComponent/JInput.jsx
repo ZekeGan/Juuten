@@ -1,9 +1,6 @@
 import React from 'react';
 import styled from "styled-components";
 
-
-
-
 const NormalInput = styled.input`
     height: 40px;
     width: 90%;
@@ -14,12 +11,11 @@ const NormalInput = styled.input`
     overflow: hidden;
     padding: 0 3%`
 
-
-const isEqual = (prevProps, nextProps) => {
-    return prevProps.mRef === nextProps.mRef
-}
-
-const JInput = React.memo(({ mRef, callback}) => {
+const JInput = React.memo((
+    {
+        mRef,
+        callback,
+    }) => {
     console.log('jinput')
     return (
         <NormalInput
@@ -27,6 +23,8 @@ const JInput = React.memo(({ mRef, callback}) => {
             onChange={callback}
         />
     )
-}, isEqual)
+},
+    (prevProps, nextProps) => prevProps.mRef === nextProps.mRef
+)
 
 export default JInput;

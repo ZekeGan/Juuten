@@ -1,13 +1,13 @@
-import React, {useEffect} from 'react';
-import {selectFolder} from "../redux/slice/folderSlice";
-import {useNavigate} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
-import {addChangeIsHistory, addFetchData, selectCollection} from "../redux/slice/collectionSlice";
+import React, { useEffect } from 'react';
+import { selectFolder } from "../redux/slice/folderSlice";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { addChangeIsHistory, addFetchData, selectCollection } from "../redux/slice/collectionSlice";
 
 const useCheckHistory = () => {
     const dispatch = useDispatch()
-    const {Juuten_Navigate_History} = useSelector(selectFolder)
-    const {isHistoryLoad} = useSelector(selectCollection)
+    const { Juuten_Navigate_History } = useSelector(selectFolder)
+    const { isHistoryLoad } = useSelector(selectCollection)
     const navigate = useNavigate()
     useEffect(() => {
         if (isHistoryLoad) return

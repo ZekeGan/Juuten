@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from "styled-components";
-import {useSelector} from "react-redux";
-import {selectGlobal} from "../../../redux/slice/globalSlice";
+import { useSelector } from "react-redux";
+import { selectGlobal } from "../../../redux/slice/globalSlice";
 import Icon from '../Svg.jsx'
 import imageOpenWindow1 from '../../../assets/img/openPopupWindow_1.png'
 import imageOpenWindow2 from '../../../assets/img/openPopupWindow_2.png'
@@ -17,8 +17,8 @@ const Main = styled.div`
     align-items: center;
     width: 100%;
     height: 100%;
-    background-color: ${({config}) => config.primary};
-    transform: translateX(${({open}) => open ? '0' : '100%'});
+    background-color: ${({ config }) => config.primary};
+    transform: translateX(${({ open }) => open ? '0' : '100%'});
     transition: 0.2s ease-out;
     padding: 0 30px;
     overflow-y: scroll;
@@ -27,7 +27,7 @@ const Main = styled.div`
         width: 5px;
     }
     &::-webkit-scrollbar-thumb {
-        background-color: ${({config}) => config.tertiary};
+        background-color: ${({ config }) => config.tertiary};
         border-radius: 2.5px;
     }
     .icon {
@@ -42,33 +42,33 @@ const Main = styled.div`
         .step {
             margin-bottom: 30px;
             > h2 {
-                font-size: ${({config}) => config.font_size_l}px;
-                color: ${({config}) => config.main};
+                font-size: ${({ config }) => config.font_size_l}px;
+                color: ${({ config }) => config.main};
                 margin-bottom: 5px;
             }
             > p {
-                font-size: ${({config}) => config.font_size_m}px;
+                font-size: ${({ config }) => config.font_size_m}px;
                 margin-bottom: 5px;
                 > strong {
-                    color: ${({config}) => config.warning};
+                    color: ${({ config }) => config.warning};
                     cursor: pointer;
                     &:hover {
-                        background-color: ${({config}) => config.warning};
+                        background-color: ${({ config }) => config.warning};
                         color: white;
                     }
                 }
                 > i {
                     font-style: normal;
-                    color: ${({config}) => config.pass};
+                    color: ${({ config }) => config.pass};
                     font-weight: bold;
                 }
                 > .pass {
                     font-weight: bold;
-                    color: ${({config}) => config.pass};
+                    color: ${({ config }) => config.pass};
                 }
                 > .warn {
                     font-weight: bold;
-                    color: ${({config}) => config.warning};
+                    color: ${({ config }) => config.warning};
                 }
             }
         }
@@ -81,26 +81,21 @@ const Main = styled.div`
         margin-bottom: 20px;
     }`
 
-const isEqual = (prev, next) => {
-    return prev.open === next.open
-}
-
 const MyComponent = React.memo((
     {
         open,
-        close = () => {
-        }
+        close = () => { }
     }) => {
-    const {configuration: config} = useSelector(selectGlobal)
+    const { configuration: config } = useSelector(selectGlobal)
 
     function goTo() {
-        chrome.tabs.create({url: 'https://github.com/JikeLuo/Juuten/issues'})
+        chrome.tabs.create({ url: 'https://github.com/JikeLuo/Juuten/issues' })
     }
 
     return (
         <Main config={config} open={open}>
             <div className={'icon'} onClick={close}>
-                <Icon.Left size={config.font_size_xl} title={'返回'}/>
+                <Icon.Left size={config.font_size_xl} title={'返回'} />
             </div>
             <div className={'container'}>
                 <div className={'step'}>
@@ -142,6 +137,8 @@ const MyComponent = React.memo((
             </div>
         </Main>
     );
-}, isEqual)
+},
+    (prev, next) => prev.open === next.open
+)
 
 export default MyComponent;

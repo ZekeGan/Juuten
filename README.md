@@ -1,7 +1,7 @@
 ## Jutten介紹
-![Juuten_Icon](public/icon/Juuten_Icon_64.png)
+![Juuten_Icon](public/icon/Juuten_Icon_128.png)
 
-如果你需要一個可以隨時快速筆記，快速把中意的句子或文章記錄起來，或是 此為 Chrome Extension 的筆記軟體 目前正在開發中，版本 0.17.0 預計未來上架 Chrome Extension
+如果你需要一個可以隨時快速筆記，快速把中意的句子或文章記錄起來，Juuten 可以滿足你的需求
 
 ### 隨時記錄
 
@@ -10,18 +10,17 @@
 ![gif1](public/gif/1.gif)
 
 
-
 ### 隨時筆記
 
 可以隨時記錄你所想的東西
 
-![gif1](public/gif/2.gif)
+![gif2](public/gif/2.gif)
 
 ### 自由的創建編輯和排序
 
 照你所想自由地進行分類和排序
 
-![gif1](public/gif/3.gif)
+![gif3](public/gif/3.gif)
 
 ## 使用技術
 
@@ -31,13 +30,14 @@
 + `styled-components` css-in-js
 + `Redux-Thunk` 處理非同步狀態
 + `Draftjs` 筆記文本編輯器
-+ `React-beautiful-dnd` dnd(托移)組件
++ `React-beautiful-dnd` dnd(拖移)組件
 + `webpack` 打包整合工具
 
 ## 代碼簡介
 
-### Draft.js
+> 以下代碼皆為精簡後的版本
 
+### Draft.js
 使用 Draft 創立組件後利用 `forwardRef` 配合 `useImperativeHandle` 將函數和變數向前傳送，讓父組件也能使用，之後要新增函數或進行改動也相當容易
 
 ```jsx
@@ -91,7 +91,7 @@ const DraftComponent = memo(forwardRef((
 
 ### React Thunk
 
-使用`React  Thunk` 獲取 `Chrome sync` 的資料後使用回調進行畫面跳轉
+使用`React Thunk` 獲取 `Chrome storage local` 的資料後使用回調進行畫面跳轉
 
 ```javascript
 /* FolderBlock.jsx */
@@ -117,10 +117,7 @@ export const CollectionSlice = createSlice({
     reducers: {/* ... */},
     extraReducers: {
         [thunkData.fulfilled]: (state, action) => {
-            const {
-                item, value, fn = () => {
-                }
-            } = action.payload
+            const {item, value, fn = () => {}} = action.payload
             fn()
             return {
                 ...state,
@@ -153,9 +150,9 @@ function findData() {
             const _data = {
                 ...item,
                 comment: comment,
-                msg: isMsgHas(item.msg, target)
+                msg: isMsgHas(item.msg, target) 
                     ? highlightMsg(item.msg, target)
-                    : (comment.length ? highlightMsg(item.msg, target) : '')
+                    : (comment.length ? highlightMsg(item.msg, target):'')
             }
             // 排除沒有搜尋結果的資料
             return (!!_data.msg || !!_data.comment.length) ? _data : null
@@ -174,9 +171,6 @@ function findData() {
 function isMsgHas(msg, target) {
     /**
      * 檢查 `msg` 是否包含 `target` 字符串
-     * @param {string} msg - 要檢查的消息
-     * @param {string} target - 要搜索的目標字符串
-     * @returns {boolean} - 如果 `msg` 包含 `target` 字符串，返回 `true`；否則，返回 `false`
      */
     const contentState = convertFromRaw(JSON.parse(msg))
     const plainText = contentState.getPlainText().toUpperCase()
@@ -186,9 +180,6 @@ function isMsgHas(msg, target) {
 function highlightMsg(msg, target) {
     /**
      * 將給定的消息中的目標文本高亮
-     * @param {string} msg - 原始訊息
-     * @param {string} target - 要高亮的目標文本
-     * @returns {string} JSON格式的高亮消息
      */
     let editorState = EditorState.createWithContent(convertFromRaw(JSON.parse(msg)))
     const blocks = editorState.getCurrentContent().getBlockMap()
@@ -224,6 +215,8 @@ function highlightMsg(msg, target) {
 Github: [Zeke](https://github.com/JikeLuo)
 
 E-Mail: traveller87072@gmail.com
+
+Version: 0.21.0
 
 
 

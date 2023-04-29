@@ -18,8 +18,7 @@ const Container = styled.div`
 const SearchNote = React.memo((
     {
         open = false,
-        setOpen = () => {
-        }
+        setOpen = () => { }
     }) => {
     const allFolder = useGetData(open, true)
 
@@ -32,11 +31,7 @@ const SearchNote = React.memo((
             closeCallback={() => setOpen(false)}
         >
             <Container>
-                {open
-                && <FoundData
-                    data={allFolder}
-                    open={open}
-                />}
+                {open && <FoundData data={allFolder} open={open} />}
             </Container>
         </BottemBarTemplate>
     );

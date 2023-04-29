@@ -1,13 +1,13 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from "styled-components";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
     addAddNewNote,
     addCleanTexting,
     selectCollection
 } from "../../../../redux/slice/collectionSlice";
-import {toggleProps} from "../../../../assets/global";
-import {selectGlobal} from "../../../../redux/slice/globalSlice";
+import { toggleProps } from "../../../../assets/global";
+import { selectGlobal } from "../../../../redux/slice/globalSlice";
 import BottemBarTemplate from "../BottemBarTemplate.jsx";
 import DraftComponent from "../../DraftComponent.jsx";
 import TextEditorIcon from "../../pureComponent/TextEditorIcon.jsx";
@@ -23,7 +23,7 @@ const Main = styled.div`
 const Textarea = styled.div`
     display: block;
     height: 70%;
-    background-color: ${({config}) => config.WandB};
+    background-color: ${({ config }) => config.WandB};
     padding: 2%;
     overflow: hidden;
     border-radius: 10px;
@@ -47,7 +47,7 @@ const BTN = styled.div`
     user-select: none;
     height: 30px;
     width: 100px;
-    background-color: ${({config}) => config.WandB};
+    background-color: ${({ config }) => config.WandB};
     border-radius: 15px;
     text-align: center;
     line-height: 30px;
@@ -59,10 +59,10 @@ const AddNewNote = React.memo((
     {
         barArea,
         open = false,
-        setOpen = () => {}
+        setOpen = () => { }
     }) => {
-    const {Juuten_EditingText} = useSelector(selectCollection)
-    const {configuration: config} = useSelector(selectGlobal)
+    const { Juuten_EditingText } = useSelector(selectCollection)
+    const { configuration: config } = useSelector(selectGlobal)
     const dispatch = useDispatch()
     const draftRef = useRef(null)
     const [inlineStyle, setInlineStyle] = useState([])
@@ -127,13 +127,16 @@ const AddNewNote = React.memo((
                     </div>
                     <BTN
                         config={config}
-                        onClick={() => addNewNote()}>新增
+                        onClick={() => addNewNote()}>
+                        新增
                     </BTN>
 
                 </EditToolbar>
             </Main>
         </BottemBarTemplate>
     );
-})
+},
+    (p, n) => p.open === n.open
+)
 
 export default AddNewNote;

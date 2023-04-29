@@ -1,8 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from "styled-components";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
-
     addOpenEditToolbar, addOpenOrCloseComment,
     addRearrangeComment,
     selectCollection
@@ -10,8 +9,8 @@ import {
 import Textarea from "./Textarea.jsx";
 import Url from "../Url.jsx";
 import Comment from "./Comment.jsx";
-import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
-import {selectGlobal} from "../../../redux/slice/globalSlice";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { selectGlobal } from "../../../redux/slice/globalSlice";
 import useRemoveBar from "../../../hooks/useRemoveBar";
 
 
@@ -19,13 +18,13 @@ const Page = styled.div`
     position: relative;
     display: flex;
     flex-direction: column;
-    background-color: ${({noteType}) => noteType ? '#fffab9' : 'white'};
+    background-color: ${({ noteType }) => noteType ? '#fffab9' : 'white'};
     border-radius: 10px;
     box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.1);
     overflow: hidden;
-    width: ${({config}) => config.max_width * 0.95}px;
+    width: ${({ config }) => config.max_width * 0.95}px;
     margin: 5px 0;
-    ${({add}) => add ? 'transform: translateY(-150px);' : ''}
+    ${({ add }) => add ? 'transform: translateY(-150px);' : ''}
     transition: 0.2s ease-out;
     padding: 5px 15px 5px 25px;`
 
@@ -38,7 +37,7 @@ const NoteDragHandle = styled.div`
     > .handle {
         height: 100%;
         width: 100%;
-        background-color: ${({config}) => config.main};
+        background-color: ${({ config }) => config.main};
         transform: translatex(${(p) => p.show ? '0' : '-100%'});
         transition: 0.2s ease-out; 
     }`
@@ -46,32 +45,24 @@ const NoteDragHandle = styled.div`
 const ShowOrHideComments = styled.div`
     display: flex;
     justify-content: center;
-    border-top: 1px solid ${({config}) => config.secondary};
+    border-top: 1px solid ${({ config }) => config.secondary};
     margin-top: 10px;
-    font-size: ${({config}) => config.font_size_s}px;
+    font-size: ${({ config }) => config.font_size_s}px;
     cursor: pointer;`
 
 
-const isEqual = (prevProps, nextProps) => {
-    // console.log('prev ', prevProps)
-    // console.log('next ', nextProps)
-    if (!nextProps.item || !prevProps.item) return true
 
-    if (prevProps.item !== nextProps.item) return false
-    return prevProps.item.isOpenComment === nextProps.item.isOpenComment
-
-}
 
 const Note = React.memo((
     {
         item,
         noteProvided,
         area,
-        barArea
+        barArea,
     }) => {
     const dispatch = useDispatch()
-    const {configuration: config} = useSelector(selectGlobal)
-    const {openEditId, addNewNoteAnimation} = useSelector(selectCollection)
+    const { configuration: config } = useSelector(selectGlobal)
+    const { openEditId, addNewNoteAnimation } = useSelector(selectCollection)
     const [handleShow, setHandleShow] = useState(false)
     const [isClick, setIsClick] = useState(false)
 
@@ -83,22 +74,14 @@ const Note = React.memo((
     console.log('note')
 
     function openOrCloseComment() {
-        console.log(area)
         if (!!openEditId) dispatch(addOpenEditToolbar(''))
-        dispatch(addOpenOrCloseComment({
-            area,
-            key: item.key
-        }))
+        dispatch(addOpenOrCloseComment({ area, key: item.key }))
     }
 
     function dragEnd(e) {
-        const {destination, source} = e
+        const { destination, source } = e
         if (!destination || !source) return
-        dispatch(addRearrangeComment({
-            area,
-            destination,
-            source,
-        }))
+        dispatch(addRearrangeComment({ area, destination, source }))
     }
 
     return (
@@ -117,16 +100,16 @@ const Note = React.memo((
                             {...provided.droppableProps}
                         >
                             {!!Object.keys(provided).length
-                            && <NoteDragHandle
-                                config={config}
-                                show={handleShow}
-                                onMouseEnter={() => setHandleShow(true)}
-                                onMouseDown={() => setIsClick(true)}
-                                onMouseLeave={() => !isClick && setHandleShow(false)}
-                                {...noteProvided?.dragHandleProps}
-                            >
-                                <div className={'handle'}/>
-                            </NoteDragHandle>}
+                                && <NoteDragHandle
+                                    config={config}
+                                    show={handleShow}
+                                    onMouseEnter={() => setHandleShow(true)}
+                                    onMouseDown={() => setIsClick(true)}
+                                    onMouseLeave={() => !isClick && setHandleShow(false)}
+                                    {...noteProvided?.dragHandleProps}
+                                >
+                                    <div className={'handle'} />
+                                </NoteDragHandle>}
 
                             <Textarea
                                 area={area}
@@ -134,47 +117,55 @@ const Note = React.memo((
                                 open={openEditId === item.key}
                                 barArea={barArea}
                             />
-                            <Url item={item}/>
+
+                            <Url item={item} />
+
 
                             {(item.comment.length > 0 && item.isOpenComment)
-                            && item.comment.map((commentItem, idx) => (
-                                <Draggable
-                                    key={`${area}_comment_key_${commentItem.key}`}
-                                    draggableId={`${area}_comment_dragId_${commentItem.key}`}
-                                    index={idx}
-                                    isDragDisabled={!(openEditId === item.key)}
-                                >
-                                    {(commentProvided) => (
-                                        <div
-                                            ref={commentProvided.innerRef}
-                                            {...commentProvided.draggableProps}
-                                        >
-                                            <Comment
-                                                area={area}
-                                                item={commentItem}
-                                                open={openEditId === item.key}
-                                                provided={commentProvided}
-                                            />
-                                        </div>
-                                    )}
-                                </Draggable>
-                            ))}
+                                && item.comment.map((commentItem, idx) => (
+                                    <Draggable
+                                        key={`${area}_comment_key_${commentItem.key}`}
+                                        draggableId={`${area}_comment_dragId_${commentItem.key}`}
+                                        index={idx}
+                                        isDragDisabled={!(openEditId === item.key)}
+                                    >
+                                        {(commentProvided) => (
+                                            <div
+                                                ref={commentProvided.innerRef}
+                                                {...commentProvided.draggableProps}
+                                            >
+                                                <Comment
+                                                    area={area}
+                                                    item={commentItem}
+                                                    open={openEditId === item.key}
+                                                    provided={commentProvided}
+                                                />
+                                            </div>
+                                        )}
+                                    </Draggable>
+                                ))}
 
                             {provided?.placeholder}
 
                             {item.comment.length > 0
-                            && <ShowOrHideComments
-                                config={config}
-                                onClick={(e) => openOrCloseComment(e)}
-                            >
-                                {item.isOpenComment ? '關閉' : `展開 ${item.comment.length} 則註記`}
-                            </ShowOrHideComments>}
+                                && <ShowOrHideComments
+                                    config={config}
+                                    onClick={(e) => openOrCloseComment(e)}
+                                >
+                                    {item.isOpenComment ? '關閉' : `展開 ${item.comment.length} 則註記`}
+                                </ShowOrHideComments>}
                         </div>
                     )}
                 </Droppable>
             </Page>
         </DragDropContext>
     );
-}, isEqual)
+},
+    (prevProps, nextProps) => {
+        if (!nextProps.item || !prevProps.item) return true
+        if (prevProps.item !== nextProps.item) return false
+        return prevProps.item.isOpenComment === nextProps.item.isOpenComment
+    }
+)
 
 export default Note;

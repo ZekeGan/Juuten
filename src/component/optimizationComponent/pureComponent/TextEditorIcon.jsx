@@ -12,15 +12,17 @@ const Icon = styled.div`
     font-family: SourceHanSansHWTC-Regular;
     width: 30px;
     margin-right: 10px;
-    ${({stylePros}) => stylePros}
+    ${({ stylePros }) => stylePros}
 `
 
-export const isEqual = (prevProps, nextProps) => {
-    if (!nextProps.curr) return true
-    else return prevProps.style === nextProps.style
-}
 
-const MyComponent = React.memo(({style, icon, fn}) => {
+
+const MyComponent = React.memo((
+    {
+        style,
+        icon,
+        fn = () => { },
+    }) => {
 
     return (
         <Icon
@@ -30,6 +32,11 @@ const MyComponent = React.memo(({style, icon, fn}) => {
             {icon}
         </Icon>
     )
-}, isEqual)
+},
+    (prevProps, nextProps) => {
+        if (!nextProps.curr) return true
+        return prevProps.style === nextProps.style
+    }
+)
 
 export default MyComponent;

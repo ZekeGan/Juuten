@@ -1,5 +1,14 @@
 import React, { useState, forwardRef, useImperativeHandle, useEffect, useRef, memo } from 'react';
-import { EditorState, RichUtils, Editor, convertFromRaw, convertToRaw, Modifier, getDefaultKeyBinding } from 'draft-js'
+import {
+    EditorState,
+    RichUtils,
+    Editor,
+    convertFromRaw,
+    convertToRaw,
+    Modifier,
+    getDefaultKeyBinding,
+    KeyBindingUtil
+} from 'draft-js'
 import { useSelector } from "react-redux";
 import { selectGlobal } from "../../redux/slice/globalSlice";
 import useAutoSave from "../../hooks/useAutoSave";
@@ -47,17 +56,60 @@ const DraftComponent = memo(forwardRef((
         setEditorState(state)
     }
 
+    function handleKeyCommand(command) {
+        switch (command) {
+            case 'bold':
+                return onChange(RichUtils.toggleInlineStyle(editorState, 'BOLD'))
+            case 'italic':
+                return onChange(RichUtils.toggleInlineStyle(editorState, 'ITALIC'))
+            case 'underline':
+                return onChange(RichUtils.toggleInlineStyle(editorState, 'UNDERLINE'))
+            case 'strikethrough':
+                return onChange(RichUtils.toggleInlineStyle(editorState, 'STRIKETHROUGH'))
+            case 'undo':
+                return onChange(EditorState.undo(editorState))
+            case 'redo':
+                return onChange(EditorState.redo(editorState))
+            case 'tab':
+                return onChange(EditorState.push(
+                    editorState,
+                    Modifier.insertText(
+                        editorState.getCurrentContent(),
+                        editorState.getSelection(),
+                        '    ' // 插入四个空格
+                    ),
+                    'insert-characters'
+                ))
+            default:
+                return 'not-handled'
+
+        }
+
+    }
+
+
     function keyBindingFn(e) {
-        if (e.keyCode === 9 ) { // tab
-            e.preventDefault()
-            const newContent = Modifier.insertText(
-                editorState.getCurrentContent(),
-                editorState.getSelection(),
-                '    ',
-                editorState.getCurrentInlineStyle()
-            )
-            const newEditorState = EditorState.push(editorState,newContent,'insert-characters')
-            onChange(newEditorState)
+        switch (e.keyCode) {
+            case 9:
+                e.preventDefault()
+                return 'tab'
+            default:
+        }
+        if (KeyBindingUtil.hasCommandModifier(e)) {
+            switch (e.keyCode) {
+                case 66:
+                    return 'bold'
+                case 73:
+                    return 'italic'
+                case 83:
+                    return 'strikethrough'
+                case 85:
+                    return 'underline'
+                case 90:
+                    if (e.shiftKey) return 'redo' // redo
+                    return 'undo'
+                default:
+            }
         }
         return getDefaultKeyBinding(e)
     }
@@ -109,6 +161,7 @@ const DraftComponent = memo(forwardRef((
             readOnly={readOnly}
             ref={mainRef}
             keyBindingFn={keyBindingFn}
+            handleKeyCommand={handleKeyCommand}
         />
     );
 }))

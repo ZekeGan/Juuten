@@ -1,13 +1,13 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Icon from "../Svg.jsx";
 import {
     addEditFolderId,
     addFolderAdd,
-} from "../../../redux/slice/folderSlice";
-import {useDispatch, useSelector} from "react-redux";
+} from "../../../redux/slice/folderSlice.js";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import {selectGlobal} from "../../../redux/slice/globalSlice";
-import AddNewInput from "../AddNewInput.jsx";
+import { selectGlobal } from "../../../redux/slice/globalSlice.js";
+import AddNewInput from "../pureComponent/AddNewInput.jsx";
 
 
 const Container = styled.div`
@@ -21,7 +21,7 @@ const Container = styled.div`
     justify-content: center;
     align-items: center;
     transition: 0.2s ease-out;
-    transform: translateY(${({newFolder}) => newFolder ? '50%' : '-50%'});
+    transform: translateY(${({ newFolder }) => newFolder ? '50%' : '-50%'});
     > div {
         display: flex;
         justify-content: center;
@@ -32,7 +32,7 @@ const Container = styled.div`
     }`
 const Main = styled.div`
     position: relative;
-    width: ${({config}) => config.max_width * 0.9}px;
+    width: ${({ config }) => config.max_width * 0.9}px;
     height: 70px;
     display: flex;
     flex-direction: column;
@@ -40,14 +40,19 @@ const Main = styled.div`
     align-items: center;
     margin: 10px 0 10px 0;
     border-radius: 10px;   
-    background-color: ${({config}) => config.WandB};
+    background-color: ${({ config }) => config.WandB};
     transition: 0.2s ease-out;
     box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
     overflow: hidden;`
 
 
-export default React.memo(({checkName}) => {
-    const {configuration: config} = useSelector(selectGlobal)
+
+
+export default React.memo((
+    {
+        checkName
+    }) => {
+    const { configuration: config } = useSelector(selectGlobal)
     const dispatch = useDispatch()
     const inputRef = useRef(null)
     const [newFolder, setNewFolder] = useState(false)
@@ -57,7 +62,7 @@ export default React.memo(({checkName}) => {
         dispatch(addEditFolderId())
         setNewFolder(bool)
         if (bool) {
-            inputRef.current.focus({preventScroll: true})
+            inputRef.current.focus({ preventScroll: true })
         }
         inputRef.current.value = ''
     }
@@ -114,4 +119,6 @@ export default React.memo(({checkName}) => {
 
         </Main>
     );
-})
+},
+    () => true
+)

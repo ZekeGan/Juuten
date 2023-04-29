@@ -1,18 +1,21 @@
-import React, {useLayoutEffect, useState} from 'react';
-import {useSelector} from "react-redux";
+import React, { useLayoutEffect, useState } from 'react';
+import { useSelector } from "react-redux";
 import styled from "styled-components";
-import {selectGlobal} from "../../../redux/slice/globalSlice";
+import { selectGlobal } from "../../../redux/slice/globalSlice";
 
 
 const Counting = styled.div`
     user-select: none;
-    color: ${ ({config}) => config. quaternary};
-    font-size: ${({config}) => config.font_size_m}px;`
+    color: ${({ config }) => config.quaternary};
+    font-size: ${({ config }) => config.font_size_m}px;`
 
 
-const EditingCounting = React.memo(({open}) => {
+const EditingCounting = React.memo((
+    {
+        open
+    }) => {
     const [editCount, setEditCount] = useState(0)
-    const {configuration: config} = useSelector(selectGlobal)
+    const { configuration: config } = useSelector(selectGlobal)
 
     useLayoutEffect(() => {
         if (!open) return
@@ -25,7 +28,7 @@ const EditingCounting = React.memo(({open}) => {
         return () => clearInterval(count)
     }, [open])
 
-    return(
+    return (
         <Counting config={config}>
             {editCount === 0 && 'Editing'}
             {editCount === 1 && 'Editing .'}
@@ -35,6 +38,8 @@ const EditingCounting = React.memo(({open}) => {
             {editCount === 5 && 'Editing . . . . .'}
         </Counting>
     )
-})
+},
+    (p, n) => p.open === n.open 
+)
 
 export default EditingCounting;

@@ -1,5 +1,5 @@
-import {convertFromRaw, EditorState} from 'draft-js'
-import {saveAs} from 'file-saver'
+import { convertFromRaw, EditorState } from 'draft-js'
+import { saveAs } from 'file-saver'
 
 /*
 * 如果要使用 npm run dev 進行調適，需要停止的函數或變數為以下幾個

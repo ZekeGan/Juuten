@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from "styled-components";
-import Icon from '../Svg.jsx'
-import {useDispatch, useSelector} from "react-redux";
-import {addSetConfiguration, selectGlobal} from "../../../redux/slice/globalSlice";
+import Icon from '../../Svg.jsx'
+import { useDispatch, useSelector } from "react-redux";
+import { addSetConfiguration, selectGlobal } from "../../../../redux/slice/globalSlice.js";
 
 const Element = styled.div`
     user-select: none;
@@ -17,18 +17,16 @@ const Element = styled.div`
         width: 30px;
         margin: 0 10px;
     }`
-const isEqual = (prev, next) => {
-    return prev.everySize === next.everySize
-}
+
 
 export default React.memo(
     ({
-         everySize = 9,
-         min = 9,
-         max = 30,
-         howMany = 1,
-         dispatchValue
-     }) => {
+        everySize = 9,
+        min = 9,
+        max = 30,
+        howMany = 1,
+        dispatchValue
+    }) => {
         const dispatch = useDispatch()
         const [flag, setFlag] = useState(true)
         const [state, setState] = useState(everySize)
@@ -53,7 +51,7 @@ export default React.memo(
         function setConfig() {
             setFlag(true)
             dispatchValue.forEach(item => {
-                dispatch(addSetConfiguration({key: item.key, value: state + item.value}))
+                dispatch(addSetConfiguration({ key: item.key, value: state + item.value }))
             })
         }
 
@@ -65,16 +63,17 @@ export default React.memo(
         return (
             <Element>
                 <div onClick={() => chengeNumber('-')}>
-                    <Icon.Dash/>
+                    <Icon.Dash />
                 </div>
 
                 <div className={'number'}>{state}</div>
 
                 <div onClick={() => chengeNumber('+')}>
-                    <Icon.Plus/>
+                    <Icon.Plus />
                 </div>
 
             </Element>
         );
-    }, isEqual
+    },
+    (prev, next) => prev.everySize === next.everySize
 )

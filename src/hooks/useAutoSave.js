@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
-import {useDispatch} from "react-redux";
-import {addAutoSave} from "../redux/slice/collectionSlice";
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from "react-redux";
+import { addAutoSave } from "../redux/slice/collectionSlice";
 
 const useAutoSave = (type, key, msg) => {
     const dispatch = useDispatch()
@@ -9,7 +9,7 @@ const useAutoSave = (type, key, msg) => {
 
     function save() {
         console.log('save')
-        dispatch(addAutoSave({type, msg, key}))
+        dispatch(addAutoSave({ type, msg, key }))
     }
 
     useEffect(() => {
@@ -26,7 +26,7 @@ const useAutoSave = (type, key, msg) => {
     }, [isStart, countToSave]);
 
 
-    return {setIsStart};
+    return { setIsStart };
 };
 
 export default useAutoSave;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector} from "react-redux";
+import { useSelector } from "react-redux";
 import {
     selectCollection
 } from "../../../../redux/slice/collectionSlice";
@@ -11,9 +11,9 @@ function Storage(
     {
         barArea = 'collection',
         open = false,
-        setOpen = () => {}
+        setOpen = () => { }
     }) {
-    const {Juuten_Storage} = useSelector(selectCollection)
+    const { Juuten_Storage } = useSelector(selectCollection)
     return (
         <BottemBarTemplate
             useContainer={false}

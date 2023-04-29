@@ -1,9 +1,9 @@
-import React, {useMemo, useState} from 'react';
-import {useSelector} from "react-redux";
-import {exportToTXT} from "../../../../utils";
-import {selectGlobal} from "../../../../redux/slice/globalSlice";
+import React, { useMemo, useState } from 'react';
+import { useSelector } from "react-redux";
+import { exportToTXT } from "../../../../utils";
+import { selectGlobal } from "../../../../redux/slice/globalSlice";
 import BottemBarTemplate from "../BottemBarTemplate.jsx";
-import Size from "../../pureComponent/Size.jsx";
+import Size from "./Size.jsx";
 import styled from "styled-components";
 import Slider from "../../Slider.jsx";
 import DotColor from "./DotColor.jsx";
@@ -19,42 +19,39 @@ const Container = styled.div`
     .container-text {
         margin-bottom: 3%;
     }`
+
 const CategoryContainer = styled.div`
     width: 100%;
     overflow: hidden;
     border-radius: 10px;`
+
 const SelectContainer = styled.div`
     height: 80px;
     width: 100%;
     background-color: white;
-    border-bottom: 1px solid ${({config}) => config.primary};
+    border-bottom: 1px solid ${({ config }) => config.primary};
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 5%;
-    ${({styled}) => styled}
+    ${({ styled }) => styled}
     .select-text-box {
         .select-text {
-            font-size: ${({config}) => config.font_size_l}px;
+            font-size: ${({ config }) => config.font_size_l}px;
         }
         .select-introduce {
-            font-size: ${({config}) => config.font_size_s}px;
-            color: ${({config}) => config.quaternary};
+            font-size: ${({ config }) => config.font_size_s}px;
+            color: ${({ config }) => config.quaternary};
         }
     }`
-
-const isEqual = (prevProps, nextProps) => {
-    return prevProps.open === nextProps.open
-}
 
 const Bar = React.memo((
     {
         barArea = 'default',
         open = false,
-        setOpen = () => {
-        },
+        setOpen = () => { },
     }) => {
-    const {configuration} = useSelector(selectGlobal)
+    const { configuration } = useSelector(selectGlobal)
     const [openContact, setOpenContact] = useState(false)
     const barList = useMemo(() => ({
         configuration: {
@@ -64,7 +61,7 @@ const Bar = React.memo((
                     open: true,
                     text: 'mainColor',
                     textCN: '調整主色調',
-                    introduce: {default: ''},
+                    introduce: { default: '' },
                     element: 'color'
                 },
                 {
@@ -72,7 +69,7 @@ const Bar = React.memo((
                     text: 'fontSize',
                     textCN: '調整文字尺寸',
                     element: 'number',
-                    introduce: {default: '文字大小下限為9，上限為16'},
+                    introduce: { default: '文字大小下限為9，上限為16' },
                     numberValue: {
                         currentValue: configuration['font_size_s'],
                         max: 16,
@@ -80,10 +77,10 @@ const Bar = React.memo((
                         howMany: 0.5
                     },
                     dispatchValue: [
-                        {key: 'font_size_s', value: 0},
-                        {key: 'font_size_m', value: 2},
-                        {key: 'font_size_l', value: 5},
-                        {key: 'font_size_xl', value: 10}
+                        { key: 'font_size_s', value: 0 },
+                        { key: 'font_size_m', value: 2 },
+                        { key: 'font_size_l', value: 5 },
+                        { key: 'font_size_xl', value: 10 }
                     ]
                 },
                 {
@@ -97,11 +94,12 @@ const Bar = React.memo((
                         min: 9,
                         howMany: 0.5
                     },
-                    introduce: {default: '圖標大小下限為9，上限為20'},
+                    introduce: { default: '圖標大小下限為9，上限為20' },
                     dispatchValue: [
-                        {key: 'icon_size_s', value: 0},
-                        {key: 'icon_size_m', value: 3},
-                        {key: 'icon_size_l', value: 6}
+                        { key: 'icon_size_s', value: 0 },
+                        { key: 'icon_size_m', value: 3 },
+                        { key: 'icon_size_l', value: 6 },
+                        { key: 'icon_size_xl', value: 10 },
                     ]
 
                 },
@@ -116,26 +114,26 @@ const Bar = React.memo((
                         min: 500,
                         howMany: 50
                     },
-                    introduce: {default: '螢幕寬度下限為500，上限為800'},
-                    dispatchValue: [{key: 'max_width', value: 0}]
+                    introduce: { default: '螢幕寬度下限為500，上限為800' },
+                    dispatchValue: [{ key: 'max_width', value: 0 }]
                 },
                 {
                     open: true,
                     text: 'noShowStorageCount',
                     textCN: '不在暫存區顯示數量',
                     element: 'ratio',
-                    ratioValue: [{key: 'showStorageCount'}],
+                    ratioValue: [{ key: 'showStorageCount' }],
                     current: configuration.showStorageCount,
-                    introduce: {default: ''},
+                    introduce: { default: '' },
                 },
                 {
                     open: true,
                     text: 'noShowThisIsBottom',
                     textCN: '停止顯示已經到最底',
                     element: 'ratio',
-                    ratioValue: [{key: 'thisIsBottom'}],
+                    ratioValue: [{ key: 'thisIsBottom' }],
                     current: configuration.thisIsBottom,
-                    introduce: {default: ''},
+                    introduce: { default: '' },
                 },
                 {
                     open: false,
@@ -143,7 +141,7 @@ const Bar = React.memo((
                     textCN: '黑暗模式',
                     element: 'ratio',
                     current: '',
-                    introduce: {default: ''},
+                    introduce: { default: '' },
                 },
             ]
         },
@@ -155,9 +153,9 @@ const Bar = React.memo((
                     text: 'selectingTool',
                     textCN: '取消快捷鍵',
                     element: 'ratio',
-                    ratioValue: [{key: 'isShowSelectionTool'}],
+                    ratioValue: [{ key: 'isShowSelectionTool' }],
                     current: configuration.isShowSelectionTool,
-                    introduce: {default: '是否顯示選取時的快捷鍵'}
+                    introduce: { default: '是否顯示選取時的快捷鍵' }
                 },
                 {
                     open: true,
@@ -170,8 +168,8 @@ const Bar = React.memo((
                         min: -999,
                         howMany: 5
                     },
-                    dispatchValue: [{key: 'toolbarX', value: 0}],
-                    introduce: {default: ''}
+                    dispatchValue: [{ key: 'toolbarX', value: 0 }],
+                    introduce: { default: '' }
                 },
                 {
                     open: true,
@@ -184,8 +182,8 @@ const Bar = React.memo((
                         min: -999,
                         howMany: 5
                     },
-                    dispatchValue: [{key: 'toolbarY', value: 0}],
-                    introduce: {default: ''}
+                    dispatchValue: [{ key: 'toolbarY', value: 0 }],
+                    introduce: { default: '' }
                 }
             ]
         },
@@ -198,9 +196,9 @@ const Bar = React.memo((
                     textCN: '匯出成 TXT',
                     element: 'click',
                     clickValue: [
-                        {text: '匯出成 TXT', type: 'plain'}
+                        { text: '匯出成 TXT', type: 'plain' }
                     ],
-                    introduce: {default: barArea === 'folder' ? '匯出所有資料夾的資料成 TXT' : '匯出此資料夾內的資料成 TXT'},
+                    introduce: { default: barArea === 'folder' ? '匯出所有資料夾的資料成 TXT' : '匯出此資料夾內的資料成 TXT' },
                 },
                 {
                     open: true,
@@ -208,9 +206,9 @@ const Bar = React.memo((
                     textCN: '匯出成 docx',
                     element: 'click',
                     clickValue: [
-                        {text: '匯出成 Docx', type: 'docx'}
+                        { text: '匯出成 Docx', type: 'docx' }
                     ],
-                    introduce: {default: barArea === 'folder' ? '匯出所有資料夾的資料成 Docx' : '匯出此資料夾內的資料成 Docx'},
+                    introduce: { default: barArea === 'folder' ? '匯出所有資料夾的資料成 Docx' : '匯出此資料夾內的資料成 Docx' },
                 },
                 {
                     open: true,
@@ -218,9 +216,9 @@ const Bar = React.memo((
                     textCN: '匯出成 HTML',
                     element: 'click',
                     clickValue: [
-                        {text: '匯出成 HTML', type: 'html'}
+                        { text: '匯出成 HTML', type: 'html' }
                     ],
-                    introduce: {default: barArea === 'folder' ? '匯出所有資料夾的資料成 HTML' : '匯出此資料夾內的資料成 HTML'},
+                    introduce: { default: barArea === 'folder' ? '匯出所有資料夾的資料成 HTML' : '匯出此資料夾內的資料成 HTML' },
                 }
             ],
         },
@@ -230,7 +228,7 @@ const Bar = React.memo((
                 open: true,
                 text: 'bugFix',
                 textCN: 'Bug錯誤回報',
-                introduce: {default: ''},
+                introduce: { default: '' },
                 element: 'navigate'
             },],
         }
@@ -257,7 +255,7 @@ const Bar = React.memo((
                                 select.open
                                 && <SelectContainer
                                     styled={select.element === 'navigate' ? 'cursor: pointer;' : ''}
-                                    onClick={select.element === 'navigate' ? () => setOpenContact(true) : () => {}}
+                                    onClick={select.element === 'navigate' ? () => setOpenContact(true) : () => { }}
                                     key={select.text}
                                     config={configuration}
                                 >
@@ -266,26 +264,26 @@ const Bar = React.memo((
                                         <div className={'select-introduce'}>{select.introduce.default}</div>
                                     </div>
                                     {select.element === 'color'
-                                    && <DotColor/>}
+                                        && <DotColor />}
 
                                     {select.element === 'number'
-                                    && <Size
-                                        everySize={select.numberValue.currentValue}
-                                        max={select.numberValue.max}
-                                        min={select.numberValue.min}
-                                        howMany={select.numberValue.howMany}
-                                        dispatchValue={select.dispatchValue}
-                                    />}
+                                        && <Size
+                                            everySize={select.numberValue.currentValue}
+                                            max={select.numberValue.max}
+                                            min={select.numberValue.min}
+                                            howMany={select.numberValue.howMany}
+                                            dispatchValue={select.dispatchValue}
+                                        />}
 
                                     {select.element === 'ratio'
-                                    && <Slider
-                                        id={select.text}
-                                        current={select.current}
-                                        ratioValue={select.ratioValue}
-                                    />}
+                                        && <Slider
+                                            id={select.text}
+                                            current={select.current}
+                                            ratioValue={select.ratioValue}
+                                        />}
 
                                     {select.element === 'click'
-                                    && select.clickValue.map(item =>
+                                        && select.clickValue.map(item =>
                                         (<BarButton
                                             key={item.text}
                                             area={barArea}
@@ -296,7 +294,7 @@ const Bar = React.memo((
                                     }
 
                                     {select.element === 'navigate'
-                                    && <Icon.Right size={configuration.font_size_l} />}
+                                        && <Icon.Right size={configuration.font_size_l} />}
 
                                 </SelectContainer>
                             ))}
@@ -312,6 +310,8 @@ const Bar = React.memo((
         </>
 
     );
-}, isEqual)
+},
+    (prevProps, nextProps) => prevProps.open === nextProps.open
+)
 
 export default Bar;

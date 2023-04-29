@@ -39,13 +39,13 @@ module.exports = {
                 exclude: /node_modules/,
                 use: {
                     loader: 'babel-loader',
-                    options: {presets: ['@babel/preset-env', '@babel/preset-react',],},
+                    options: { presets: ['@babel/preset-env', '@babel/preset-react',], },
                 },
             },
             {
                 test: /\.(woff|woff2|ttf|eot|otf)$/i,
                 type: 'asset/resource',
-                generator: {filename: 'src/asset/font/[name][ext][query]'},
+                generator: { filename: 'src/asset/font/[name][ext][query]' },
             },
             {
                 test: /\.css$/i,
@@ -55,7 +55,7 @@ module.exports = {
             {
                 test: /\.(png|jpe?g|gif)$/i,
                 type: 'asset/resource',
-                generator: {filename: 'src/asset/image/[name][ext][query]'},
+                generator: { filename: 'src/asset/image/[name][ext][query]' },
             },
         ]
     },
@@ -71,9 +71,9 @@ module.exports = {
         }),
         new CopyPlugin({
             patterns: [
-                {from: "public/manifest.json"},
-                {from: "public/icon", to: "src/asset/icon"},
-                {from: "src/assets/content.css", to:'src'}
+                { from: "public/manifest.json" },
+                { from: "public/icon", to: "src/asset/icon" },
+                { from: "src/assets/content.css", to: 'src' }
             ],
         }),
     ],

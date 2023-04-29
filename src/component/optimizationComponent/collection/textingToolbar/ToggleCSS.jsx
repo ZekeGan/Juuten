@@ -1,10 +1,14 @@
 import React from 'react';
 import TextEditorIcon from "../../pureComponent/TextEditorIcon.jsx";
 
-import {toggleProps} from "../../../../assets/global";
+import { toggleProps } from "../../../../assets/global";
 
 
-const Toggle = ({draftRef, inlineStyle}) => {
+const Toggle = (
+    {
+        draftRef,
+        inlineStyle,
+    }) => {
 
     function handleToggleStyle(keyword, e) {
         draftRef.current?.toggleStyle(keyword, e)

@@ -1,10 +1,9 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import styled from "styled-components";
-import {useSelector} from "react-redux";
-
+import { useSelector } from "react-redux";
+import { selectGlobal } from "../../../redux/slice/globalSlice";
 
 import Icon from "../Svg.jsx";
-import {selectGlobal} from "../../../redux/slice/globalSlice";
 import SearchNote from "./search/SearchNote.jsx";
 import Storage from "./storage/Storage.jsx";
 import AddNewNote from "./addNewNote/AddNewNote.jsx";
@@ -16,12 +15,12 @@ const BottomBar = styled.div`
     left: 0;
     bottom: 0;
     z-index: 2;
-    transform: translateY(${({hideNav}) => hideNav ? '48px' : '0'});
+    transform: translateY(${({ hideNav }) => hideNav ? '48px' : '0'});
     transition: 0.2s ease-in;
-    width: ${({config}) => config.max_width}px;
+    width: ${({ config }) => config.max_width}px;
     height: 48px;
     background-color: rgba(255,255,255);
-    border: 1px solid ${({config}) => config.primary};
+    border: 1px solid ${({ config }) => config.primary};
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -30,10 +29,10 @@ const BottomBar = styled.div`
         height: 25px;
         border-radius: 12.5px;
         border: none;
-        background-color: ${({config}) => config.primary};
+        background-color: ${({ config }) => config.primary};
         outline: none;
         padding-left: 15px;
-        font-size: ${({config}) => config.font_size_m}px;
+        font-size: ${({ config }) => config.font_size_m}px;
     }`
 const StorageCount = styled.div`
     position: relative;
@@ -44,18 +43,16 @@ const StorageCount = styled.div`
         width: 15px;
         height: 15px;
         border-radius: 50%;
-        background-color: ${({config}) => config.main};
+        background-color: ${({ config }) => config.main};
         color: white;
         font-style: normal;   
-        font-size: ${({config}) => config.font_size_s}px;
+        font-size: ${({ config }) => config.font_size_s}px;
         line-height: 15px;
         text-align: center;
         cursor: pointer;
     }`
 
-export const isEqual = (prev, next) => {
-    return prev.hide === next.hide && prev.storageLen === next.storageLen
-}
+
 
 
 const App = React.memo((
@@ -64,7 +61,7 @@ const App = React.memo((
         storageLen = 0,
         barArea,
     }) => {
-    const {configuration: config} = useSelector(selectGlobal)
+    const { configuration: config } = useSelector(selectGlobal)
 
     const [openStorage, setOpenStorage] = useState(false)
     const [openBar, setOpenBar] = useState(false)
@@ -92,7 +89,7 @@ const App = React.memo((
                 <div onClick={() => setOpenSearch(true)} >
                     <Icon.Search
                         title={'搜尋筆記'}
-                        size={config.icon_size_l}
+                        size={config.icon_size_xl}
                         styled={`color: ${config.main};`}
                     />
                 </div>
@@ -100,15 +97,18 @@ const App = React.memo((
                 <div onClick={() => setOpenNewNote(true)} >
                     <Icon.Plus
                         title={'新增筆記'}
-                        size={config.icon_size_l}
+                        size={config.icon_size_xl}
                         styled={`color: ${config.main};`}
                     />
                 </div>
 
-                <StorageCount config={config} onClick={() => setOpenStorage(true)} >
+                <StorageCount
+                    config={config}
+                    onClick={() => setOpenStorage(true)}
+                >
                     <Icon.Box
                         title={'置物區'}
-                        size={config.icon_size_l}
+                        size={config.icon_size_xl}
                         styled={`color: ${config.main};`}
                     />
                     {
@@ -121,7 +121,7 @@ const App = React.memo((
                 <div onClick={() => setOpenBar(true)} >
                     <Icon.Bar
                         title={'更多'}
-                        size={config.icon_size_l}
+                        size={config.icon_size_xl}
                         styled={`color: ${config.main};`}
                     />
                 </div>
@@ -153,6 +153,8 @@ const App = React.memo((
         </>
 
     );
-}, isEqual)
+},
+    (prev, next) => prev.hide === next.hide && prev.storageLen === next.storageLen
+)
 
 export default App;

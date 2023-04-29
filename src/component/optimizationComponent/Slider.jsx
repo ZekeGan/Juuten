@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from "styled-components";
-import {useDispatch, useSelector} from "react-redux";
-import {addSetConfiguration, selectGlobal} from "../../redux/slice/globalSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addSetConfiguration, selectGlobal } from "../../redux/slice/globalSlice";
 
 
 const Element = styled.div`
@@ -20,7 +20,7 @@ const Element = styled.div`
       width: 60px;
       height: 32px;
       display: block;
-      background: ${({config}) => config.secondary};
+      background: ${({ config }) => config.secondary};
       border-radius: 20px;
       position: relative;
       &:after {
@@ -40,37 +40,42 @@ const Element = styled.div`
     }
     
     input:checked + label {
-      background: ${({config}) => config.main};
+      background: ${({ config }) => config.main};
       &:after {
         left: calc(100% - 2.5px);
         transform: translateX(-100%);
       }
     }`
 
-const Slider = React.memo(({id, ratioValue, current}) => {
-    const {configuration: config} = useSelector(selectGlobal)
-    const dispatch = useDispatch()
+const Slider = React.memo((
+  {
+    id,
+    ratioValue,
+    current,
+  }) => {
+  const { configuration: config } = useSelector(selectGlobal)
+  const dispatch = useDispatch()
 
-    function fn(e) {
-        ratioValue.forEach(item => {
-            dispatch(addSetConfiguration({
-                key: item.key,
-                value: e.target.checked
-            }))
-        })
+  function fn(e) {
+    ratioValue.forEach(item => {
+      dispatch(addSetConfiguration({
+        key: item.key,
+        value: e.target.checked
+      }))
+    })
 
-    }
+  }
 
-    return (
-        <Element config={config}>
-            <input type="checkbox"
-                   id={id}
-                   checked={current}
-                   onChange={(e) => fn(e)}
-            />
-            <label htmlFor={id}/>
-        </Element>
-    )
+  return (
+    <Element config={config}>
+      <input type="checkbox"
+        id={id}
+        checked={current}
+        onChange={(e) => fn(e)}
+      />
+      <label htmlFor={id} />
+    </Element>
+  )
 })
 
 export default Slider;

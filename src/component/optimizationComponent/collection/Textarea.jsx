@@ -1,11 +1,8 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import DraftComponent from "../DraftComponent.jsx";
 import TextingToolbar from "./textingToolbar/TextingToolbar.jsx";
 
 
-const isEqual = (prevProps, nextProps) => {
-    return prevProps.item.msg === nextProps.item.msg && prevProps.open === nextProps.open
-}
 
 const Textarea = React.memo((
     {
@@ -24,11 +21,11 @@ const Textarea = React.memo((
             console.log('editing open')
             draftRef.current?.autoFocus()
         }
-    },[open])
+    }, [open])
 
     console.log(inlineStyle)
 
-    console.log('text ' + item.key )
+    console.log('text ' + item.key)
 
     return (
         <>
@@ -55,6 +52,8 @@ const Textarea = React.memo((
         </>
 
     );
-}, isEqual)
+},
+    (prevProps, nextProps) => prevProps.item.msg === nextProps.item.msg && prevProps.open === nextProps.open
+)
 
 export default Textarea;

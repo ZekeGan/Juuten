@@ -1,12 +1,11 @@
-import React, {useEffect, useId, useMemo} from 'react';
+import React, { useEffect, useId, useMemo } from 'react';
 import styled from "styled-components";
 import {
-    addDeleteNoteOrComment,
     addEditCollectionOrStorage,
     addOpenEditToolbar, selectCollection
 } from "../../../../redux/slice/collectionSlice";
-import {useDispatch, useSelector} from "react-redux";
-import {selectGlobal} from "../../../../redux/slice/globalSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { selectGlobal } from "../../../../redux/slice/globalSlice";
 import ShowEditCounting from "../../pureComponent/EditingCounting.jsx";
 import Icon from "../../Svg.jsx";
 import ToggleCSS from "./ToggleCSS.jsx";
@@ -22,7 +21,7 @@ const EditToolbar = styled.div`
     top: 0;
     transition: 0.2s ease-out ${p => p.open ? '200ms' : ''};
     transform: translateY(${p => p.open ? '0px' : '-25px'}); 
-    color: ${({config}) => config.quaternary};`
+    color: ${({ config }) => config.quaternary};`
 
 const IconBox = styled.div`
     display: flex;
@@ -42,11 +41,10 @@ const TextingToolbarInside = (
         open,
         draftRef,
         inlineStyle,
-        setDelCheck = () => {
-        }
+        setDelCheck = () => { }
     }) => {
     const dispatch = useDispatch()
-    const {configuration: config} = useSelector(selectGlobal)
+    const { configuration: config } = useSelector(selectGlobal)
 
     /* 儲存編輯 */
     const leaveEdit = () => {
@@ -61,7 +59,7 @@ const TextingToolbarInside = (
 
     return (
         <EditToolbar config={config} open={open}>
-            <ShowEditCounting open={open}/>
+            <ShowEditCounting open={open} />
             <IconBox>
 
                 <div onClick={leaveEdit}>
@@ -72,7 +70,7 @@ const TextingToolbarInside = (
                 </div>
 
                 <div className={'textingToolbar'}>
-                    <ToggleCSS draftRef={draftRef} inlineStyle={inlineStyle}/>
+                    <ToggleCSS draftRef={draftRef} inlineStyle={inlineStyle} />
                 </div>
 
                 <div

@@ -16,16 +16,16 @@ export default function App() {
             <Routes>
                 <Route
                     path='/'
-                    element={<Home/>}/>
+                    element={<Home />} />
                 <Route
                     path='home'
-                    element={<Home/>}/>
+                    element={<Home />} />
                 <Route
                     path='collection/:id'
-                    element={<Collection/>}/>
+                    element={<Collection />} />
                 <Route
                     path='*'
-                    element={<Home/>}/>
+                    element={<Home />} />
             </Routes>
         </Router>
     );

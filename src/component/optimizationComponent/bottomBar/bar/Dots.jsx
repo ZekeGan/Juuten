@@ -1,15 +1,14 @@
 import styled from "styled-components";
 import React from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {addSetConfiguration} from "../../../redux/slice/globalSlice";
-import {selectCollection} from "../../../redux/slice/collectionSlice";
+import { useDispatch } from "react-redux";
+import { addSetConfiguration } from "../../../../redux/slice/globalSlice";
 
 const Elements = styled.div`
     height: 30px;
     width: 30px;
     border-radius: 15px;
     flex-shrink: 0;
-    background-color: ${({color}) => color};
+    background-color: ${({ color }) => color};
     margin: 0 2px;
     cursor: pointer;
     transition: 0.2s;
@@ -18,11 +17,15 @@ const Elements = styled.div`
     }
 `
 
-const Dots = React.memo(({item,setOpen}) => {
+const Dots = React.memo((
+    {
+        item,
+        setOpen,
+    }) => {
     const dispatch = useDispatch()
 
     function selectColor(color) {
-        dispatch(addSetConfiguration({key: 'main', value: color}))
+        dispatch(addSetConfiguration({ key: 'main', value: color }))
         setOpen(false)
     }
 
@@ -33,6 +36,8 @@ const Dots = React.memo(({item,setOpen}) => {
             onClick={() => selectColor(item)}
         />
     );
-},)
+},
+    () => true
+)
 
 export default Dots

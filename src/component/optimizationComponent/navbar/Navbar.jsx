@@ -1,23 +1,23 @@
 import React from 'react';
 import styled from "styled-components";
 import Icon from "../Svg.jsx";
-import {useNavigate} from "react-router-dom";
-import {useSelector} from "react-redux";
-import {selectGlobal} from "../../../redux/slice/globalSlice";
-import {setDataToLocal} from "../../../utils";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectGlobal } from "../../../redux/slice/globalSlice";
+import { setDataToLocal } from "../../../utils";
 
 
 const Navbar = styled.div`
     position: absolute;
     z-index: 2;
-    width: ${({config}) => config.max_width}px;
+    width: ${({ config }) => config.max_width}px;
     height: 48px;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: ${({config}) => config.primary_opacity};
-    color: ${({config}) => config.main};
-    border-bottom: 1px solid ${({config}) => config.secondary};
+    background-color: ${({ config }) => config.primary_opacity};
+    color: ${({ config }) => config.main};
+    border-bottom: 1px solid ${({ config }) => config.secondary};
     ${(p) => p.hide ? 'transform: translateY(-48px);' : ''}
     transition: 0.2s ease-out;
     .where {
@@ -29,28 +29,20 @@ const Navbar = styled.div`
         height: 100%;
         overflow: hidden;
         margin: 0 2%;
-        font-size: ${({config}) => config.font_size_l}px;
+        font-size: ${({ config }) => config.font_size_l}px;
     }`
 
-const isEqual = (prev, next) => {
-    for (let key in prev) {
-        if (prev[key] !== next[key]) {
-            return false
-        }
-    }
-    return true
-}
 
 const app = React.memo((
     {
         hide = false,
-        name = 'undefined',
-        setSaveWarning,
+        name = 'null',
+        setSaveWarning = () => { },
         area,
         openEditId
     }) => {
     const navigate = useNavigate()
-    const {configuration: config} = useSelector(selectGlobal)
+    const { configuration: config } = useSelector(selectGlobal)
 
     function back() {
         if (!!openEditId) {
@@ -70,12 +62,12 @@ const app = React.memo((
             hide={hide}
         >
             {area !== 'home'
-            && <div onClick={() => back()}>
-                <Icon.House
-                    size={config.icon_size_l}
-                    styled={`color: ${config.main};`}
-                />
-            </div>}
+                && <div onClick={() => back()}>
+                    <Icon.House
+                        size={config.icon_size_xl}
+                        styled={`color: ${config.main};`}
+                    />
+                </div>}
 
             <div className={'where'}>
                 {!!name
@@ -88,6 +80,8 @@ const app = React.memo((
 
         </Navbar>
     );
-}, isEqual)
+},
+    (prev, next) => prev.hide === next.hide && prev.name === next.name
+)
 
 export default app;

@@ -1,18 +1,18 @@
-import React, {useRef} from 'react';
+import React, { useRef } from 'react';
 import Toolbar from "./FolderToolbar.jsx";
 import FolderName from "./FolderName.jsx";
 import Icon from "../Svg.jsx";
 import styled from "styled-components";
-import {useNavigate} from "react-router-dom";
-import {addEditFolderId} from "../../../redux/slice/folderSlice";
-import {useDispatch, useSelector} from "react-redux";
-import {selectGlobal} from "../../../redux/slice/globalSlice";
-import {addFetchData} from "../../../redux/slice/collectionSlice";
+import { useNavigate } from "react-router-dom";
+import { addEditFolderId } from "../../../redux/slice/folderSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { selectGlobal } from "../../../redux/slice/globalSlice";
+import { addFetchData } from "../../../redux/slice/collectionSlice";
 
 
 const Main = styled.div`
     grid-row: 2/3;
-    width: ${({config}) => config.max_width * 0.9}px;
+    width: ${({ config }) => config.max_width * 0.9}px;
     height: 70px;
     position: relative;
     display: flex;
@@ -39,16 +39,6 @@ const DragHandle = styled.div`
     justify-content: center;
     align-items: center;`
 
-const isEqual = (prev, next) => {
-    let flag = true
-    if (prev.openToolbar !== next.openToolbar) return false
-
-    for (let key in prev.item) {
-        if (prev.item[key] !== next.item[key]) return false
-    }
-    return flag
-}
-
 export default React.memo((
     {
         item,
@@ -57,7 +47,7 @@ export default React.memo((
         openToolbar,
         checkName,
     }) => {
-    const {configuration: config} = useSelector(selectGlobal)
+    const { configuration: config } = useSelector(selectGlobal)
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
@@ -72,10 +62,9 @@ export default React.memo((
         e.stopPropagation()
         // navigate('/collection/N1') // *****************************************<==== delete when build
         console.log('enterFolder')
-        const fn = () => navigate(`/collection/${item.key}`)
         dispatch(addFetchData({
             item,
-            fn,
+            fn: navigate(`/collection/${item.key}`),
         }))
     }
 
@@ -87,12 +76,12 @@ export default React.memo((
             onDoubleClick={(e) => goIntoFolder(e, item)}
         >
             {openToolbar
-            && <Toolbar
-                checkName={checkName}
-                open={openToolbar}
-                item={item}
-                setDelCheck={setDelCheck}
-            />}
+                && <Toolbar
+                    checkName={checkName}
+                    open={openToolbar}
+                    item={item}
+                    setDelCheck={setDelCheck}
+                />}
 
             <DragHandle {...provided.dragHandleProps}>
                 <Icon.Grip
@@ -112,4 +101,14 @@ export default React.memo((
 
         </Main>
     );
-}, isEqual)
+},
+    (prev, next) => {
+        let flag = true
+        if (prev.openToolbar !== next.openToolbar) return false
+
+        for (let key in prev.item) {
+            if (prev.item[key] !== next.item[key]) return false
+        }
+        return flag
+    }
+)

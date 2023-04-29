@@ -1,7 +1,7 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import styled from "styled-components";
-import {useSelector} from "react-redux";
-import {selectGlobal} from "../../redux/slice/globalSlice";
+import { useSelector } from "react-redux";
+import { selectGlobal } from "../../../redux/slice/globalSlice";
 
 
 const NewFolderInput = styled.input`
@@ -11,22 +11,19 @@ const NewFolderInput = styled.input`
     outline: none;
     border: none;
     overflow: hidden;
-    border-bottom: 2px solid ${({config}) => config.main};
+    border-bottom: 2px solid ${({ config }) => config.main};
     resize: none;
     padding-bottom: 3px;
     margin: 0 5%;
 `
-const isEqual = (prevProps, nextProps) => {
-    return prevProps.mRef === nextProps.mRef
-}
+
 
 const Input = React.memo((
     {
         mRef,
-        onInput = () => {
-        }
+        onInput = () => { }
     }) => {
-    const {configuration: config} = useSelector(selectGlobal)
+    const { configuration: config } = useSelector(selectGlobal)
 
     return (
         <NewFolderInput
@@ -35,6 +32,8 @@ const Input = React.memo((
             onInput={onInput}
         />
     );
-}, isEqual)
+},
+    (prevProps, nextProps) => prevProps.mRef === nextProps.mRef
+)
 
 export default Input

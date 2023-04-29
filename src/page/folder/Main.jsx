@@ -1,7 +1,7 @@
-import React, {useState, useEffect, useMemo, useRef} from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import styled from "styled-components";
-import {useDispatch, useSelector} from "react-redux";
-import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
+import { useDispatch, useSelector } from "react-redux";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import {
     addDeleteFolder,
     addEditFolderAnimationId,
@@ -9,8 +9,8 @@ import {
     addRearrangeFolder,
     selectFolder,
 } from "../../redux/slice/folderSlice";
-import {selectGlobal} from "../../redux/slice/globalSlice";
-import {selectCollection} from "../../redux/slice/collectionSlice";
+import { selectGlobal } from "../../redux/slice/globalSlice";
+import { selectCollection } from "../../redux/slice/collectionSlice";
 import useHideBar from "../../hooks/useHideBar";
 import AddNewFolder from "../../component/optimizationComponent/folder/AddingNewFolder.jsx";
 import Warning from "../../component/optimizationComponent/Warning.jsx";
@@ -24,15 +24,15 @@ import useCheckHistory from "../../hooks/useCheckHistory";
 
 const Folders = styled.div`
     position: relative;
-    width: ${({config}) => config.max_width}px;
-    height: ${({config}) => config.max_height}px;
+    width: ${({ config }) => config.max_width}px;
+    height: ${({ config }) => config.max_height}px;
     overflow: hidden;;`
 
 const FolderSection = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: ${({config}) => config.max_height}px;
+    height: ${({ config }) => config.max_height}px;
     padding: 48px 0 48px 0;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -40,7 +40,7 @@ const FolderSection = styled.div`
         width: 5px;
     }
     &::-webkit-scrollbar-thumb {
-        background-color: ${({config}) => config.tertiary};
+        background-color: ${({ config }) => config.tertiary};
         border-radius: 2.5px;
     }`
 
@@ -57,8 +57,8 @@ export default function App() {
         editFolderId,
         addFolderAnimationId,
     } = useSelector(selectFolder)
-    const {Juuten_Storage, isHistoryLoad} = useSelector(selectCollection)
-    const {configuration: config} = useSelector(selectGlobal)
+    const { Juuten_Storage, isHistoryLoad } = useSelector(selectCollection)
+    const { configuration: config } = useSelector(selectGlobal)
     const folderRef = useRef(null)
     const hideNav = useHideBar(folderRef.current)
     const [delCheck, setDelCheck] = useState(false)
@@ -88,8 +88,8 @@ export default function App() {
 
     /* 資料夾拖移後啟動 */
     function dragEnd(e) {
-        const {destination, source} = e
-        dispatch(addRearrangeFolder({destination, source}))
+        const { destination, source } = e
+        dispatch(addRearrangeFolder({ destination, source }))
     }
 
     /* 檢查名稱是否合法 */
@@ -127,7 +127,10 @@ export default function App() {
 
 
             <DragDropContext onDragEnd={(e) => dragEnd(e)}>
-                <FolderSection config={config} ref={folderRef}>
+                <FolderSection
+                    config={config}
+                    ref={folderRef}
+                >
                     <Droppable droppableId={`folder_drog_key`}>
                         {(provided) => (
                             <div
@@ -135,29 +138,29 @@ export default function App() {
                                 {...provided.droppableProps}
                             >
                                 {/* 新增資料夾 */}
-                                <AddNewFolder checkName={checkLigalName}/>
+                                <AddNewFolder checkName={checkLigalName} />
 
                                 {Juuten_folderLists.map((item, idx) =>
-                                    (<Draggable
-                                        key={`folder_drag_key_${item.key}`}
-                                        draggableId={`draggableId_${item.key}`}
-                                        index={idx}
+                                (<Draggable
+                                    key={`folder_drag_key_${item.key}`}
+                                    draggableId={`draggableId_${item.key}`}
+                                    index={idx}
+                                >
+                                    {(provided) =>
+                                    (<DraggableBox
+                                        ref={provided.innerRef}
+                                        {...provided.draggableProps}
                                     >
-                                        {(provided) =>
-                                            (<DraggableBox
-                                                ref={provided.innerRef}
-                                                {...provided.draggableProps}
-                                            >
-                                                <FolderBlock
-                                                    item={item}
-                                                    setDelCheck={setDelCheck}
-                                                    openToolbar={item.key === editFolderId}
-                                                    checkName={checkLigalName}
-                                                    provided={provided}
-                                                />
-                                            </DraggableBox>)
-                                        }
-                                    </Draggable>)
+                                        <FolderBlock
+                                            item={item}
+                                            setDelCheck={setDelCheck}
+                                            openToolbar={item.key === editFolderId}
+                                            checkName={checkLigalName}
+                                            provided={provided}
+                                        />
+                                    </DraggableBox>)
+                                    }
+                                </Draggable>)
                                 )}
                                 {provided.placeholder}
                             </div>

@@ -1,13 +1,13 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {fetchData, getCurrentDate, setDataToLocal} from "../../utils";
-import {Juuten_Storage, N1} from "../../assets/fakeData";
-import {convertToRaw, EditorState} from 'draft-js'
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { fetchData, getCurrentDate, setDataToLocal } from "../../utils";
+import { Juuten_Storage, N1 } from "../../assets/fakeData";
+import { convertToRaw, EditorState } from 'draft-js'
 
 const thunkData = createAsyncThunk(
     'folder/fetchFolderData',
-    async ({item, fn}) => {
+    async ({ item, fn }) => {
         const value = await fetchData(item.key, [])
-        return {item, value, fn}
+        return { item, value, fn }
     })
 export const CollectionSlice = createSlice({
     name: 'collection',
@@ -16,7 +16,7 @@ export const CollectionSlice = createSlice({
         /* 測試時替換 */
         // Juuten_Storage: Juuten_Storage,
         // Juuten_EditingText: [{msg: '', key: 'Juuten_editingText'}],
-        Juuten_EditingText: await fetchData('Juuten_EditingText', [{msg: '', key: 'Juuten_editingText'}]),
+        Juuten_EditingText: await fetchData('Juuten_EditingText', [{ msg: '', key: 'Juuten_editingText' }]),
         Juuten_Storage: await fetchData('Juuten_Storage', []),
         ///////////
 
@@ -62,8 +62,8 @@ export const CollectionSlice = createSlice({
         /* storage collection 位置切換 */
         moveToStorageOrCollection: (state, action) => {
             // 423 優化
-            const {folderId} = state
-            const {toWhere, key} = action.payload
+            const { folderId } = state
+            const { toWhere, key } = action.payload
 
             const type = toWhere === 'toStorage' ? 'storage' : 'collection'
             const removeKey = toWhere === 'toStorage' ? folderId : 'Juuten_Storage'
@@ -73,7 +73,7 @@ export const CollectionSlice = createSlice({
 
             const newItem = removeGroup.find(item => item.key === key)
             const newRemove = removeGroup.filter(item => item.key !== key)
-            const newAdd = [{...newItem, type}, ...addGroup]
+            const newAdd = [{ ...newItem, type }, ...addGroup]
 
             setDataToLocal(removeKey, newRemove)
             setDataToLocal(addKey, newAdd)
@@ -86,7 +86,7 @@ export const CollectionSlice = createSlice({
         },
         /* 新增筆記 */
         addNewNote: (state, action) => {
-            const {area, text} = action.payload
+            const { area, text } = action.payload
             const where = area === 'collection' ? state.folderId : 'Juuten_Storage'
 
             const newNote = {
@@ -107,7 +107,7 @@ export const CollectionSlice = createSlice({
         },
 
         autoSave: (state, action) => {
-            const {type, msg, key} = action.payload
+            const { type, msg, key } = action.payload
             const typeMap = {
                 textingBox: {
                     key: 'Juuten_EditingText',
@@ -125,13 +125,13 @@ export const CollectionSlice = createSlice({
             const data = typeMap[type].data
             const newData = data.map(item => {
                 return item.key === key
-                    ? {...item, msg}
+                    ? { ...item, msg }
                     : 'comment' in item
                         ? {
                             ...item,
                             comment: item.comment.map(comm => comm.key === key
-                                    ? {...comm, msg}
-                                    : comm)
+                                ? { ...comm, msg }
+                                : comm)
                         }
                         : item
 
@@ -143,13 +143,13 @@ export const CollectionSlice = createSlice({
             setDataToLocal('Juuten_editingText', '')
             return {
                 ...state,
-                Juuten_editingText: [{msg: '', key: 'Juuten_editingText'}]
+                Juuten_editingText: [{ msg: '', key: 'Juuten_editingText' }]
             }
         },
         /* 新增註記(comment) */
         addComment: (state, action) => {
             // 423 優化
-            const {folderId, openEditId, ...rest} = state
+            const { folderId, openEditId, ...rest } = state
 
             const _key = `Juuten_${Date.now()}`
             const newComment = {
@@ -188,10 +188,10 @@ export const CollectionSlice = createSlice({
                 comment: state.folderId
             }
             const folderId = areaMap[action.payload.area]
-            const {openEditId} = state
+            const { openEditId } = state
             const newData = state[folderId].map(item => {
                 return item.key === openEditId
-                    ? {...item, msg: action.payload.msg}
+                    ? { ...item, msg: action.payload.msg }
                     : {
                         ...item,
                         comment: item.comment.map(comm => comm.key !== openEditId ? comm : {
@@ -214,9 +214,9 @@ export const CollectionSlice = createSlice({
                 collection: state.folderId,
                 comment: state.folderId
             }
-            const {area} = action.payload
+            const { area } = action.payload
             const folderId = areaMap[area]
-            const {openEditId} = state
+            const { openEditId } = state
             const data = [...state[folderId]]
 
             const newData = data
@@ -240,7 +240,7 @@ export const CollectionSlice = createSlice({
         /* dnd 更換位置 */
         rearrangeComment: (state, action) => {
             // 423 優化
-            const {destination, source, area} = action.payload
+            const { destination, source, area } = action.payload
             if (source.index === destination.index) return state
 
             const whatArea = area === 'textMain' ? state.folderId : 'Juuten_Storage'
@@ -249,7 +249,7 @@ export const CollectionSlice = createSlice({
                     const newComm = item.comment.slice();
                     const [removed] = newComm.splice(source.index, 1);
                     newComm.splice(destination.index, 0, removed);
-                    return {...item, comment: newComm}
+                    return { ...item, comment: newComm }
                 }
                 return item
             })
@@ -264,7 +264,7 @@ export const CollectionSlice = createSlice({
 
         rearrangeNote: (state, action) => {
             // 423 優化
-            const {destination, source, area} = action.payload
+            const { destination, source, area } = action.payload
             if (source.index === destination.index) return state
 
             const whatArea = area === 'textMain' ? state.folderId : 'Juuten_Storage'
@@ -290,7 +290,7 @@ export const CollectionSlice = createSlice({
             const newData = state[value].map(item =>
                 item.key !== action.payload.key
                     ? item
-                    : {...item, isOpenComment: !item.isOpenComment}
+                    : { ...item, isOpenComment: !item.isOpenComment }
             )
 
             setDataToLocal(value, newData)
@@ -310,7 +310,7 @@ export const CollectionSlice = createSlice({
     },
     extraReducers: {
         [thunkData.fulfilled]: (state, action) => {
-            const {item, value, fn = () => {}} = action.payload
+            const { item, value, fn = () => { } } = action.payload
             setDataToLocal('Juuten_Navigate_History', item)
             fn()
             return {

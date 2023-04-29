@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import styled from "styled-components";
 import Icon from '../../Svg.jsx'
 import {
@@ -7,8 +7,8 @@ import {
     addMoveToStorageOrCollection,
     addOpenEditToolbar,
 } from "../../../../redux/slice/collectionSlice";
-import {useDispatch, useSelector} from "react-redux";
-import {selectGlobal} from "../../../../redux/slice/globalSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { selectGlobal } from "../../../../redux/slice/globalSlice";
 import BuiltDate from "../../pureComponent/BuiltDate.jsx";
 import TextingToolbarInside from "./TextingToolbarInside.jsx";
 import useRemoveBar from "../../../../hooks/useRemoveBar";
@@ -25,9 +25,9 @@ const DateBox = styled.div`
     height: 100%;
     transition: 0.2s ease-out ${p => p.open ? '' : '200ms'};
     transform: translateY(${p => p.open ? '-25px' : '0px'});
-    color: ${({config}) => config.quaternary};
+    color: ${({ config }) => config.quaternary};
     > div {
-        font-size: ${({config}) => config.font_size_s}px;
+        font-size: ${({ config }) => config.font_size_s}px;
     }
     > .icon-box {
         display: flex;
@@ -38,7 +38,7 @@ const DateBox = styled.div`
     }`
 
 const DelBox = styled.div`
-    display: ${({open}) => open ? 'flex' : 'none'};
+    display: ${({ open }) => open ? 'flex' : 'none'};
     justify-content: center;
     align-items: center;
     position: absolute;
@@ -47,18 +47,14 @@ const DelBox = styled.div`
     width: 80px;
     height: 35px;
     border-radius: 5px;
-    background-color: ${({config}) => config.secondary};
-    // border: 1px solid ${({config}) => config.quaternary};
-    font-size: ${({config}) => config.font_size_s}px;
+    background-color: ${({ config }) => config.secondary};
+    // border: 1px solid ${({ config }) => config.quaternary};
+    font-size: ${({ config }) => config.font_size_s}px;
     cursor: pointer;
     &:hover {
-         background-color: ${({config}) => config.tertiary};
+         background-color: ${({ config }) => config.tertiary};
     }`
 
-const isEqual = (prevProps, nextProps) => {
-    if (prevProps.open === nextProps.open && prevProps.inlineStyle === nextProps.inlineStyle) return true
-    return prevProps === nextProps
-}
 
 const App = React.memo((
     {
@@ -70,19 +66,19 @@ const App = React.memo((
         barArea,
     }) => {
     const dispatch = useDispatch()
-    const {configuration: config} = useSelector(selectGlobal)
+    const { configuration: config } = useSelector(selectGlobal)
     const [delCheck, setDelCheck] = useState(false)
     useRemoveBar(delCheck, () => setDelCheck(false))
 
     console.log('toolbar')
 
     function openToolbar() {
-        dispatch(addOpenEditToolbar({key: item.key, type: item.type}))
+        dispatch(addOpenEditToolbar({ key: item.key, type: item.type }))
     }
 
     /* 新增註記(comment) */
     function addComment() {
-        dispatch(addAddComment({key: item.key}))
+        dispatch(addAddComment({ key: item.key }))
     }
 
     /* 移至storage OR collection */
@@ -92,7 +88,7 @@ const App = React.memo((
 
     function deleteNoteOrComment(e) {
         e.stopPropagation()
-        dispatch(addDeleteNoteOrComment({area: item.type}))
+        dispatch(addDeleteNoteOrComment({ area: item.type }))
         dispatch(addOpenEditToolbar(''))
     }
 
@@ -111,61 +107,65 @@ const App = React.memo((
                     config={config}
                     open={open}
                 >
-                    <BuiltDate date={item.currentDate}/>
+                    <BuiltDate date={item.currentDate} />
                     {showToolbar
-                    && <div className={'icon-box'}>
-                        {item.type === 'collection'
-                        &&
-                        <div onClick={addComment}>
-                            <Icon.Chat
-                                size={config.icon_size_m}
-                                title={'新增留言'}
-                            />
-                        </div>}
-                        <div onClick={openToolbar}>
-                            <Icon.Pen size={config.icon_size_m}/>
-                        </div>
+                        && <div className={'icon-box'}>
+                            {item.type === 'collection'
+                                &&
+                                <div onClick={addComment}>
+                                    <Icon.Chat
+                                        size={config.icon_size_m}
+                                        title={'新增留言'}
+                                    />
+                                </div>}
+                            <div onClick={openToolbar}>
+                                <Icon.Pen size={config.icon_size_m} />
+                            </div>
 
-                        {(item.type === 'storage' && barArea !== 'folder')
-                        && <div
-                            onClick={() => moveToStorageOrCollection({
-                                key: item.key,
-                                toWhere: 'toCollection'
-                            })}>
-                            <Icon.BarTop
-                                size={config.icon_size_m}
-                                title={'加入至資料夾'}
-                            />
-                        </div>}
+                            {(item.type === 'storage' && barArea !== 'folder')
+                                && <div
+                                    onClick={() => moveToStorageOrCollection({
+                                        key: item.key,
+                                        toWhere: 'toCollection'
+                                    })}>
+                                    <Icon.BarTop
+                                        size={config.icon_size_m}
+                                        title={'加入至資料夾'}
+                                    />
+                                </div>}
 
-                        {item.type === 'collection'
-                        && <div
-                            onClick={() => moveToStorageOrCollection({
-                                key: item.key,
-                                toWhere: 'toStorage'
-                            })}>
-                            <Icon.BarDown
-                                size={config.icon_size_m}
-                                title={'放入暫存區'}
-                            />
-                        </div>}
+                            {item.type === 'collection'
+                                && <div
+                                    onClick={() => moveToStorageOrCollection({
+                                        key: item.key,
+                                        toWhere: 'toStorage'
+                                    })}>
+                                    <Icon.BarDown
+                                        size={config.icon_size_m}
+                                        title={'放入暫存區'}
+                                    />
+                                </div>}
 
-                    </div>}
+                        </div>}
 
 
                 </DateBox>
                 {showToolbar
-                && <TextingToolbarInside
-                    delCheck={delCheck}
-                    setDelCheck={setDelCheck}
-                    item={item}
-                    open={open}
-                    draftRef={draftRef}
-                    inlineStyle={inlineStyle}
-                />}
+                    && <TextingToolbarInside
+                        delCheck={delCheck}
+                        setDelCheck={setDelCheck}
+                        item={item}
+                        open={open}
+                        draftRef={draftRef}
+                        inlineStyle={inlineStyle}
+                    />}
             </TextingToolbar>
         </>
     );
-}, isEqual)
+},
+    (prevProps, nextProps) => {
+        if (prevProps.open === nextProps.open && prevProps.inlineStyle === nextProps.inlineStyle) return true
+        return prevProps === nextProps
+    })
 
 export default App

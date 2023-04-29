@@ -1,6 +1,6 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styled from "styled-components";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
     addAddAnimation,
     addRearrangeNote,
@@ -9,17 +9,17 @@ import {
 
 import Note from '../../component/optimizationComponent/collection/Note.jsx'
 import ThisIsBottom from "../../component/optimizationComponent/ThisIsBottom.jsx";
-import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
-import {selectGlobal} from "../../redux/slice/globalSlice";
-import useHideBar from "../../hooks/useHideBar";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { selectGlobal } from "../../redux/slice/globalSlice";
+import useHideBar from '../../hooks/useHideBar';
 
 
 /* main */
 const TextMain = styled.div`
     position: relative;
-    width: ${({config}) => config.max_width}px;
-    height: ${({area, config}) => area ? '100%' : `${config.max_height}px`};
-    padding: ${({area}) => area ? '30px 10px 30px 10px' : '50px 10px 30px 10px'} ;
+    width: ${({ config }) => config.max_width}px;
+    height: ${({ area, config }) => area ? '100%' : `${config.max_height}px`};
+    padding: ${({ area }) => area ? '30px 10px 30px 10px' : '50px 10px 30px 10px'} ;
     overflow-y: scroll; 
     overflow-x: hidden;
     &::-webkit-scrollbar {
@@ -27,9 +27,10 @@ const TextMain = styled.div`
     }
 
     &::-webkit-scrollbar-thumb {
-        background-color: ${({config}) => config.tertiary};
+        background-color: ${({ config }) => config.tertiary};
         border-radius: 2.5px;
-    }`
+    }
+    `
 
 const DropWrapper = styled.div`
     display: flex;
@@ -42,35 +43,27 @@ export default (
         area,
         barArea,
         data = [],
-        setHide = () => {
-        }
+        setHide = () => { },
     }) => {
     const dispatch = useDispatch()
-    const {addNewNoteAnimation} = useSelector(selectCollection)
-    const {configuration: config} = useSelector(selectGlobal)
+    const { addNewNoteAnimation } = useSelector(selectCollection)
+    const { configuration: config } = useSelector(selectGlobal)
+    const mainRef = useRef(null)
+    area === 'textMain' && useHideBar(mainRef.current, setHide)
 
-    const textMainRef = useRef(null)
-    const hideNav = useHideBar(textMainRef.current)
-    useEffect(() => {
-        setHide(hideNav)
-    }, [hideNav])
+
+    console.log('textMain');
 
     function dragEnd(e) {
-        const {destination, source} = e
+        const { destination, source } = e
         if (!destination || !source) return
-        dispatch(addRearrangeNote({
-            area,
-            destination,
-            source
-        }))
+        dispatch(addRearrangeNote({ area, destination, source }))
     }
 
     /* 新增筆記後的動畫 */
     useMemo(() => {
         if (!addNewNoteAnimation) return
-        setTimeout(() => {
-            dispatch(addAddAnimation())
-        }, 0)
+        setTimeout(() => dispatch(addAddAnimation()), 0)
     }, [addNewNoteAnimation])
 
     return (
@@ -78,10 +71,10 @@ export default (
             <TextMain
                 config={config}
                 area={area === 'storage'}
-                ref={textMainRef}
+                ref={mainRef}
             >
                 <Droppable droppableId={`${area}_note_dropId_solo`}>
-                    {(provided, snapshot) => (
+                    {(provided) => (
                         <DropWrapper
                             {...provided.droppableProps}
                             ref={provided.innerRef}
@@ -111,7 +104,7 @@ export default (
                             {provided.placeholder}
 
                             {!config.thisIsBottom
-                            && <ThisIsBottom/>}
+                                && <ThisIsBottom />}
                         </DropWrapper>
                     )}
                 </Droppable>

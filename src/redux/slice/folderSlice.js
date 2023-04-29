@@ -1,6 +1,6 @@
-import {createSlice} from "@reduxjs/toolkit";
-import {changeFontColor, getCurrentDate, setDataToLocal, fetchData} from "../../utils";
-import {Juuten_folderLists} from "../../assets/fakeData";
+import { createSlice } from "@reduxjs/toolkit";
+import { changeFontColor, getCurrentDate, setDataToLocal, fetchData } from "../../utils";
+import { Juuten_folderLists } from "../../assets/fakeData";
 
 
 export const FolderSlice = createSlice({
@@ -21,7 +21,7 @@ export const FolderSlice = createSlice({
 
         // 修改資料夾顏色
         changeFolderColor: (state, action) => {
-            const {Juuten_folderLists: data, editFolderId} = state
+            const { Juuten_folderLists: data, editFolderId } = state
             const newData = data.map(item => {
                 return item.key !== editFolderId ? item : {
                     ...item,
@@ -30,25 +30,25 @@ export const FolderSlice = createSlice({
                 }
             })
             setDataToLocal('Juuten_folderLists', newData)
-            return {...state, Juuten_folderLists: newData}
+            return { ...state, Juuten_folderLists: newData }
         },
         // 修改資料夾名稱
         changeFolderName: (state, action) => {
             const newData = state.Juuten_folderLists.map(item => {
-                return item.key === state.editFolderId ? {...item, name: action.payload} : item
+                return item.key === state.editFolderId ? { ...item, name: action.payload } : item
             })
             setDataToLocal('Juuten_folderLists', newData)
-            return {...state, Juuten_folderLists: newData}
+            return { ...state, Juuten_folderLists: newData }
         },
         // 刪除資料夾
         deleteFolder: (state, action) => {
             const newData = state.Juuten_folderLists.filter(item => item.key !== action.payload)
             setDataToLocal('Juuten_folderLists', newData)
-            return {...state, Juuten_folderLists: newData}
+            return { ...state, Juuten_folderLists: newData }
         },
         // 新增資料夾
         folderAdd: (state, action) => {
-            const {folderColor} = action.payload
+            const { folderColor } = action.payload
             const newFolder = {
                 key: `Juuten_${Date.now()}`,
                 name: action.payload.name,
@@ -81,7 +81,7 @@ export const FolderSlice = createSlice({
         },
 
         rearrangeFolder: (state, action) => {
-            const {destination, source} = action.payload
+            const { destination, source } = action.payload
             if (source.index === destination.index) return state
 
             const newData = state.Juuten_folderLists.slice();
@@ -89,7 +89,7 @@ export const FolderSlice = createSlice({
             newData.splice(destination.index, 0, removed);
 
             setDataToLocal('Juuten_folderLists', newData)
-            return {...state, Juuten_folderLists: newData}
+            return { ...state, Juuten_folderLists: newData }
         },
     }
 })

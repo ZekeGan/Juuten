@@ -1,6 +1,6 @@
-import {convertToRaw, EditorState} from "draft-js";
-import {getCurrentDate} from "./utils";
-import {initialConfiguration} from "./assets/global";
+import { convertToRaw, EditorState } from "draft-js";
+import { getCurrentDate } from "./utils";
+import { initialConfiguration } from "./assets/global";
 
 /* 監聽從 background || popup.js 的通信 */
 chrome.runtime.onMessage.addListener((req) => {
@@ -23,7 +23,7 @@ let selectionText = ''
 fetchMsg('Juuten_Configuration', initialConfiguration)
     .then(res => {
         document.addEventListener("mouseup", (event) => {
-            const {isShowSelectionTool, toolbarY, toolbarX} = res
+            const { isShowSelectionTool, toolbarY, toolbarX } = res
             if (!isShowSelectionTool && event.button === 0) {
                 const selection = window.getSelection()
                 if (!selection.isCollapsed && selection.toString() !== selectionText) {
@@ -67,7 +67,7 @@ async function fetchMsg(dataName, initailData) {
 }
 
 function addNewMsg(obj) {
-    const {pageTitle, favIconUrl, url, msg} = obj
+    const { pageTitle, favIconUrl, url, msg } = obj
     let selection
     if (!msg) selection = document.getSelection().toString()
     else selection = msg

@@ -1,12 +1,12 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from "styled-components";
 import Icon from "../Svg.jsx";
 import {
     addChangeFolderColor, addChangeFolderName,
 } from "../../../redux/slice/folderSlice";
-import {useDispatch, useSelector} from "react-redux";
-import {selectGlobal} from "../../../redux/slice/globalSlice";
-import AddNewInput from "../AddNewInput.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import { selectGlobal } from "../../../redux/slice/globalSlice";
+import AddNewInput from "../pureComponent/AddNewInput.jsx";
 
 
 const FolderToolbar = styled.div`
@@ -24,7 +24,7 @@ const FolderToolbar = styled.div`
 const Folder = styled.div`
     width: 300px;
     padding: 4px 5px;
-    border-right: 1px solid ${({config}) => config.secondary};
+    border-right: 1px solid ${({ config }) => config.secondary};
     > .changeFolderName {
         display: flex;
         justify-content: center;
@@ -44,7 +44,7 @@ const ColorDot = styled.div`
     height: 20px;
     background-color: ${p => p.color};
     border-radius: 10px;
-    border: 1px solid ${({config}) => config.secondary};
+    border: 1px solid ${({ config }) => config.secondary};
     margin: 3px 5px;
     cursor: pointer;`
 
@@ -60,26 +60,22 @@ const IconBox = styled.div`
         padding-left: 8%;
     }`
 
-const isEqual = (prev, next) => {
-    if (!prev.open && !next.open) return true
-    return prev === next
-}
 
 const App = React.memo((
     {
         open,
-        setDelCheck = () => {},
+        setDelCheck = () => { },
         item = {},
         checkName,
     }) => {
-    const {configuration: config} = useSelector(selectGlobal)
+    const { configuration: config } = useSelector(selectGlobal)
     const dispatch = useDispatch()
     const inputRef = useRef(null)
     const [detectFolderName, setDetectFolderName] = useState('')
     useEffect(() => {
-        if(!open) return
-        inputRef.current?.focus({preventScroll: true})
-    },[])
+        if (!open) return
+        inputRef.current?.focus({ preventScroll: true })
+    }, [])
 
     const deleteFolder = (e) => {
         setDelCheck(true)
@@ -116,15 +112,15 @@ const App = React.memo((
                     />
 
                     {detectFolderName !== ''
-                    && <div
-                        onClick={saveFolderNewName}
-                        className={'icon'}
-                    >
-                        <Icon.Save
-                            size={config.font_size_l}
-                            styled={`color: ${config.main}`}
-                        />
-                    </div>}
+                        && <div
+                            onClick={saveFolderNewName}
+                            className={'icon'}
+                        >
+                            <Icon.Save
+                                size={config.font_size_l}
+                                styled={`color: ${config.main}`}
+                            />
+                        </div>}
                 </div>
 
                 <div className="Juuten_color">
@@ -152,6 +148,11 @@ const App = React.memo((
 
         </FolderToolbar>
     );
-}, isEqual)
+},
+    (prev, next) => {
+        if (!prev.open && !next.open) return true
+        return prev === next
+    }
+)
 
 export default App;
