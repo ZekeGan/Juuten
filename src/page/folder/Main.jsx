@@ -82,7 +82,6 @@ export default function App() {
     /* 刪除資料夾的第 2/2 步驟 */
     const doubleDelCheck = () => {
         setDelCheck(false)
-        console.log('delete')
         dispatch(addDeleteFolder(editFolderId))
         dispatch(addEditFolderId())
     }

@@ -1,7 +1,7 @@
+.vscode/
 node_module/
 dist/
 .idea/
-.vscode/
 *.iml
 # Project exclude paths
 /node_modules/

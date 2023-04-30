@@ -31,8 +31,6 @@ export default React.memo(
         const [flag, setFlag] = useState(true)
         const [state, setState] = useState(everySize)
 
-        console.log('size')
-
         function chengeNumber(type) {
             setFlag(false)
             if (type === '+') {

@@ -44,8 +44,6 @@ const App = React.memo((
         }, 0)
     }, [addNewCommentAnimation])
 
-    console.log('comment')
-
     return (
         <Comment config={config} animation={addNewCommentAnimation === item.key}>
             <DragHandle

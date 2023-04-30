@@ -4,8 +4,7 @@ const CopyPlugin = require('copy-webpack-plugin')
 
 
 module.exports = {
-    mode: 'development',
-    // mode: 'production',
+    mode: 'production',
     entry: {
         popup: './src/popup.jsx',
         content: './src/content.js',
@@ -26,9 +25,6 @@ module.exports = {
         hot: true,
         historyApiFallback: true,
     },
-    // optimization: { // inactive this when build
-    //     runtimeChunk: 'single',
-    // },
     experiments: {
         topLevelAwait: true,
     },

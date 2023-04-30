@@ -13,8 +13,6 @@ export const FolderSlice = createSlice({
         addFolderAnimationId: '',
     },
     reducers: {
-
-
         // 修改資料夾顏色
         changeFolderColor: (state, action) => {
             const { Juuten_folderLists: data, editFolderId } = state

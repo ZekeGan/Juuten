@@ -51,9 +51,6 @@ export default (
     const mainRef = useRef(null)
     area === 'textMain' && useHideBar(mainRef.current, setHide)
 
-
-    console.log('textMain');
-
     function dragEnd(e) {
         const { destination, source } = e
         if (!destination || !source) return

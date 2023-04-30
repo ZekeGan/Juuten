@@ -15,9 +15,6 @@ export default React.memo((
     }) => {
     const { Juuten_Storage } = useSelector(selectCollection)
 
-    console.log(Juuten_Storage);
-
-    console.log('storage');
     return (
         <BottemBarTemplate
             useContainer={false}

@@ -6,7 +6,6 @@ const useRemoveBar = (trigger, fn) => {
         e.preventDefault()
         e.stopPropagation()
         e.stopImmediatePropagation()
-        console.log('stop')
         if (!!fn) fn()
         return document.removeEventListener('mouseup', removeToolbar, false)
     }

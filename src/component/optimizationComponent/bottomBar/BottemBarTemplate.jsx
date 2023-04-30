@@ -57,9 +57,10 @@ const BottemBarTemplate = React.memo(
     children,
     useContainer = true,
   }) => {
+    
     const { configuration } = useSelector(selectGlobal);
-    const close = () => closeCallback();
-    console.log("tempalte");
+    const close = () => closeCallback()
+
     return (
       <Main config={configuration} open={open} fullPage={fullPage}>
         <CloseBar config={configuration} onClick={() => close()}>

@@ -18,7 +18,6 @@ chrome.runtime.onMessage.addListener((req) => {
     return true
 })
 
-console.log('contentscript active')
 let selectionText = ''
 fetchMsg('Juuten_Configuration', initialConfiguration)
     .then(res => {
@@ -71,7 +70,6 @@ function addNewMsg(obj) {
     let selection
     if (!msg) selection = document.getSelection().toString()
     else selection = msg
-    console.log(selection)
     const position = document.documentElement.scrollTop
     const currentDate = getCurrentDate()
     const key = `Juuten_${Date.now()}`

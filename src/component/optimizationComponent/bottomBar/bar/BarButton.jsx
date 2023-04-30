@@ -32,8 +32,6 @@ const MyComponent = React.memo(({ text, type, area, open = false }) => {
   const { configuration: config } = useSelector(selectGlobal);
   const allData = useGetData(open, true);
 
-  console.log("barBtn");
-
   function getData() {
     const { folderData } = store.getState().collection;
     if (area !== "folder") {

@@ -17,15 +17,10 @@ const Textarea = React.memo((
 
     useEffect(() => {
         if (!item && !draftRef.current) return
-        if (open) {
-            console.log('editing open')
-            draftRef.current?.autoFocus()
-        }
+        if (open) draftRef.current?.autoFocus()
+        
     }, [open])
 
-    console.log(inlineStyle)
-
-    console.log('text ' + item.key)
 
     return (
         <>

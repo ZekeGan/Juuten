@@ -31,8 +31,6 @@ const MyComponent = React.memo(({ data, open = false }) => {
   const inputRef = useRef(null);
   const [foundData, setFoundData] = useState([]);
 
-  console.log("foundData");
-
   useEffect(() => {
     if (!inputRef.current || !open) return;
     inputRef.current?.focus({ preventScroll: true });
@@ -100,14 +98,12 @@ const MyComponent = React.memo(({ data, open = false }) => {
     );
     const blocks = editorState.getCurrentContent().getBlockMap();
     const regex = new RegExp(target, "g");
-    console.log(editorState.getCurrentContent().getPlainText());
 
     blocks.forEach((block) => {
       const text = block.getText().toUpperCase();
       let matchArr = regex.exec(text);
 
       while (matchArr !== null) {
-        console.log(matchArr);
         editorState = RichUtils.toggleInlineStyle(
           EditorState.forceSelection(
             editorState,

@@ -234,9 +234,6 @@ const Bar = React.memo((
         }
     }), [configuration])
 
-    console.log('bar')
-
-
     return (
         <>
             <BottemBarTemplate

@@ -48,8 +48,6 @@ const DotColor = React.memo(() => {
         setOpen(true);
     }
 
-    console.log("dotColor");
-
     return (
         <Main open={open}>
             <Element

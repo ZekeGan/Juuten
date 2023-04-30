@@ -14,7 +14,7 @@ export const CollectionSlice = createSlice({
     initialState: {
         Juuten_EditingText: await fetchData('Juuten_EditingText', [{ msg: '', key: 'Juuten_editingText' }]),
         Juuten_Storage: await fetchData('Juuten_Storage', initialStorage),
-        ////////////////////////////////////////////////////////////////
+
         openAddNewNote: false,
         openStorage: false,
         openSearchPage: false,
@@ -53,7 +53,6 @@ export const CollectionSlice = createSlice({
         },
         /* storage collection 位置切換 */
         moveToStorageOrCollection: (state, action) => {
-            // 423 優化
             const { folderId } = state
             const { toWhere, key } = action.payload
 
@@ -104,7 +103,7 @@ export const CollectionSlice = createSlice({
                 textingBox: {
                     key: 'Juuten_EditingText',
                     data: state.Juuten_EditingText,
-                }, // [{msg: ''}]
+                },
                 textMain: {
                     key: state.folderId,
                     data: state[state.folderId],
@@ -140,7 +139,6 @@ export const CollectionSlice = createSlice({
         },
         /* 新增註記(comment) */
         addComment: (state, action) => {
-            // 423 優化
             const { folderId, openEditId, ...rest } = state
 
             const _key = `Juuten_${Date.now()}`
@@ -173,7 +171,6 @@ export const CollectionSlice = createSlice({
         },
         /* 修改錦集(collection)、註記(comment)和暫存區(storage)的文字 */
         editCollectionOrStorage: (state, action) => {
-            /* 420 修改VVVVVVVVVV */
             const areaMap = {
                 storage: 'Juuten_Storage',
                 collection: state.folderId,
@@ -200,7 +197,6 @@ export const CollectionSlice = createSlice({
         },
         /* 刪除錦集(collection)和暫存區(storage)筆記或註記(comment) */
         deleteNoteOrComment: (state, action) => {
-            /* 420 修改 VVVVVVVVVV */
             const areaMap = {
                 storage: 'Juuten_Storage',
                 collection: state.folderId,
@@ -231,7 +227,6 @@ export const CollectionSlice = createSlice({
         },
         /* dnd 更換位置 */
         rearrangeComment: (state, action) => {
-            // 423 優化
             const { destination, source, area } = action.payload
             if (source.index === destination.index) return state
 
@@ -255,7 +250,6 @@ export const CollectionSlice = createSlice({
         },
 
         rearrangeNote: (state, action) => {
-            // 423 優化
             const { destination, source, area } = action.payload
             if (source.index === destination.index) return state
 
@@ -275,7 +269,6 @@ export const CollectionSlice = createSlice({
         },
 
         openOrCloseComment: (state, action) => {
-            // 423 優化
             const folderId = state.folderId
             const value = action.payload.area === 'textMain' ? folderId : 'Juuten_Storage'
 

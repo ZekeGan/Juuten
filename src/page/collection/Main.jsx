@@ -32,8 +32,6 @@ export default function App() {
     const [saveWarning, setSaveWarning] = useState(false)
     const [hide, setHide] = useState(false)
 
-    console.log(currData);
-
     return (
         <Main config={config}>
 

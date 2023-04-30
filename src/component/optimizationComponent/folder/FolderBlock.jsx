@@ -51,8 +51,6 @@ export default React.memo((
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    console.log('folderBlock')
-
     function editFolder(e, item) {
         e.stopPropagation()
         dispatch(addEditFolderId(item.key))
@@ -60,8 +58,6 @@ export default React.memo((
 
     function goIntoFolder(e, item) {
         e.stopPropagation()
-        // navigate('/collection/N1') // *****************************************<==== delete when build
-        console.log('enterFolder')
         dispatch(addFetchData({
             item,
             fn: navigate(`/collection/${item.key}`),
