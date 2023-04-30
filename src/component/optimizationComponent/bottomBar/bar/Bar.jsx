@@ -106,7 +106,7 @@ const Bar = React.memo((
                 {
                     open: true,
                     text: 'screenWidth',
-                    textCN: '螢幕寬度',
+                    textCN: '調整螢幕寬度',
                     element: 'number',
                     numberValue: {
                         currentValue: configuration['max_width'],
@@ -120,7 +120,7 @@ const Bar = React.memo((
                 {
                     open: true,
                     text: 'noShowStorageCount',
-                    textCN: '不在暫存區顯示數量',
+                    textCN: '取消暫存區數量的顯示',
                     element: 'ratio',
                     ratioValue: [{ key: 'showStorageCount' }],
                     current: configuration.showStorageCount,
@@ -129,7 +129,7 @@ const Bar = React.memo((
                 {
                     open: true,
                     text: 'noShowThisIsBottom',
-                    textCN: '停止顯示已經到最底',
+                    textCN: '取消已經到最底的顯示',
                     element: 'ratio',
                     ratioValue: [{ key: 'thisIsBottom' }],
                     current: configuration.thisIsBottom,
@@ -151,16 +151,16 @@ const Bar = React.memo((
                 {
                     open: true,
                     text: 'selectingTool',
-                    textCN: '取消快捷鍵',
+                    textCN: '關閉快捷鍵',
                     element: 'ratio',
                     ratioValue: [{ key: 'isShowSelectionTool' }],
                     current: configuration.isShowSelectionTool,
-                    introduce: { default: '是否顯示選取時的快捷鍵' }
+                    introduce: { default: '是否顯示選取時出現的快捷鍵' }
                 },
                 {
                     open: true,
                     text: 'selectingToolX',
-                    textCN: 'X軸',
+                    textCN: '快捷鍵X軸',
                     element: 'number',
                     numberValue: {
                         currentValue: configuration['toolbarX'],
@@ -169,12 +169,12 @@ const Bar = React.memo((
                         howMany: 5
                     },
                     dispatchValue: [{ key: 'toolbarX', value: 0 }],
-                    introduce: { default: '' }
+                    introduce: { default: '調整快捷鍵左右的位置' }
                 },
                 {
                     open: true,
                     text: 'selectingToolY',
-                    textCN: 'Y軸',
+                    textCN: '快捷鍵Y軸',
                     element: 'number',
                     numberValue: {
                         currentValue: configuration['toolbarY'],
@@ -183,7 +183,7 @@ const Bar = React.memo((
                         howMany: 5
                     },
                     dispatchValue: [{ key: 'toolbarY', value: 0 }],
-                    introduce: { default: '' }
+                    introduce: { default: '調整快捷鍵上下的位置' }
                 }
             ]
         },
@@ -249,7 +249,9 @@ const Bar = React.memo((
                         key={`${category}-text`}
                         config={configuration}
                     >
-                        <div className={'container-text'}>{barList[category].text}</div>
+                        <div className={'container-text'}>
+                            {barList[category].text}
+                        </div>
                         <CategoryContainer>
                             {barList[category].list.map(select => (
                                 select.open
@@ -260,8 +262,12 @@ const Bar = React.memo((
                                     config={configuration}
                                 >
                                     <div className={'select-text-box'}>
-                                        <div className={'select-text'}>{select.textCN}</div>
-                                        <div className={'select-introduce'}>{select.introduce.default}</div>
+                                        <div className={'select-text'}>
+                                            {select.textCN}
+                                        </div>
+                                        <div className={'select-introduce'}>
+                                            {select.introduce.default}
+                                        </div>
                                     </div>
                                     {select.element === 'color'
                                         && <DotColor />}
