@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import store from './redux/store'
 import './assets/style.css'
 
-const root = ReactDOM.createRoot(document.getElementById('root'))
+const root = ReactDOM.createRoot(document.getElementById('Juuten_root'))
 root.render(
     <Provider store={store}>
         <Router />

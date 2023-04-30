@@ -12,7 +12,7 @@ const thunkData = createAsyncThunk(
 export const CollectionSlice = createSlice({
     name: 'collection',
     initialState: {
-        Juuten_EditingText: await fetchData('Juuten_EditingText', [{ msg: '', key: 'Juuten_editingText' }]),
+        Juuten_EditingText: await fetchData('Juuten_EditingText', [{ msg: '', key: 'Juuten_EditingText' }]),
         Juuten_Storage: await fetchData('Juuten_Storage', initialStorage),
         ////////////////////////////////////////////////////////////////
         openAddNewNote: false,

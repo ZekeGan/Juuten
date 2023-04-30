@@ -22,6 +22,7 @@ console.log('contentscript active')
 let selectionText = ''
 fetchMsg('Juuten_Configuration', initialConfiguration)
     .then(res => {
+        if (!!document.querySelector('#Juuten_root')) return
         document.addEventListener("mouseup", (event) => {
             const { isShowSelectionTool, toolbarY, toolbarX } = res
             if (!isShowSelectionTool && event.button === 0) {

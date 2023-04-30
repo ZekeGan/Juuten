@@ -11,6 +11,7 @@ import { selectGlobal } from "../../../../redux/slice/globalSlice";
 import BottemBarTemplate from "../BottemBarTemplate.jsx";
 import DraftComponent from "../../DraftComponent.jsx";
 import TextEditorIcon from "../../pureComponent/TextEditorIcon.jsx";
+import { setDataToLocal } from '../../../../utils';
 
 
 const Main = styled.div`
@@ -78,6 +79,7 @@ const AddNewNote = React.memo((
         setOpen(false)
         dispatch(addCleanTexting())
         draftRef.current?.cleanEditorState()
+        setDataToLocal('Juuten_EditingText', [{ msg: '', key: 'Juuten_EditingText' }])
     }
 
     console.log('addNewNote')
@@ -107,7 +109,7 @@ const AddNewNote = React.memo((
                         open={open}
                         autoSave={{
                             type: 'textingBox',
-                            key: 'Juuten_editingText',
+                            key: 'Juuten_EditingText',
                             destination: 'Juuten_EditingText'
                         }}
                     />
