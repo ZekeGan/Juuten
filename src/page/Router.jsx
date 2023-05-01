@@ -10,6 +10,7 @@ import Collection from './collection/Main.jsx'
 
 export default function App() {
 
+    console.log('router');
 
     return (
         <Router>
