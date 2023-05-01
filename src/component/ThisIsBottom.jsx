@@ -10,9 +10,9 @@ const Bottom = styled.div`
     color: ${({ config }) => config.quaternary};
     border-bottom: 1px solid ${({ config }) => config.quaternary}; 
 `
-const ThisIsBottom = React.memo((props) => {
+export default React.memo((props) => {
     const { configuration: config } = useSelector(selectGlobal)
     return <Bottom config={config}>已經到最底</Bottom>
-})
-
-export default ThisIsBottom;
+},
+    () => true
+)

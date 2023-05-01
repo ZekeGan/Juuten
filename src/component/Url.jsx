@@ -25,7 +25,8 @@ const Replace = styled.div`
     width: 100%;
     height: 10px;
 `
-const Url = React.memo((
+
+export default React.memo((
     {
         item
     }) => {
@@ -53,5 +54,3 @@ const Url = React.memo((
 },
     () => true
 )
-
-export default Url;

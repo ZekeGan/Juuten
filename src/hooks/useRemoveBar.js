@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 
-const useRemoveBar = (trigger, fn) => {
-
+export default (trigger, fn) => {
     function removeToolbar(e) {
         e.preventDefault()
         e.stopPropagation()
@@ -16,6 +15,4 @@ const useRemoveBar = (trigger, fn) => {
         }
     }, [trigger])
 
-};
-
-export default useRemoveBar;
+}

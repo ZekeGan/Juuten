@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import store from "Store/store";
 import { fetchData } from "../utils";
 
-const useGetData = (active, all) => {
+export default (active) => {
     const allFolder = useMemo(() => {
         const state = store.getState()
         let data = []
@@ -17,6 +17,4 @@ const useGetData = (active, all) => {
     }, [active])
 
     return allFolder
-};
-
-export default useGetData;
+}

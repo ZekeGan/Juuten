@@ -11,19 +11,7 @@ const NormalInput = styled.input`
     overflow: hidden;
     padding: 0 3%`
 
-const JInput = React.memo((
-    {
-        mRef,
-        callback,
-    }) => {
-    return (
-        <NormalInput
-            ref={mRef}
-            onChange={callback}
-        />
-    )
-},
+export default React.memo(({ mRef, callback, }) =>
+    <NormalInput ref={mRef} onChange={callback} />,
     (prevProps, nextProps) => prevProps.mRef === nextProps.mRef
 )
-
-export default JInput;

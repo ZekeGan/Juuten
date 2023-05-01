@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchData, getCurrentDate, setDataToLocal } from "src/utils";
 import { convertToRaw, EditorState } from 'draft-js'
+import { fetchData, getCurrentDate, setDataToLocal } from "src/utils";
 import { storage as initialStorage, note as intrduceData } from "assets/mock";
 
 const thunkData = createAsyncThunk(
@@ -323,7 +323,6 @@ export const CollectionSlice = createSlice({
 
 
 export default CollectionSlice.reducer
-
 export const selectCollection = (state) => state.collection
 export const addFetchData = (payload) => thunkData(payload)
 export const {
@@ -340,5 +339,4 @@ export const {
     autoSave: addAutoSave,
     cleanTexting: addCleanTexting,
     changeIsHistory: addChangeIsHistory,
-
 } = CollectionSlice.actions

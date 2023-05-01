@@ -11,20 +11,7 @@ const Mask = styled.div`
     height: 100%;
     background-color: rgba(0,0,0,${({ open }) => open ? '0.5' : '0'});`
 
-const App = React.memo((
-    {
-        open = false,
-        onClick = () => { }
-    }) => {
-        
-    return (
-        <Mask
-            open={open}
-            onClick={onClick}
-        />
-    );
-},
+export default React.memo(({ open = false, onClick = () => { } }) =>
+    <Mask open={open} onClick={onClick} />,
     (prev, next) => prev.open === next.open
 )
-
-export default App;

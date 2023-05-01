@@ -47,9 +47,7 @@ const ShowOrHideComments = styled.div`
     cursor: pointer;`
 
 
-
-
-const Note = React.memo((
+export default React.memo((
     {
         item,
         noteProvided,
@@ -161,5 +159,3 @@ const Note = React.memo((
         return prevProps.item.isOpenComment === nextProps.item.isOpenComment
     }
 )
-
-export default Note;

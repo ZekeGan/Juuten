@@ -18,7 +18,7 @@ const Textarea = React.memo((
     useEffect(() => {
         if (!item && !draftRef.current) return
         if (open) draftRef.current?.autoFocus()
-        
+
     }, [open])
 
 
@@ -48,7 +48,9 @@ const Textarea = React.memo((
 
     );
 },
-    (prevProps, nextProps) => prevProps.item.msg === nextProps.item.msg && prevProps.open === nextProps.open
+    (prevProps, nextProps) =>
+        prevProps.item.msg === nextProps.item.msg
+        && prevProps.open === nextProps.open
 )
 
 export default Textarea;

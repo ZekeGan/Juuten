@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from "react-redux";
 import { addAutoSave } from "slice/collectionSlice";
 
-const useAutoSave = (type, key, msg) => {
+export default (type, key, msg) => {
     const dispatch = useDispatch()
     const [isStart, setIsStart] = useState(false)
     const [countToSave, setCountToSave] = useState(false)
@@ -24,8 +24,5 @@ const useAutoSave = (type, key, msg) => {
         if (isStart) save()
     }, [isStart, countToSave]);
 
-
     return { setIsStart };
-};
-
-export default useAutoSave;
+}

@@ -22,7 +22,7 @@ const Main = styled.div`
     background-color: ${({ config }) => config.primary};`
 
 
-export default function App() {
+export default () => {
     const {
         [useParams().id]: currData,
         folderData,

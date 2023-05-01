@@ -3,12 +3,7 @@ import TextEditorIcon from "com/pure/TextEditorIcon.jsx";
 import { toggleProps } from "assets/global";
 
 
-const Toggle = (
-    {
-        draftRef,
-        inlineStyle,
-    }) => {
-
+const Toggle = ({ draftRef, inlineStyle, }) => {
     function handleToggleStyle(keyword, e) {
         draftRef.current?.toggleStyle(keyword, e)
     }
@@ -23,8 +18,6 @@ const Toggle = (
             curr={open}
         />
     ))
-
-
 }
 
 export default Toggle;

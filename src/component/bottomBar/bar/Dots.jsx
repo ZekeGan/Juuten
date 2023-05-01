@@ -17,27 +17,13 @@ const Elements = styled.div`
     }
 `
 
-const Dots = React.memo((
-    {
-        item,
-        setOpen,
-    }) => {
+export default React.memo(({ item, setOpen }) => {
     const dispatch = useDispatch()
-
     function selectColor(color) {
         dispatch(addSetConfiguration({ key: 'main', value: color }))
         setOpen(false)
     }
-
-    return (
-        <Elements
-            key={`color_${item}`}
-            color={item}
-            onClick={() => selectColor(item)}
-        />
-    );
+    return <Elements key={`color_${item}`} color={item} onClick={() => selectColor(item)} />
 },
     () => true
 )
-
-export default Dots

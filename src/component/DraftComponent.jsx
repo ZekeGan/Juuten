@@ -1,20 +1,14 @@
 import React, { useState, forwardRef, useImperativeHandle, useEffect, useRef, memo } from 'react';
 import {
-    EditorState,
-    RichUtils,
-    Editor,
-    convertFromRaw,
-    convertToRaw,
-    Modifier,
-    getDefaultKeyBinding,
-    KeyBindingUtil,
+    EditorState, RichUtils, Editor, convertFromRaw,
+    convertToRaw, Modifier, getDefaultKeyBinding, KeyBindingUtil,
 } from 'draft-js'
 import { useSelector } from "react-redux";
 import { selectGlobal } from "slice/globalSlice";
 import useAutoSave from "hook/useAutoSave";
 import { changeFontColor } from "src/utils";
 
-const DraftComponent = memo(forwardRef((
+export default memo(forwardRef((
     {
         item = '',
         readOnly = false,
@@ -26,10 +20,10 @@ const DraftComponent = memo(forwardRef((
 ) => {
     const mainRef = useRef(null)
     const { configuration: config } = useSelector(selectGlobal)
-    const [editorState, setEditorState] = useState(() => {
-        if (item) return EditorState.createWithContent(convertFromRaw(JSON.parse(item)))
-        else return EditorState.createEmpty()
-    })
+    const [editorState, setEditorState] = useState(() => item
+        ? EditorState.createWithContent(convertFromRaw(JSON.parse(item)))
+        : EditorState.createEmpty()
+    )
     const { setIsStart } = useAutoSave(
         autoSave?.type,
         autoSave?.key,
@@ -82,11 +76,8 @@ const DraftComponent = memo(forwardRef((
                 ))
             default:
                 return 'not-handled'
-
         }
-
     }
-
 
     function keyBindingFn(e) {
         switch (e.keyCode) {
@@ -153,17 +144,14 @@ const DraftComponent = memo(forwardRef((
         [editorState]
     )
 
-    return (
-        <Editor
-            customStyleMap={styleMap}
-            editorState={editorState}
-            onChange={onChange}
-            readOnly={readOnly}
-            ref={mainRef}
-            keyBindingFn={keyBindingFn}
-            handleKeyCommand={handleKeyCommand}
-        />
-    );
-}))
+    return <Editor
+        customStyleMap={styleMap}
+        editorState={editorState}
+        onChange={onChange}
+        readOnly={readOnly}
+        ref={mainRef}
+        keyBindingFn={keyBindingFn}
+        handleKeyCommand={handleKeyCommand}
+    />
 
-export default DraftComponent;
+}))

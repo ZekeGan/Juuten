@@ -7,7 +7,7 @@ const DateBox = styled.div`
     margin-right: auto;
     font-size: ${({ config }) => config.font_size_m}px;`
 
-const BuiltDate = React.memo((
+export default React.memo((
     {
         date
     }) => {
@@ -17,5 +17,3 @@ const BuiltDate = React.memo((
     (prevProps, nextProps) => prevProps.date === nextProps.date
 )
 
-
-export default BuiltDate;

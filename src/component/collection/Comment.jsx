@@ -25,7 +25,7 @@ const DragHandle = styled.div`
     transform: translatey(-50%) ${({ open }) => open ? '' : 'translatex(-12px)'};
     transition: 0.2s ease-out;`
 
-const App = React.memo((
+export default React.memo((
     {
         area,
         item,
@@ -60,7 +60,7 @@ const App = React.memo((
         </Comment>
     )
 },
-    (prevProps, nextProps) => prevProps.item.msg === nextProps.item.msg && prevProps.open === nextProps.open
+    (prevProps, nextProps) =>
+        prevProps.item.msg === nextProps.item.msg
+        && prevProps.open === nextProps.open
 )
-
-export default App

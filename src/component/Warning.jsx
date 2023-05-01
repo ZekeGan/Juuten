@@ -19,7 +19,7 @@ const Page = styled.div`
     transition: 0.2s ease-out;
     font-size: ${({ config }) => config.font_size_m}px;`
 
-const Warning = React.memo((
+export default React.memo((
     {
         warning,
         children
@@ -34,5 +34,3 @@ const Warning = React.memo((
         </Page>
     );
 })
-
-export default Warning;

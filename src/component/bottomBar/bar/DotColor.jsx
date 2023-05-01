@@ -37,7 +37,7 @@ const Element = styled.div`
   transition: 0.4s;
 `;
 
-const DotColor = React.memo(() => {
+export default React.memo(() => {
     const [open, setOpen] = useState(false);
     const { configuration: config } = useSelector(selectGlobal);
 
@@ -62,4 +62,3 @@ const DotColor = React.memo(() => {
     );
 });
 
-export default DotColor;

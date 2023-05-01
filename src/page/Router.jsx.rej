@@ -1,0 +1,9 @@
+diff a/src/page/Router.jsx b/src/page/Router.jsx	(rejected hunks)
+@@ -3,7 +3,6 @@
+  import Home from './folder/Main.jsx'
+  import Collection from './collection/Main.jsx'
+  
+- 
+  export default function App() {
+ +<<<<<<< HEAD
+ +

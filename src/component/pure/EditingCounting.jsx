@@ -10,7 +10,7 @@ const Counting = styled.div`
     font-size: ${({ config }) => config.font_size_m}px;`
 
 
-const EditingCounting = React.memo((
+export default React.memo((
     {
         open
     }) => {
@@ -39,7 +39,6 @@ const EditingCounting = React.memo((
         </Counting>
     )
 },
-    (p, n) => p.open === n.open 
+    (p, n) => p.open === n.open
 )
 
-export default EditingCounting;

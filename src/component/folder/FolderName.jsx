@@ -15,21 +15,9 @@ const Page = styled.div`
     overflow: hidden;
     font-size: ${({ config }) => config.font_size_m}px;
 `
-const FolderName = React.memo((
-    {
-        font,
-        children,
-    }) => {
+const FolderName = React.memo(({ font, children }) => {
     const { configuration: config } = useSelector(selectGlobal)
-
-    return (
-        <Page
-            config={config}
-            font={font}
-        >
-            {children}
-        </Page>
-    );
+    return <Page config={config} font={font}>{children}</Page>
 },
     (p, n) => p === n
 )

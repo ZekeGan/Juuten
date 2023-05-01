@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { selectGlobal } from "slice/globalSlice";
@@ -18,7 +18,7 @@ const NewFolderInput = styled.input`
 `
 
 
-const Input = React.memo((
+export default React.memo((
     {
         mRef,
         onInput = () => { }
@@ -35,5 +35,3 @@ const Input = React.memo((
 },
     (prevProps, nextProps) => prevProps.mRef === nextProps.mRef
 )
-
-export default Input

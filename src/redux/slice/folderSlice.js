@@ -8,7 +8,7 @@ export const FolderSlice = createSlice({
     initialState: {
         Juuten_folderLists: await fetchData('Juuten_folderLists', initailFolder),
         Juuten_Navigate_History: await fetchData('Juuten_Navigate_History', {}),
-        ////////////////////////////////////////////////////////////
+        
         editFolderId: '',
         addFolderAnimationId: '',
     },

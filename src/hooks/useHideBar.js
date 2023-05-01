@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
-const useHideBar = (ref, fn) => {
+export default (ref, fn) => {
     const [hideNav, setHideNav] = useState(false)
     const [prevScroll, setPrevScroll] = useState(0)
-
 
     useEffect(() => {
         if (!ref) return
@@ -27,5 +26,3 @@ const useHideBar = (ref, fn) => {
 
     return hideNav
 }
-
-export default useHideBar;

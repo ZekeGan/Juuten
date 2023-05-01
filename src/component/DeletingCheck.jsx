@@ -43,7 +43,7 @@ const Page = styled.div`
     }
 `
 
-const DeletingCheck = React.memo((
+export default React.memo((
     {
         delCheck,
         setDelCheck,
@@ -82,5 +82,3 @@ const DeletingCheck = React.memo((
 },
     (prevProps, nextProps) => prevProps.delCheck === nextProps.delCheck
 )
-
-export default DeletingCheck;

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectFolder } from "slice/folderSlice";
 import { addChangeIsHistory, addFetchData, selectCollection } from "slice/collectionSlice";
 
-const useCheckHistory = () => {
+export default () => {
     const dispatch = useDispatch()
     const { Juuten_Navigate_History } = useSelector(selectFolder)
     const { isHistoryLoad } = useSelector(selectCollection)
@@ -21,6 +21,4 @@ const useCheckHistory = () => {
             fn: navigate(`/collection/${Juuten_Navigate_History.key}`)
         }))
     }, [])
-};
-
-export default useCheckHistory;
+}

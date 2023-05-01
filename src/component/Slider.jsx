@@ -47,7 +47,7 @@ const Element = styled.div`
       }
     }`
 
-const Slider = React.memo((
+export default React.memo((
   {
     id,
     ratioValue,
@@ -77,5 +77,3 @@ const Slider = React.memo((
     </Element>
   )
 })
-
-export default Slider;

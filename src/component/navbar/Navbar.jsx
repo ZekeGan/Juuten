@@ -33,7 +33,7 @@ const Navbar = styled.div`
     }`
 
 
-const app = React.memo((
+export default React.memo((
     {
         hide = false,
         name = 'null',
@@ -87,5 +87,3 @@ const app = React.memo((
             && prev.openEditId === next.openEditId
     }
 )
-
-export default app;

@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from "styled-components";
 
-
 const Icon = styled.div`
     cursor: pointer;
     user-select: none;
@@ -15,28 +14,10 @@ const Icon = styled.div`
     ${({ stylePros }) => stylePros}
 `
 
-
-
-const MyComponent = React.memo((
-    {
-        style,
-        icon,
-        fn = () => { },
-    }) => {
-
-    return (
-        <Icon
-            stylePros={style}
-            onMouseDown={fn}
-        >
-            {icon}
-        </Icon>
-    )
-},
+export default React.memo(({ style, icon, fn = () => { }, }) =>
+    <Icon stylePros={style} onMouseDown={fn}>{icon}</Icon>,
     (prevProps, nextProps) => {
         if (!nextProps.curr) return true
         return prevProps.style === nextProps.style
     }
 )
-
-export default MyComponent;

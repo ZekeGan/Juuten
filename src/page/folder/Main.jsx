@@ -2,13 +2,7 @@ import React, { useState, useMemo, useRef } from 'react';
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import {
-    addDeleteFolder,
-    addEditFolderAnimationId,
-    addEditFolderId,
-    addRearrangeFolder,
-    selectFolder,
-} from "slice/folderSlice";
+import { addDeleteFolder, addEditFolderAnimationId, addEditFolderId, addRearrangeFolder, selectFolder } from "slice/folderSlice";
 import { selectGlobal } from "slice/globalSlice";
 import { selectCollection } from "slice/collectionSlice";
 
@@ -52,7 +46,7 @@ const DraggableBox = styled.div`
 `
 
 
-export default function App() {
+export default () => {
     const dispatch = useDispatch()
     const {
         Juuten_folderLists,
@@ -140,32 +134,32 @@ export default function App() {
                                 {...provided.droppableProps}
                             >
                                 {/* 新增資料夾 */}
-                                <AddNewFolder 
-                                checkName={checkLigalName} 
-                                newFolder={newFolder} 
-                                setNewFolder={setNewFolder} />
+                                <AddNewFolder
+                                    checkName={checkLigalName}
+                                    newFolder={newFolder}
+                                    setNewFolder={setNewFolder} />
 
-                                {Juuten_folderLists.map((item, idx) =>
-                                (<Draggable
-                                    key={`folder_drag_key_${item.key}`}
-                                    draggableId={`draggableId_${item.key}`}
-                                    index={idx}
-                                >
-                                    {(provided) =>
-                                    (<DraggableBox
-                                        ref={provided.innerRef}
-                                        {...provided.draggableProps}
+                                {Juuten_folderLists.map((item, idx) => (
+                                    <Draggable
+                                        key={`folder_drag_key_${item.key}`}
+                                        draggableId={`draggableId_${item.key}`}
+                                        index={idx}
                                     >
-                                        <FolderBlock
-                                            item={item}
-                                            setDelCheck={setDelCheck}
-                                            openToolbar={item.key === editFolderId}
-                                            checkName={checkLigalName}
-                                            provided={provided}
-                                        />
-                                    </DraggableBox>)
-                                    }
-                                </Draggable>)
+                                        {(provided) =>
+                                        (<DraggableBox
+                                            ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                        >
+                                            <FolderBlock
+                                                item={item}
+                                                setDelCheck={setDelCheck}
+                                                openToolbar={item.key === editFolderId}
+                                                checkName={checkLigalName}
+                                                provided={provided}
+                                            />
+                                        </DraggableBox>)
+                                        }
+                                    </Draggable>)
                                 )}
                                 {provided.placeholder}
                             </div>
@@ -174,7 +168,6 @@ export default function App() {
                 </FolderSection>
             </DragDropContext>
 
-
             <BottomBar
                 barArea={'folder'}
                 hide={hideNav}
@@ -182,5 +175,4 @@ export default function App() {
             />
 
         </Folders>
-
 }

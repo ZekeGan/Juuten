@@ -59,7 +59,7 @@ const IconBox = styled.div`
     }`
 
 
-const App = React.memo((
+export default React.memo((
     {
         open,
         setDelCheck = () => { },
@@ -150,5 +150,3 @@ const App = React.memo((
         return prev === next
     }
 )
-
-export default App;

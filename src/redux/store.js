@@ -1,8 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-
-import collection from './slice/collectionSlice'
-import folder from './slice/folderSlice'
-import global from './slice/globalSlice'
+import collection from 'slice/collectionSlice'
+import folder from 'slice/folderSlice'
+import global from 'slice/globalSlice'
 
 const reducer = combineReducers({
     collection,
@@ -11,12 +10,10 @@ const reducer = combineReducers({
 })
 
 
-const store = configureStore({
-    reducer: reducer,
+export default configureStore({
+    reducer,
     middleware: getDefaultMiddleware => getDefaultMiddleware({
         serializableCheck: false
     })
 })
-
-export default store
 

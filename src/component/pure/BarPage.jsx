@@ -1,6 +1,6 @@
 import React from 'react';
-import styled from "styled-components";
 import { useSelector } from "react-redux";
+import styled from "styled-components";
 import { selectGlobal } from "slice/globalSlice";
 import Icon from 'com/Svg.jsx'
 import imageOpenWindow1 from 'assets/img/reportBug_forApp_1.jpg'
@@ -82,7 +82,7 @@ const Main = styled.div`
         margin-bottom: 20px;
     }`
 
-const MyComponent = React.memo((
+export default React.memo((
     {
         open,
         close = () => { }
@@ -143,4 +143,3 @@ const MyComponent = React.memo((
     (prev, next) => prev.open === next.open
 )
 
-export default MyComponent;

@@ -25,6 +25,4 @@ export const GlobalSlice = createSlice({
 //
 export default GlobalSlice.reducer
 export const selectGlobal = (state) => state.global
-export const {
-    setConfiguration: addSetConfiguration
-} = GlobalSlice.actions
+export const { setConfiguration: addSetConfiguration } = GlobalSlice.actions

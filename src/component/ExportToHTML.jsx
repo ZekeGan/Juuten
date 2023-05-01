@@ -3,7 +3,11 @@ import { convertFromRaw, EditorState } from "draft-js";
 
 
 
-const ExportToHTML = ({ data, config }) => {
+export default (
+    {
+        data,
+        config,
+    }) => {
 
     function DraftjsConversion(msg) {
         return EditorState
@@ -99,4 +103,3 @@ const ExportToHTML = ({ data, config }) => {
     )
 }
 
-export default ExportToHTML
