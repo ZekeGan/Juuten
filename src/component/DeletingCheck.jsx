@@ -56,6 +56,8 @@ const DeletingCheck = React.memo((
         e.preventDefault()
     }
 
+    console.log('del');
+
     return (
         <Page
             config={config}
