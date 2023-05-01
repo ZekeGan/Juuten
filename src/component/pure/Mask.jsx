@@ -16,7 +16,7 @@ const App = React.memo((
         open = false,
         onClick = () => { }
     }) => {
-    console.log('mask')
+        
     return (
         <Mask
             open={open}

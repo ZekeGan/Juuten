@@ -83,8 +83,6 @@ const App = React.memo((
         dispatch(addChangeFolderColor(color))
     }
 
-    console.log('folderToolbar')
-
     const saveFolderNewName = (e) => {
         if (checkName(inputRef.current.value)) return
 

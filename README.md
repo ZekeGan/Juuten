@@ -236,4 +236,8 @@ Github: [Zeke](https://github.com/JikeLuo)
 
 E-Mail: traveller87072@gmail.com
 
+<<<<<<< HEAD
 Version: 0.22.2
+=======
+Version: 0.21.0
+>>>>>>> prod

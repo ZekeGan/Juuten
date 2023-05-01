@@ -52,7 +52,6 @@ const DeletingCheck = React.memo((
     const { configuration: config } = useSelector(selectGlobal)
 
     function stop(e) {
-        console.log('stop')
         e.stopPropagation()
         e.preventDefault()
     }

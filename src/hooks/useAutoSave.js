@@ -8,7 +8,6 @@ const useAutoSave = (type, key, msg) => {
     const [countToSave, setCountToSave] = useState(false)
 
     function save() {
-        console.log('save')
         dispatch(addAutoSave({ type, msg, key }))
     }
 

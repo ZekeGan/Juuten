@@ -12,6 +12,10 @@
 - 新增 鍵盤的快捷鍵 redo undo bold italic...
 - Debug navbar 無法收起的問題
 
+## Juuten v0.22.0 - 2023/4/29
+- 新增 鍵盤的快捷鍵 redo undo bold italic...
+- Debug navbar無法收起的問題
+
 ## Juuten v0.21.0 - 2023/4/28
 
 - 新增 紀錄上次所在資料夾

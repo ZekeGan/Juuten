@@ -55,8 +55,6 @@ const app = React.memo((
         }
     }
 
-    console.log('navbar name: ' + name)
-
     return (
         <Navbar
             config={config}

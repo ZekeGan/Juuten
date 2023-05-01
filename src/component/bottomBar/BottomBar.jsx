@@ -68,9 +68,6 @@ const App = React.memo((
     const [openNewNote, setOpenNewNote] = useState(false)
     const [openSearch, setOpenSearch] = useState(false)
 
-
-    console.log('bottomBar')
-
     function clickToClose() {
         setOpenNewNote(false)
     }

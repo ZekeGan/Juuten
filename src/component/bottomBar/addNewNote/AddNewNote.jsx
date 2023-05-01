@@ -73,14 +73,11 @@ const AddNewNote = React.memo((
             text: draftRef.current.getJSONData(),
             area: barArea
         }))
-        console.log(draftRef.current.getJSONData())
         setOpen(false)
         dispatch(addCleanTexting())
         draftRef.current?.cleanEditorState()
         setDataToLocal('Juuten_EditingText', [{ msg: '', key: 'Juuten_EditingText' }])
     }
-
-    console.log('addNewNote')
 
     function handleToggleStyle(keyword, e) {
         draftRef.current?.toggleStyle(keyword, e)

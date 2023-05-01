@@ -66,8 +66,6 @@ export default React.memo((
         inputRef.current.value = ''
     }
 
-    console.log('addnewfolder')
-
     function createdNewFolderOrNot() {
         if (checkName(inputRef.current.value)) return
 

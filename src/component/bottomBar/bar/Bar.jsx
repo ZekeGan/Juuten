@@ -233,9 +233,6 @@ const Bar = React.memo((
         }
     }), [configuration])
 
-    console.log('bar')
-
-
     return (
         <>
             <BottemBarTemplate
@@ -248,7 +245,9 @@ const Bar = React.memo((
                         key={`${category}-text`}
                         config={configuration}
                     >
-                        <div className={'container-text'}>{barList[category].text}</div>
+                        <div className={'container-text'}>
+                            {barList[category].text}
+                        </div>
                         <CategoryContainer>
                             {barList[category].list.map(select => (
                                 select.open
@@ -259,8 +258,12 @@ const Bar = React.memo((
                                     config={configuration}
                                 >
                                     <div className={'select-text-box'}>
-                                        <div className={'select-text'}>{select.textCN}</div>
-                                        <div className={'select-introduce'}>{select.introduce.default}</div>
+                                        <div className={'select-text'}>
+                                            {select.textCN}
+                                        </div>
+                                        <div className={'select-introduce'}>
+                                            {select.introduce.default}
+                                        </div>
                                     </div>
                                     {select.element === 'color'
                                         && <DotColor />}

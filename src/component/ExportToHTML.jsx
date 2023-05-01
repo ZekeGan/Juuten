@@ -12,8 +12,6 @@ const ExportToHTML = ({ data, config }) => {
             .getPlainText()
     }
 
-    console.log('exprtHTML')
-
     return (
         <>
             {Object.keys(data).map((folder) => (

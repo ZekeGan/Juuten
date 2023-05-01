@@ -67,8 +67,6 @@ const Note = React.memo((
         setIsClick(false)
     })
 
-    console.log('note')
-
     function openOrCloseComment() {
         if (!!openEditId) dispatch(addOpenEditToolbar(''))
         dispatch(addOpenOrCloseComment({ area, key: item.key }))

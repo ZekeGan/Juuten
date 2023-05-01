@@ -22,8 +22,6 @@ const SearchNote = React.memo((
     }) => {
     const allFolder = useGetData(open, true)
 
-    console.log('searchPage')
-
     return (
         <BottemBarTemplate
             open={open}

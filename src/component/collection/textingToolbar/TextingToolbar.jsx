@@ -71,8 +71,6 @@ const App = React.memo((
     const [delCheck, setDelCheck] = useState(false)
     useRemoveBar(delCheck, () => setDelCheck(false))
 
-    console.log('toolbar')
-
     function openToolbar() {
         dispatch(addOpenEditToolbar({ key: item.key, type: item.type }))
     }
