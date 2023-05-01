@@ -11,6 +11,7 @@ import Collection from './collection/Main.jsx'
 export default function App() {
 
     console.log('router');
+    console.log('test');
 
     return (
         <Router>
