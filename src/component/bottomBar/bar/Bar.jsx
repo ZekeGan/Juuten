@@ -197,17 +197,25 @@ const Bar = React.memo((
                     clickValue: [
                         { text: '匯出成 TXT', type: 'plain' }
                     ],
-                    introduce: { default: barArea === 'folder' ? '匯出所有資料夾的資料成 TXT' : '匯出此資料夾內的資料成 TXT' },
+                    introduce: {
+                        default: barArea === 'folder'
+                            ? '匯出所有資料夾的資料成 TXT'
+                            : '匯出此資料夾內的資料成 TXT'
+                    },
                 },
                 {
-                    open: true,
+                    open: false,
                     text: ' exportToDocx',
                     textCN: '匯出成 docx',
                     element: 'click',
                     clickValue: [
                         { text: '匯出成 Docx', type: 'docx' }
                     ],
-                    introduce: { default: barArea === 'folder' ? '匯出所有資料夾的資料成 Docx' : '匯出此資料夾內的資料成 Docx' },
+                    introduce: {
+                        default: barArea === 'folder'
+                            ? '匯出所有資料夾的資料成 Docx'
+                            : '匯出此資料夾內的資料成 Docx'
+                    },
                 },
                 {
                     open: true,
@@ -217,7 +225,11 @@ const Bar = React.memo((
                     clickValue: [
                         { text: '匯出成 HTML', type: 'html' }
                     ],
-                    introduce: { default: barArea === 'folder' ? '匯出所有資料夾的資料成 HTML' : '匯出此資料夾內的資料成 HTML' },
+                    introduce: {
+                        default: barArea === 'folder'
+                            ? '匯出所有資料夾的資料成 HTML'
+                            : '匯出此資料夾內的資料成 HTML'
+                    },
                 }
             ],
         },

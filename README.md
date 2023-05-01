@@ -2,9 +2,14 @@
 
 ![Juuten_Icon](public/icon/Juuten_Icon_128.png)
 
-[Demo](https://drive.google.com/file/d/1nF2hDQzGWwNjHPaxRsCkGkI5jlYrD98i/view?usp=share_link)
+[Demo](https://drive.google.com/file/d/1rOPTouC8RkWb3qtC-mD2EJj1mT99GO92/view?usp=share_link)
 
 如果你需要一個可以隨時快速筆記，快速把中意的句子或文章記錄起來，Juuten 可以滿足你的需求
+
+### 未來預計新增
+- 黑暗模式
+- 更改字體大小
+- 更改字體顏色
 
 ### 隨時記錄
 
@@ -238,5 +243,5 @@ Github: [Zeke](https://github.com/JikeLuo)
 
 E-Mail: traveller87072@gmail.com
 
-Version: 0.22.2
+Version: 0.22.3
 

@@ -27,7 +27,13 @@ const Btn = styled.div`
   }
 `;
 
-const MyComponent = React.memo(({ text, type, area, open = false }) => {
+export default React.memo((
+  {
+    text,
+    type,
+    area,
+    open = false
+  }) => {
   const { configuration: config } = useSelector(selectGlobal);
   const allData = useGetData(open, true);
 
@@ -66,9 +72,9 @@ const MyComponent = React.memo(({ text, type, area, open = false }) => {
     }
 
     if (type === "docx") {
-      downloadDocx(newData, `Juuten_Note_${getCurrentDate()}`);
+      downloadDocx(newData, `Juuten_Note_${getCurrentDate()}.${type === 'html' ? 'html' : 'txt'}`);
     } else {
-      const filename = `Juuten_Note_${getCurrentDate()}`;
+      const filename = `Juuten_Note_${getCurrentDate()}.${type === 'html' ? 'html' : 'txt'}`;
       const link = document.createElement("a");
       link.href = window.URL.createObjectURL(
         new Blob([newData], { type: `text/${type}` })
@@ -81,11 +87,5 @@ const MyComponent = React.memo(({ text, type, area, open = false }) => {
     }
   }
 
-  return (
-    <Btn config={config} onClick={exportData}>
-      {text}
-    </Btn>
-  );
+  return <Btn config={config} onClick={exportData}>{text}</Btn>
 });
-
-export default MyComponent;

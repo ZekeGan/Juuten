@@ -1,3 +1,6 @@
+## Juuten v0.22.3 - 2023/5/1
+- debug .htm => .html
+
 ## Juutn v0.22.2 - 2023/5/1
 - OPT 路徑alias
 - OPT barPage說明更新
