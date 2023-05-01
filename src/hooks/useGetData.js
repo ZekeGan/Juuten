@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import store from "../redux/store";
+import store from "Store/store";
 import { fetchData } from "../utils";
 
 const useGetData = (active, all) => {

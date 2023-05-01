@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from "react-redux";
-import { addAutoSave } from "../redux/slice/collectionSlice";
+import { addAutoSave } from "slice/collectionSlice";
 
 const useAutoSave = (type, key, msg) => {
     const dispatch = useDispatch()

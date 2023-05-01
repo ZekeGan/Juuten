@@ -1,17 +1,13 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef } from 'react';
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import {
-    addAddAnimation,
-    addRearrangeNote,
-    selectCollection,
-} from "../../redux/slice/collectionSlice";
-
-import Note from '../../component/optimizationComponent/collection/Note.jsx'
-import ThisIsBottom from "../../component/optimizationComponent/ThisIsBottom.jsx";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import { selectGlobal } from "../../redux/slice/globalSlice";
-import useHideBar from '../../hooks/useHideBar';
+import {addAddAnimation,addRearrangeNote,selectCollection,} from "slice/collectionSlice";
+import { selectGlobal } from "slice/globalSlice";
+
+import Note from 'com/collection/Note.jsx'
+import ThisIsBottom from "com/ThisIsBottom.jsx";
+import useHideBar from 'hook/useHideBar';
 
 
 /* main */

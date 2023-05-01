@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import styled from "styled-components";
-import { useSelector } from "react-redux";
-import { selectCollection } from "../../redux/slice/collectionSlice";
-import { selectGlobal } from "../../redux/slice/globalSlice";
 import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import styled from "styled-components";
+
+import { selectCollection } from "slice/collectionSlice";
+import { selectGlobal } from "slice/globalSlice";
 
 import TextMain from "./TextMain.jsx";
-import Warning from "../../component/optimizationComponent/Warning.jsx";
-import BottomBar from "../../component/optimizationComponent/bottomBar/BottomBar.jsx";
-import Navbar from "../../component/optimizationComponent/navbar/Navbar.jsx";
+import Warning from "com/Warning.jsx";
+import BottomBar from "com/bottomBar/BottomBar.jsx";
+import Navbar from "com/navbar/Navbar.jsx";
 
 
 

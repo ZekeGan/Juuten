@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
@@ -8,18 +8,20 @@ import {
     addEditFolderId,
     addRearrangeFolder,
     selectFolder,
-} from "../../redux/slice/folderSlice";
-import { selectGlobal } from "../../redux/slice/globalSlice";
-import { selectCollection } from "../../redux/slice/collectionSlice";
-import useHideBar from "../../hooks/useHideBar";
-import AddNewFolder from "../../component/optimizationComponent/folder/AddingNewFolder.jsx";
-import Warning from "../../component/optimizationComponent/Warning.jsx";
-import DeletingCheck from "../../component/optimizationComponent/DeletingCheck.jsx";
-import BottomBar from "../../component/optimizationComponent/bottomBar/BottomBar.jsx";
-import FolderBlock from "../../component/optimizationComponent/folder/FolderBlock.jsx";
-import Navbar from "../../component/optimizationComponent/navbar/Navbar.jsx";
-import useRemoveBar from "../../hooks/useRemoveBar";
-import useCheckHistory from "../../hooks/useCheckHistory";
+} from "slice/folderSlice";
+import { selectGlobal } from "slice/globalSlice";
+import { selectCollection } from "slice/collectionSlice";
+
+import BottomBar from "com/bottomBar/BottomBar.jsx";
+import Navbar from "com/navbar/Navbar.jsx";
+import FolderBlock from "com/folder/FolderBlock.jsx";
+import DeletingCheck from "com/DeletingCheck.jsx";
+import AddNewFolder from "com/folder/AddingNewFolder.jsx";
+import Warning from "com/Warning.jsx";
+
+import useHideBar from "hook/useHideBar";
+import useRemoveBar from "hook/useRemoveBar";
+import useCheckHistory from "hook/useCheckHistory";
 
 
 const Folders = styled.div`

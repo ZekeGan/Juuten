@@ -1,3 +1,7 @@
+## Juutn v0.22.2 - 2023/5/1
+- OPT 路徑alias
+- OPT barPage說明更新
+
 ## Juuten v0.22.1 - 2023/4/30
 
 - Debug 創建新筆記後依然會讀取舊 autoSave 而不清乾淨

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { changeFontColor, getCurrentDate, setDataToLocal, fetchData } from "../../utils";
-import { folder as initailFolder } from "../../assets/mock";
+import { changeFontColor, getCurrentDate, setDataToLocal, fetchData } from "src/utils";
+import { folder as initailFolder } from "assets/mock";
 
 
 export const FolderSlice = createSlice({

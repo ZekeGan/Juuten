@@ -85,7 +85,17 @@ module.exports = {
             "dns": false,
             "readline": false,
             "net": false,
-        }
+        },
+        alias: {
+            src: path.resolve(__dirname, 'src'),
+            assets: path.resolve(__dirname, 'src/assets'),
+            com: path.resolve(__dirname, 'src/component'),
+            page: path.resolve(__dirname, 'src/page'),
+            hook: path.resolve(__dirname, 'src/hooks'),
+            Store: path.resolve(__dirname, 'src/redux'),
+            slice: path.resolve(__dirname, 'src/redux/slice'),
+
+        },
     },
 
 }

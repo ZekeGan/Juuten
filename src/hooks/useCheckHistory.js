@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
-import { selectFolder } from "../redux/slice/folderSlice";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addChangeIsHistory, addFetchData, selectCollection } from "../redux/slice/collectionSlice";
+
+import { selectFolder } from "slice/folderSlice";
+import { addChangeIsHistory, addFetchData, selectCollection } from "slice/collectionSlice";
 
 const useCheckHistory = () => {
     const dispatch = useDispatch()

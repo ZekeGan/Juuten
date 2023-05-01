@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchData, getCurrentDate, setDataToLocal } from "../../utils";
+import { fetchData, getCurrentDate, setDataToLocal } from "src/utils";
 import { convertToRaw, EditorState } from 'draft-js'
-import { storage as initialStorage, note as intrduceData } from "../../assets/mock";
+import { storage as initialStorage, note as intrduceData } from "assets/mock";
 
 const thunkData = createAsyncThunk(
     'folder/fetchFolderData',

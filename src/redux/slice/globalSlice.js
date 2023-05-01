@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { initialConfiguration } from "../../assets/global";
-import { fetchData, setDataToLocal } from "../../utils";
+import { initialConfiguration } from "assets/global";
+import { fetchData, setDataToLocal } from "src/utils";
 
 
 export const GlobalSlice = createSlice({

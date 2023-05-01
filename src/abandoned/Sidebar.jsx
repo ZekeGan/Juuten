@@ -1,9 +1,7 @@
 import React from 'react';
 import styled from "styled-components";
-import {addOpenEditToolbar} from "../redux/slice/collectionSlice";
+import {addOpenEditToolbar} from "slice/collectionSlice";
 import {useDispatch} from "react-redux";
-
-import Icon from "../component/optimizationComponent/Svg.jsx";
 
 
 const SideToolbar = styled.div`
