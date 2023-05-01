@@ -92,5 +92,4 @@ module.exports = {
             slice: path.resolve(__dirname, 'src/redux/slice'),
         },
     },
-
 }
