@@ -90,7 +90,6 @@ module.exports = {
             hook: path.resolve(__dirname, 'src/hooks'),
             Store: path.resolve(__dirname, 'src/redux'),
             slice: path.resolve(__dirname, 'src/redux/slice'),
-
         },
     },
 
