@@ -2,7 +2,7 @@
 
 ![Juuten_Icon](public/icon/Juuten_Icon_128.png)
 
-[Demo](https://drive.google.com/file/d/1rOPTouC8RkWb3qtC-mD2EJj1mT99GO92/view?usp=share_link)
+[Demo](https://drive.google.com/file/d/1yl2OwDviKE-cSyOMoaoDINhoeRzIMNVb/view?usp=share_link)
 
 如果你需要一個可以隨時快速筆記，快速把中意的句子或文章記錄起來，Juuten 可以滿足你的需求
 
