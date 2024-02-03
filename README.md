@@ -2,6 +2,8 @@
 
 ![Juuten_Icon](public/icon/Juuten_Icon_128.png)
 
+[Chrome Web Store](https://chromewebstore.google.com/detail/fnhndlacbnkkdlgladhkcgoflchnhifb?hl=zh-TW)
+
 [Demo](https://drive.google.com/file/d/1zYdZe_0dbDFHZ9wPQDD2CAmf9IV_dOHN/view?usp=share_link)
 
 如果你需要一個可以隨時快速筆記，快速把中意的句子或文章記錄起來，Juuten 可以滿足你的需求
